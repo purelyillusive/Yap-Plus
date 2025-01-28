@@ -43,11 +43,20 @@
       await import(
         "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
       );
+    var {
+      getStorage,
+      ref: storageRef,
+      uploadBytes,
+      getDownloadURL,
+    } = await import(
+      "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js"
+    );
     /* Initialize Firebase app */
     var app = initializeApp(firebaseConfig); /* Initialize Firebase services */
     database = getDatabase(app);
     auth = getAuth(app);
     var provider = new GoogleAuthProvider();
+    var storage = getStorage(app);
   } catch (error) {
     console.error("Error initializing Firebase:", error);
     alert("Firebase initialization failed. Check the console for details.");
@@ -309,9 +318,6 @@
           messageDiv.classList.add(
             message.User === email ? "sent" : "received",
           );
-if (message.User !== email && (!readMessages[currentChat] || message.id > readMessages[currentChat])) {
-  messageDiv.classList.add('unread');
-}
           messageDiv.style.marginTop = "10px";
           messageDiv.dataset.messageId = message.id;
           messageDiv.dataset.user = username;
