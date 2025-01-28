@@ -64,10 +64,7 @@
     async function openChatScreen() {
       try {
         document.getElementById("email-saved-here").textContent = email;
-        const storage = getStorage(app);
-        /* Get the file URL from Firebase Storage */
-        const fileRef = storageRef(storage, "Code/chat.js");
-        const fileURL = await getDownloadURL(fileRef);
+        const fileURL = "https://github.com/TheHumblePotato/Yap-Window/blob/main/Code/login.js"
 
         /* Remove existing script tag if it exists */
         const existingScript = document.querySelector(
