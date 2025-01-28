@@ -634,8 +634,3 @@ if (message.User !== email && (!readMessages[currentChat] || message.id > readMe
   const messagesDiv = document.getElementById("messages");
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 })();
-
-
-
-
-
