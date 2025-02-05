@@ -54,15 +54,21 @@
       async function openChatScreen() {
         document.getElementById("email-saved-here").textContent = email;
 
-        fetch(
-          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js",
-        )
-          .then((r) => r.text())
-          .then((chatCode) => {eval(chatCode)})
-          .catch((error) => {
-            console.error("Error loading chat.js:", error);
-            alert("Failed to load chat.js. Check the console for details.");
-          });
+        try {
+          const response = await fetch(
+            "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js"
+          );
+          const chatCode = await response.text();
+          try {
+            eval(chatCode);
+          } catch (evalError) {
+            console.error("Error evaluating chat code:", evalError);
+            alert("Failed to initialize chat. Check the console for details.");
+          }
+        } catch (fetchError) {
+          console.error("Error loading chat.js:", fetchError);
+          alert("Failed to load chat.js. Check the console for details.");
+        }
       }
 
       /* Screens */
