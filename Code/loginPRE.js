@@ -44,7 +44,7 @@
   )
     .then((r) => r.text())
     .then((code) => {
-      eval(code); // Execute GUI code
+      eval(code);
       const gui = document.getElementById("bookmarklet-gui");
       var create_username;
       var create_password;
@@ -58,7 +58,7 @@
           "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js",
         )
           .then((r) => r.text())
-          .then((chatCode) => eval(chatCode))
+          .then((chatCode) => {eval(chatCode)})
           .catch((error) => {
             console.error("Error loading chat.js:", error);
             alert("Failed to load chat.js. Check the console for details.");
