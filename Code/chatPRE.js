@@ -208,7 +208,7 @@ async function scrollToFirstUnread(chatName) {
         console.error('Error during smooth scroll:', error);
         firstUnread.scrollIntoView({ block: "center" });
     }
-=
+
     await new Promise(resolve => setTimeout(resolve, 100));
     unreadMessages.forEach(msg => {
         if (!msg.classList.contains('unread')) {
