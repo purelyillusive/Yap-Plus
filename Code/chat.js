@@ -1,6 +1,9 @@
 (async function () {
   var email = document.getElementById("email-saved-here").textContent;
   var username;
+  var readMessages = {};
+  var readAll = true;
+  var isDark = false;
   /* Firebase Config */
   const firebaseConfig = {
     apiKey: "AIzaSyA48Uv_v5c7-OCnkQ8nBkjIW8MN4STDcJs",
@@ -43,20 +46,11 @@
       await import(
         "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
       );
-    var {
-      getStorage,
-      ref: storageRef,
-      uploadBytes,
-      getDownloadURL,
-    } = await import(
-      "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js"
-    );
     /* Initialize Firebase app */
     var app = initializeApp(firebaseConfig); /* Initialize Firebase services */
     database = getDatabase(app);
     auth = getAuth(app);
     var provider = new GoogleAuthProvider();
-    var storage = getStorage(app);
   } catch (error) {
     console.error("Error initializing Firebase:", error);
     alert("Firebase initialization failed. Check the console for details.");
@@ -65,7 +59,191 @@
 
   const gui = document.getElementById("bookmarklet-gui");
   chatScreen = document.getElementById("chat-screen");
-  chatScreen.style.display = "flex";
+  chatScreen.classList.remove("hidden");
+
+  async function initializeReadMessages() {
+    const readMessagesRef = ref(
+      database,
+      `Accounts/${email.replace(/\./g, "*")}/readMessages`,
+    );
+    const snapshot = await get(readMessagesRef);
+    readMessages = snapshot.val() || {};
+    return readMessages;
+  }
+
+  function updateReadAllStatus() {
+    const allChats = document.querySelectorAll(".server");
+    readAll = true;
+
+    allChats.forEach((chat) => {
+      const unreadCount = parseInt(chat.getAttribute("data-unread") || "0");
+      if (unreadCount > 0) {
+        readAll = false;
+      }
+    });
+    updateFavicon();
+  }
+  async function setupDarkModeDetection() {
+    const waitForGui = () => {
+      return new Promise((resolve) => {
+        const checkGui = () => {
+          const gui = document.getElementById("bookmarklet-gui");
+          if (gui) {
+            resolve(gui);
+          } else {
+            setTimeout(checkGui, 100);
+          }
+        };
+        checkGui();
+      });
+    };
+
+    const gui = await waitForGui();
+    if (!gui) return;
+
+    function detectDarkMode() {
+      const style = window.getComputedStyle(gui);
+      return (
+        style.backgroundColor.includes("51, 51, 51") ||
+        style.backgroundColor.includes("#333")
+      );
+    }
+
+    function updateBadgeStyles() {
+      const badges = document.querySelectorAll(".unread-badge");
+      badges.forEach((badge) => {
+        badge.style.backgroundColor = isDark ? "#ff6b6b" : "#ff4444";
+        badge.style.color = "white";
+      });
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "style"
+        ) {
+          isDark = detectDarkMode();
+          updateBadgeStyles();
+        }
+      });
+    });
+
+    observer.observe(gui, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+
+    isDark = detectDarkMode();
+    updateBadgeStyles();
+  }
+
+  async function scrollToFirstUnread(chatName) {
+    const messagesDiv = document.getElementById("messages");
+
+    await new Promise((resolve) => {
+      const checkMessages = () => {
+        if (messagesDiv.children.length > 0) {
+          resolve();
+        } else {
+          setTimeout(checkMessages, 50);
+        }
+      };
+      checkMessages();
+    });
+
+    let findUnreadMessage = async () => {
+        let unreadMessages = Array.from(document.querySelectorAll(".message.unread"));
+        if (unreadMessages.length === 0) {
+            return null;
+        }
+        return unreadMessages[0];
+    };
+
+    const firstUnread = await findUnreadMessage();
+    if (!firstUnread) return;
+
+    const smoothScroll = () => {
+      const targetPosition =
+        firstUnread.offsetTop - messagesDiv.clientHeight / 3;
+      const startPosition = messagesDiv.scrollTop;
+      const distance = targetPosition - startPosition;
+      const duration = 500;
+      let start = null;
+
+      const animation = (currentTime) => {
+        if (!start) start = currentTime;
+        const progress = (currentTime - start) / duration;
+
+        if (progress < 1) {
+          const ease = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+          const currentPosition = startPosition + distance * ease(progress);
+          messagesDiv.scrollTop = currentPosition;
+          window.requestAnimationFrame(animation);
+        } else {
+          messagesDiv.scrollTop = targetPosition;
+        }
+      };
+
+      window.requestAnimationFrame(animation);
+    };
+
+    try {
+      smoothScroll();
+    } catch (error) {
+      console.error("Error during smooth scroll:", error);
+      firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const unreadMessages = document.querySelectorAll(".message.unread");
+    unreadMessages.forEach((msg) => {
+      if (!msg.classList.contains("unread")) {
+        msg.classList.add("unread");
+      }
+    });
+  }
+
+  async function updateFavicon() {
+    const currentUrl = window.location.href;
+    const hasUnreadMessages = !readAll;
+
+    let link = document.querySelector(
+      'link[rel="icon"], link[rel="shortcut icon"]',
+    );
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+
+    if (hasUnreadMessages) {
+      let notificationIconPath;
+
+      if (currentUrl.includes("lakesideschool.instructure.com")) {
+        iconUrl =
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/main/Favicon/CanvasNotification.png";
+      } else if (currentUrl.includes("google.com")) {
+        iconUrl =
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/main/Favicon/GoogleNotification.png";
+      }
+
+      if (iconUrl) {
+        try {
+          link.href = iconUrl;
+        } catch (error) {
+          console.error("Error loading notification favicon:", error);
+        }
+      }
+    } else {
+      if (currentUrl.includes("lakesideschool.instructure.com")) {
+        link.href =
+          "https://instructure-uploads-pdx.s3.us-west-2.amazonaws.com/account_211800000000000001/attachments/3701/smallershield.png";
+      } else if (currentUrl.includes("google.com")) {
+        link.href = "https://google.com/favicon.ico";
+      }
+    }
+  }
 
   async function checkForUpdates() {
     const userRef = ref(
@@ -106,7 +284,6 @@
   }
 
   function showUpdatePopup(updates, newUpdates) {
-    let isDark = localStorage.getItem("bookmarklet-mode") === "dark";
     const popup = document.createElement("div");
     popup.classList.add("update-popup");
     popup.style.position = "fixed";
@@ -167,47 +344,174 @@
   async function fetchChatList() {
     const chatRef = ref(database, "Chat Info");
 
-    onValue(chatRef, (snapshot) => {
+    onValue(chatRef, async (snapshot) => {
       const chatData = snapshot.val();
       if (chatData) {
-        populateSidebar(chatData);
+        await populateSidebar(chatData);
+        const generalServer = Array.from(
+          document.querySelectorAll(".server"),
+        ).find((server) => server.textContent.trim() === "General");
+        if (generalServer) {
+          generalServer.classList.add("selected");
+        }
       }
     });
   }
+
   var currentChat = "General";
   let currentChatListener = null;
 
-  function populateSidebar(chatData) {
+  async function populateSidebar(chatData) {
+    if (Object.keys(readMessages).length === 0) {
+      await initializeReadMessages();
+    }
+
     const sidebar = document.getElementById("server-list");
     sidebar.innerHTML = "";
 
+    const chatElements = new Map();
+
     for (const [chatName, chatInfo] of Object.entries(chatData)) {
       const { Description, Members, Type } = chatInfo;
+      const memberList =
+        Type === "Private"
+          ? Members.split(",").map((m) => m.trim().replace(/\s+/g, ""))
+          : [];
 
       if (
         Type === "Public" ||
-        (Type === "Private" &&
-          Members.split(", ").includes(`${email.replace(/\./g, "*")}`))
+        (Type === "Private" && memberList.includes(email.replace(/\./g, "*")))
       ) {
         const chatElement = document.createElement("div");
         chatElement.className = "server";
         chatElement.textContent = chatName;
         chatElement.title = Description;
 
+        const badge = document.createElement("span");
+        badge.className = "unread-badge";
+        badge.style.display = "none";
+        badge.style.backgroundColor = isDark ? "#ff6b6b" : "#ff4444";
+        badge.style.color = "white";
+        badge.style.borderRadius = "10px";
+        badge.style.padding = "2px 6px";
+        badge.style.fontSize = "12px";
+        badge.style.marginLeft = "5px";
+        chatElement.appendChild(badge);
+
         chatElement.onclick = function () {
+          document
+            .querySelectorAll(".server")
+            .forEach((s) => s.classList.remove("selected"));
+          this.classList.add("selected");
           loadMessages(chatName);
-          document.getElementById("messages").scrollTop =
-            messagesDiv.scrollHeight;
+          updateUnreadCount(chatName);
         };
 
         sidebar.appendChild(chatElement);
+        chatElements.set(chatName, chatElement);
       }
     }
+
+    chatElements.forEach((element, chatName) => {
+      const chatRef = ref(database, `Chats/${chatName}`);
+      onValue(chatRef, async (snapshot) => {
+        const messages = snapshot.val() || {};
+        const lastReadMessage = readMessages[chatName] || "";
+        let unreadCount = 0;
+
+        Object.entries(messages).forEach(([messageId, message]) => {
+          if (
+            message.User !== email &&
+            (!lastReadMessage || messageId > lastReadMessage)
+          ) {
+            unreadCount++;
+          }
+        });
+
+        const badge = element.querySelector(".unread-badge");
+        element.setAttribute("data-unread", unreadCount);
+
+        if (unreadCount > 0) {
+          badge.textContent = unreadCount > 99 ? "99+" : unreadCount;
+          badge.style.display = "inline";
+        } else {
+          badge.style.display = "none";
+        }
+      });
+    });
+
+    updateReadAllStatus();
+  }
+
+  async function updateUnreadCount(chatName) {
+    const chatRef = ref(database, `Chats/${chatName}`);
+    const snapshot = await get(chatRef);
+    const messages = snapshot.val() || {};
+
+    const accountRef = ref(
+      database,
+      `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+    );
+    const lastReadSnapshot = await get(accountRef);
+    const lastReadMessage = lastReadSnapshot.val() || "";
+    let unreadCount = 0;
+
+    const sortedMessages = Object.entries(messages).sort(
+      ([, a], [, b]) => new Date(a.Date) - new Date(b.Date),
+    );
+
+    let lastReadIndex = -1;
+    sortedMessages.forEach(([messageId, message], index) => {
+      if (messageId === lastReadMessage) {
+        lastReadIndex = index;
+      }
+    });
+
+    sortedMessages.forEach(([messageId, message], index) => {
+      if (message.User !== email && index > lastReadIndex) {
+        unreadCount++;
+      }
+    });
+
+    const chatElement = Array.from(document.querySelectorAll(".server")).find(
+      (el) => el.textContent.trim().includes(chatName.trim()),
+    );
+
+    if (chatElement) {
+      const badge = chatElement.querySelector(".unread-badge");
+      chatElement.setAttribute("data-unread", unreadCount);
+
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount > 99 ? "99+" : unreadCount;
+        badge.style.display = "inline";
+      } else {
+        badge.style.display = "none";
+      }
+
+      if (badge) {
+        badge.style.backgroundColor = isDark ? "#ff6b6b" : "#ff4444";
+        badge.style.color = "white";
+      }
+    }
+
+    updateReadAllStatus();
   }
   async function loadMessages(chatName) {
+    document.getElementById("bookmarklet-gui").scrollTop = 0;
     const messagesDiv = document.getElementById("messages");
     messagesDiv.innerHTML = "";
     currentChat = chatName;
+
+    const chatRef = ref(database, `Chats/${chatName}`);
+    const snapshot = await get(chatRef);
+    const messages = snapshot.val();
+    if (messages) {
+      const messageIds = Object.keys(messages).sort();
+      if (messageIds.length > 0) {
+        const latestMessageId = messageIds[messageIds.length - 1];
+        await markMessagesAsRead(chatName, latestMessageId);
+      }
+    }
 
     if (currentChatListener) {
       currentChatListener();
@@ -220,7 +524,7 @@
     let isLoadingMore = false;
     let initialLoad = true;
     let oldestLoadedIndex = null;
-    const MESSAGES_PER_LOAD = 50;
+    const MESSAGES_PER_LOAD = 100;
 
     messagesDiv.addEventListener("scroll", async () => {
       if (
@@ -257,7 +561,19 @@
     function formatDate(dateString) {
       const messageDate = new Date(dateString);
       const now = new Date();
-      const diffTime = now - messageDate;
+
+      const messageMidnight = new Date(
+        messageDate.getFullYear(),
+        messageDate.getMonth(),
+        messageDate.getDate(),
+      );
+      const todayMidnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      );
+
+      const diffTime = todayMidnight - messageMidnight;
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
       if (diffDays === 0) {
@@ -284,12 +600,12 @@
       let lastUser = null;
       let lastTimestamp = null;
       let lastMessageDiv = null;
+      const lastReadMessage = readMessages[chatName] || "";
 
       const fragment = document.createDocumentFragment();
 
-      const messagesToProcess = prepend
-        ? [...newMessages].reverse()
-        : newMessages;
+      const messagesToProcess = prepend ? newMessages : [...newMessages];
+      messagesToProcess.sort((a, b) => new Date(a.Date) - new Date(b.Date));
 
       if (!prepend && messagesDiv.children.length > 0) {
         lastMessageDiv = messagesDiv.lastChild;
@@ -318,10 +634,21 @@
           messageDiv.classList.add(
             message.User === email ? "sent" : "received",
           );
+
+          if (
+            message.User !== email &&
+            (!lastReadMessage || message.id > lastReadMessage)
+          ) {
+            messageDiv.classList.add("unread");
+          } else {
+            messageDiv.classList.remove("unread");
+          }
+
           messageDiv.style.marginTop = "10px";
           messageDiv.dataset.messageId = message.id;
           messageDiv.dataset.user = username;
           messageDiv.dataset.date = messageDate;
+          messageDiv.dataset.lastMessageId = message.id;
 
           const headerInfo = document.createElement("p");
           headerInfo.className = "send-info";
@@ -344,8 +671,15 @@
           messageContent.textContent = message.Message;
           messageContent.style.marginTop = "5px";
           lastMessageDiv.appendChild(messageContent);
+          lastMessageDiv.dataset.lastMessageId = message.id;
+          if (
+            message.User !== email &&
+            (!lastReadMessage || message.id > lastReadMessage)
+          ) {
+            lastMessageDiv.classList.add("unread");
+          }
         }
-
+        document.getElementById("bookmarklet-gui").scrollTop = 0;
         lastUser = username;
         lastTimestamp = messageDate;
         appendedMessages.add(message.id);
@@ -364,6 +698,7 @@
           });
         }
       }
+      document.getElementById("bookmarklet-gui").scrollTop = 0;
     }
 
     currentChatListener = onValue(messagesRef, async (snapshot) => {
@@ -388,6 +723,9 @@
           );
           await appendMessages(recentMessages);
           initialLoad = false;
+          setTimeout(async () => {
+            await scrollToFirstUnread(chatName);
+          }, 100);
         } else {
           const wasNearBottom =
             messagesDiv.scrollHeight -
@@ -422,12 +760,43 @@
     });
   }
 
+  async function markMessagesAsRead(chatName, messageId) {
+    const messageElement = document.querySelector(
+      `[data-message-id="${messageId}"]`,
+    );
+    if (!messageElement) return;
+
+    const lastMessageId = messageElement.dataset.lastMessageId;
+    if (!lastMessageId) return;
+
+    const currentLastRead = readMessages[chatName] || "";
+    if (currentLastRead && lastMessageId <= currentLastRead) return;
+
+    readMessages[chatName] = lastMessageId;
+
+    const readMessagesRef = ref(
+      database,
+      `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+    );
+    await set(readMessagesRef, lastMessageId);
+
+    document.querySelectorAll(`.message.received`).forEach((msg) => {
+      const msgId = msg.dataset.lastMessageId;
+      if (msgId && msgId <= lastMessageId && msg.dataset.user !== email) {
+        msg.classList.remove("unread");
+      }
+    });
+    document.getElementById("bookmarklet-gui").scrollTop = 0;
+    await updateUnreadCount(chatName);
+  }
+
   /* Function to send a message */
   async function sendMessage() {
     const messagesRef = ref(database, `Chats/${currentChat}`);
     const messageInput = document.getElementById("message-input");
     let message = messageInput.value.trim();
     message = convertHtmlToEmoji(joypixels.shortnameToImage(message));
+
     if (message) {
       const newMessageRef = push(messagesRef);
       await update(newMessageRef, {
@@ -435,9 +804,21 @@
         Message: message,
         Date: Date.now(),
       });
+
       messageInput.value = "";
+
+      const snapshot = await get(messagesRef);
+      const messages = snapshot.val() || {};
+
+      const allMessageIds = Object.keys(messages).sort();
+      if (allMessageIds.length > 0) {
+        const latestMessageId = allMessageIds[allMessageIds.length - 1];
+        await markMessagesAsRead(currentChat, latestMessageId);
+      }
     }
+    document.getElementById("bookmarklet-gui").scrollTop = 0;
   }
+
   function convertHtmlToEmoji(inputString) {
     return inputString.replace(
       /<img[^>]*alt="([^"]*)"[^>]*>/g,
@@ -461,7 +842,16 @@
       return `${diffDays} days ago`;
     }
   }
-  checkForUpdates();
+
+  document.getElementById("messages").addEventListener("click", async (e) => {
+    const messageElement = e.target.closest(".message");
+    if (messageElement) {
+      const messageId = messageElement.dataset.messageId;
+      if (messageId) {
+        await markMessagesAsRead(currentChat, messageId);
+      }
+    }
+  });
 
   /* Attach send message functionality to the button */
   const sendButton = document.getElementById("send-button");
@@ -482,6 +872,191 @@
     }
   });
 
+  async function markAllMessagesAsRead() {
+    try {
+      document.querySelectorAll(".message.unread").forEach((msg) => {
+        msg.classList.remove("unread");
+      });
+
+      document.querySelectorAll(".unread-badge").forEach((badge) => {
+        badge.style.display = "none";
+        badge.textContent = "0";
+      });
+
+      const chatInfoRef = ref(database, "Chat Info");
+      const chatInfoSnapshot = await get(chatInfoRef);
+      const chatInfo = chatInfoSnapshot.val();
+
+      const readMessagesUpdates = {};
+
+      for (const [chatName, chatDetails] of Object.entries(chatInfo)) {
+        const isAccessible =
+          chatDetails.Type === "Public" ||
+          (chatDetails.Type === "Private" &&
+            chatDetails.Members.split(",").includes(email.replace(/\./g, "*")));
+
+        if (isAccessible) {
+          const chatRef = ref(database, `Chats/${chatName}`);
+          const chatSnapshot = await get(chatRef);
+          const messages = chatSnapshot.val();
+
+          if (messages) {
+            const messageIds = Object.keys(messages).sort();
+            const latestMessageId = messageIds[messageIds.length - 1];
+
+            const readMessageRef = ref(
+              database,
+              `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+            );
+            await set(readMessageRef, latestMessageId);
+
+            readMessages[chatName] = latestMessageId;
+          }
+        }
+      }
+
+      updateReadAllStatus();
+      updateFavicon();
+    } catch (error) {
+      console.error("Error marking all messages as read:", error);
+      alert("Failed to mark all messages as read. Please try again.");
+    }
+  }
+
+  const hideSidebarButton = document.getElementById("hide-left-sidebar");
+  let isSidebarHidden = false;
+
+  hideSidebarButton.addEventListener("click", function () {
+    const leftSidebar = document.getElementById("left-sidebar");
+    const rightSidebar = document.getElementById("right-sidebar");
+    const chatScreen = document.getElementById("chat-screen");
+
+    if (!isSidebarHidden) {
+      leftSidebar.style.transition = "all 0.3s ease";
+      leftSidebar.style.width = "0";
+      leftSidebar.style.opacity = "0";
+      leftSidebar.style.overflow = "hidden";
+      leftSidebar.style.display = "none";
+
+      rightSidebar.style.width = "100%";
+      rightSidebar.style.left = "0";
+
+      hideSidebarButton.textContent = "Show Left Sidebar";
+      isSidebarHidden = true;
+    } else {
+      leftSidebar.style.transition = "all 0.3s ease";
+      leftSidebar.style.width = "20%";
+      leftSidebar.style.opacity = "1";
+      leftSidebar.style.overflow = "visible";
+      leftSidebar.style.display = "block";
+
+      rightSidebar.style.width = "80%";
+      rightSidebar.style.left = "20%";
+
+      hideSidebarButton.textContent = "Hide Left Sidebar";
+      isSidebarHidden = false;
+    }
+  });
+
+  document.getElementById("read-all").addEventListener("click", async () => {
+    try {
+      await markAllMessagesAsRead();
+      updateFavicon();
+    } catch (error) {
+      console.error("Error marking all messages as read:", error);
+    }
+  });
+
+  gui.querySelector("#bookmarklet-close").onclick = function () {
+    const currentUrl = window.location.href;
+    let link = document.querySelector(
+      'link[rel="icon"], link[rel="shortcut icon"]',
+    );
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+
+    if (currentUrl.includes("lakesideschool.instructure.com")) {
+      link.href =
+        "https://instructure-uploads-pdx.s3.us-west-2.amazonaws.com/account_211800000000000001/attachments/3701/smallershield.png";
+    } else if (currentUrl.includes("google.com")) {
+      link.href = "https://google.com/favicon.ico";
+    }
+
+    gui.remove();
+  };
+
+  document
+    .getElementById("customize-profile")
+    .addEventListener("click", async function () {
+      const customizeScreen = document.getElementById(
+        "customize-account-screen",
+      );
+      const chatScreen = document.getElementById("chat-screen");
+
+      document.getElementById("create-username").value = "";
+      document.getElementById("create-bio").value = "";
+      document.getElementById("create-picture").value = "";
+
+      const accountRef = ref(database, `Accounts/${email.replace(/\./g, "*")}`);
+      const snapshot = await get(accountRef);
+      const userData = snapshot.val();
+
+      if (userData) {
+        document.getElementById("create-username").value =
+          userData.Username || "";
+        document.getElementById("create-bio").value = userData.Bio || "";
+      }
+
+      chatScreen.classList.add("hidden");
+      customizeScreen.classList.remove("hidden");
+    });
+
+  document.getElementById("submit-customize").onclick = async function () {
+    const username = document.getElementById("create-username").value.trim();
+    const bio = document.getElementById("create-bio").value.trim();
+    const pictureInput = document.getElementById("create-picture");
+    const pictureFile = pictureInput.files[0];
+    const chatScreen = document.getElementById("chat-screen");
+    const customizeScreen = document.getElementById("customize-account-screen");
+
+    try {
+      let imageUrl = "None";
+      if (pictureFile) {
+        const storage = getStorage();
+        const fileRef = storageRef(
+          storage,
+          `ProfilePictures/${email.replace(/\./g, "*")}`,
+        );
+        await uploadBytes(fileRef, pictureFile);
+        imageUrl = await getDownloadURL(fileRef);
+      }
+
+      const accountsRef = ref(
+        database,
+        `Accounts/${email.replace(/\./g, "*")}`,
+      );
+      const snapshot = await get(accountsRef);
+      const existingData = snapshot.val() || {};
+
+      const updatedAccountData = {
+        ...existingData,
+        Username: username || "Anonymous",
+        Bio: bio || "I'm a yapper",
+        Image: imageUrl !== "None" ? imageUrl : existingData.Image || "None",
+      };
+
+      await set(accountsRef, updatedAccountData);
+
+      chatScreen.classList.remove("hidden");
+      customizeScreen.classList.add("hidden");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
+  };
   document
     .getElementById("create-new-server")
     .addEventListener("click", async function () {
@@ -493,7 +1068,24 @@
       const channelDescription = document.getElementById("channel-description");
       const submitButton = document.getElementById("submit-channel");
       const backButton = document.getElementById("back-channel");
+      const membersContainer = document.getElementById("members-container");
+      const selectedMembers = document.getElementById("selected-members");
+      const membersList = document.getElementById("members-list");
 
+      function resetForm() {
+        channelType.value = "Public";
+        membersContainer.style.display = "none";
+        membersList.innerHTML = "";
+        selectedMembers.innerHTML = "";
+        if (!submitButton.clicked) {
+          channelName.value = "";
+          channelDescription.value = "";
+        }
+      }
+
+      resetForm();
+
+      let availableMembers = [];
       document
         .getElementById("channel-type")
         .addEventListener("change", function () {
@@ -506,21 +1098,29 @@
           }
         });
 
-      async function loadMemberOptions() {
+      function loadMemberOptions() {
         const membersContainer = document.getElementById("members-container");
         const membersList = document.getElementById("members-list");
         const memberSearch = document.getElementById("member-search");
         const selectedMembers = document.getElementById("selected-members");
         let availableMembers = [];
 
-        const accountsRef = ref(database, "Accounts");
-        try {
+        async function updateAvailableMembers() {
+          const accountsRef = ref(database, "Accounts");
           const snapshot = await get(accountsRef);
           const accounts = snapshot.val();
 
+          const selectedEmails = new Set(
+            Array.from(document.querySelectorAll(".selected-member"))
+              .map((el) => el.textContent.trim().replace(/×$/, ""))
+              .map((email) => email.replace(/\./g, "*")),
+          );
+
           availableMembers = Object.keys(accounts)
             .filter(
-              (accountEmail) => accountEmail !== email.replace(/\./g, "*"),
+              (accountEmail) =>
+                accountEmail !== email.replace(/\./g, "*") &&
+                !selectedEmails.has(accountEmail),
             )
             .map((accountEmail) => ({
               id: accountEmail,
@@ -528,8 +1128,6 @@
             }));
 
           renderMembersList(availableMembers);
-        } catch (error) {
-          console.error("Error loading members:", error);
         }
 
         function renderMembersList(members) {
@@ -547,13 +1145,29 @@
           const memberElement = document.createElement("div");
           memberElement.className = "selected-member";
           memberElement.innerHTML = `
-            ${member.email}
-            <span class="remove-member" onclick="this.parentElement.remove()">×</span>
-        `;
+        ${member.email}
+        <span class="remove-member">×</span>
+    `;
+
+          memberElement.querySelector(".remove-member").onclick = () => {
+            memberElement.remove();
+            availableMembers.push(member);
+            availableMembers.sort((a, b) => a.email.localeCompare(b.email));
+            renderMembersList(availableMembers);
+          };
+
           selectedMembers.appendChild(memberElement);
+
+          availableMembers = availableMembers.filter(
+            (availableMember) => availableMember.id !== member.id,
+          );
+          renderMembersList(availableMembers);
+
           membersList.style.display = "none";
           memberSearch.value = "";
         }
+
+        updateAvailableMembers();
 
         memberSearch.onfocus = () => {
           membersList.style.display = "block";
@@ -584,6 +1198,14 @@
           alert("Please enter a channel name");
           return;
         }
+        const chatInfoRef = ref(database, `Chat Info/${name}`);
+        const snapshot = await get(chatInfoRef);
+        if (snapshot.exists()) {
+          alert(
+            "A channel with this name already exists. Please choose a different name.",
+          );
+          return;
+        }
 
         let members = [];
         members.push(email.replace(/\./g, "*"));
@@ -597,14 +1219,19 @@
           }
           members = members.concat(
             Array.from(selectedMemberElements).map((el) =>
-              el.textContent.trim().replace(/×$/, "").replace(/\./g, "*"),
+              el.textContent
+                .trim()
+                .replace(/×$/, "")
+                .replace(/\./g, "*")
+                .trim()
+                .replace(/\s+/g, ""),
             ),
           );
         }
 
         const channelData = {
           Description: description || "No description provided",
-          Members: type === "Private" ? members.join(", ") : "None",
+          Members: type === "Private" ? members.join(",") : "None",
           Type: type,
         };
 
@@ -623,9 +1250,7 @@
         }
       });
       backButton.addEventListener("click", async function () {
-        channelName.value = "";
-        channelDescription.value = "";
-        channelType.value = "Public";
+        resetForm();
         document.getElementById("channel-screen").classList.add("hidden");
         chatScreen.style.display = "flex";
       });
@@ -634,8 +1259,29 @@
       channelMembers.disabled = true;
     });
 
+  function setupUnreadCountUpdates() {
+    const chatsRef = ref(database, "Chats");
+
+    onValue(chatsRef, async (snapshot) => {
+      const chats = snapshot.val();
+      if (!chats) return;
+
+      const servers = document.querySelectorAll(".server");
+      for (const server of servers) {
+        const chatName = server.textContent.trim();
+        if (chats[chatName]) {
+          await updateUnreadCount(chatName);
+        }
+      }
+    });
+  }
+
   /* Load existing messages */
+  setupDarkModeDetection();
+  checkForUpdates();
   fetchChatList();
+  setupUnreadCountUpdates();
+  await initializeReadMessages();
   loadMessages("General");
   const messagesDiv = document.getElementById("messages");
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
