@@ -56,7 +56,7 @@
 
         try {
           const response = await fetch(
-            "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js"
+            "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js",
           );
           const chatCode = await response.text();
           try {
