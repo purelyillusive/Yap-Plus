@@ -138,116 +138,85 @@
     updateBadgeStyles();
   }
 
-async function scrollToFirstUnread(chatName) {
+  async function scrollToFirstUnread(chatName) {
     const messagesDiv = document.getElementById("messages");
-    
+
     await new Promise((resolve) => {
-        const checkMessages = () => {
-            if (messagesDiv.children.length > 0) {
-                resolve();
-            } else {
-                setTimeout(checkMessages, 50);
-            }
-        };
-        checkMessages();
+      const checkMessages = () => {
+        if (messagesDiv.children.length > 0) {
+          resolve();
+        } else {
+          setTimeout(checkMessages, 50);
+        }
+      };
+      checkMessages();
     });
 
-    const findFirstUnread = async () => {
-        let previousLength = messagesDiv.children.length;
-        let previousScrollTop = messagesDiv.scrollTop;
+    let findUnreadMessage = async () => {
+      let unreadMessages = Array.from(
+        document.querySelectorAll(".message.unread"),
+      );
+      if (unreadMessages.length === 0) {
+        if (messagesDiv.scrollTop > 0) {
+          let previousHeight = messagesDiv.scrollHeight;
+          messagesDiv.scrollTop = Math.max(
+            0,
+            messagesDiv.scrollTop - messagesDiv.clientHeight,
+          );
 
-        while (true) {
-            const unreadMessages = Array.from(document.querySelectorAll('.message.unread'));
-            if (unreadMessages.length > 0) {
-                return unreadMessages[0];
-            }
-
-            if (messagesDiv.scrollTop <= 100) {
-                messagesDiv.scrollTop = 0;
-
-                await new Promise(resolve => {
-                    const checkNewMessages = () => {
-                        if (messagesDiv.children.length > previousLength || 
-                            (messagesDiv.scrollTop !== previousScrollTop && messagesDiv.scrollTop > 0)) {
-                            previousLength = messagesDiv.children.length;
-                            previousScrollTop = messagesDiv.scrollTop;
-                            setTimeout(resolve, 100);
-                        } else if (messagesDiv.scrollTop === 0 && messagesDiv.children.length === previousLength) {
-                            resolve();
-                        } else {
-                            setTimeout(checkNewMessages, 50);
-                        }
-                    };
-                    setTimeout(checkNewMessages, 50);
-                });
-            } else {
-                return null;
-            }
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          if (messagesDiv.scrollHeight > previousHeight) {
+            return findUnreadMessage();
+          }
         }
+        return null;
+      }
+      return unreadMessages[0];
     };
 
-    const firstUnread = await findFirstUnread();
+    const firstUnread = await findUnreadMessage();
     if (!firstUnread) return;
 
-    const isInView = await new Promise(resolve => {
-        const observer = new IntersectionObserver(entries => {
-            resolve(entries[0].isIntersecting);
-            observer.disconnect();
-        });
-        observer.observe(firstUnread);
-    });
+    const smoothScroll = () => {
+      const targetPosition =
+        firstUnread.offsetTop - messagesDiv.clientHeight / 3;
+      const startPosition = messagesDiv.scrollTop;
+      const distance = targetPosition - startPosition;
+      const duration = 500;
+      let start = null;
 
-    if (isInView) return;
+      const animation = (currentTime) => {
+        if (!start) start = currentTime;
+        const progress = (currentTime - start) / duration;
 
-    let scrollAttempts = 0;
-    const maxAttempts = 3;
-
-    const smoothScroll = async () => {
-        if (scrollAttempts >= maxAttempts) return;
-        scrollAttempts++;
-
-        const startPosition = messagesDiv.scrollTop;
-        const targetPosition = firstUnread.offsetTop - (messagesDiv.clientHeight / 3);
-        
-        await new Promise(resolve => {
-            const step = () => {
-                const currentPosition = messagesDiv.scrollTop;
-                const distance = targetPosition - currentPosition;
-                const step = distance * 0.2;
-
-                if (Math.abs(distance) < 1 || scrollAttempts >= maxAttempts) {
-                    messagesDiv.scrollTop = targetPosition;
-                    resolve();
-                } else {
-                    messagesDiv.scrollTop = currentPosition + step;
-                    requestAnimationFrame(step);
-                }
-            };
-            requestAnimationFrame(step);
-        });
-
-        const finalPosition = messagesDiv.scrollTop;
-        if (Math.abs(finalPosition - targetPosition) > 10) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            await smoothScroll();
+        if (progress < 1) {
+          const ease = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+          const currentPosition = startPosition + distance * ease(progress);
+          messagesDiv.scrollTop = currentPosition;
+          window.requestAnimationFrame(animation);
+        } else {
+          messagesDiv.scrollTop = targetPosition;
         }
+      };
+
+      window.requestAnimationFrame(animation);
     };
 
     try {
-        await smoothScroll();
+      smoothScroll();
     } catch (error) {
-        console.error('Error during smooth scroll:', error);
-        firstUnread.scrollIntoView({ block: "center" });
+      console.error("Error during smooth scroll:", error);
+      firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
     }
 
-    await new Promise(resolve => setTimeout(resolve, 100));
-    Array.from(document.querySelectorAll('.message.unread')).forEach(msg => {
-        if (!msg.classList.contains('unread')) {
-            msg.classList.add('unread');
-        }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const unreadMessages = document.querySelectorAll(".message.unread");
+    unreadMessages.forEach((msg) => {
+      if (!msg.classList.contains("unread")) {
+        msg.classList.add("unread");
+      }
     });
-}
-
+  }
   async function updateFavicon() {
     const currentUrl = window.location.href;
     const hasUnreadMessages = !readAll;
@@ -487,54 +456,59 @@ async function scrollToFirstUnread(chatName) {
     updateReadAllStatus();
   }
 
-async function updateUnreadCount(chatName) {
+  async function updateUnreadCount(chatName) {
     const chatRef = ref(database, `Chats/${chatName}`);
     const snapshot = await get(chatRef);
     const messages = snapshot.val() || {};
-    
-    const accountRef = ref(database, `Accounts/${email.replace(/\./g, '*')}/readMessages/${chatName}`);
+
+    const accountRef = ref(
+      database,
+      `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+    );
     const lastReadSnapshot = await get(accountRef);
     const lastReadMessage = lastReadSnapshot.val() || "";
     let unreadCount = 0;
-    
-    const sortedMessages = Object.entries(messages)
-        .sort(([, a], [, b]) => new Date(a.Date) - new Date(b.Date));
-    
+
+    const sortedMessages = Object.entries(messages).sort(
+      ([, a], [, b]) => new Date(a.Date) - new Date(b.Date),
+    );
+
     let lastReadIndex = -1;
     sortedMessages.forEach(([messageId, message], index) => {
-        if (messageId === lastReadMessage) {
-            lastReadIndex = index;
-        }
+      if (messageId === lastReadMessage) {
+        lastReadIndex = index;
+      }
     });
 
     sortedMessages.forEach(([messageId, message], index) => {
-        if (message.User !== email && index > lastReadIndex) {
-            unreadCount++;
-        }
+      if (message.User !== email && index > lastReadIndex) {
+        unreadCount++;
+      }
     });
-    
-    const chatElement = Array.from(document.querySelectorAll('.server'))
-        .find(el => el.textContent.trim().includes(chatName.trim()));
-    
+
+    const chatElement = Array.from(document.querySelectorAll(".server")).find(
+      (el) => el.textContent.trim().includes(chatName.trim()),
+    );
+
     if (chatElement) {
-        const badge = chatElement.querySelector('.unread-badge');
-        chatElement.setAttribute('data-unread', unreadCount);
-        
-        if (unreadCount > 0) {
-            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-            badge.style.display = 'inline';
-        } else {
-            badge.style.display = 'none';
-        }
-        
-        if (badge) {
-            badge.style.backgroundColor = isDark ? '#ff6b6b' : '#ff4444';
-            badge.style.color = 'white';
-        }
+      const badge = chatElement.querySelector(".unread-badge");
+      chatElement.setAttribute("data-unread", unreadCount);
+
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount > 99 ? "99+" : unreadCount;
+        badge.style.display = "inline";
+      } else {
+        badge.style.display = "none";
+      }
+
+      if (badge) {
+        badge.style.backgroundColor = isDark ? "#ff6b6b" : "#ff4444";
+        badge.style.color = "white";
+      }
     }
-    
+
     updateReadAllStatus();
-}
+  }
   async function loadMessages(chatName) {
     document.getElementById("bookmarklet-gui").scrollTop = 0;
     const messagesDiv = document.getElementById("messages");
@@ -643,16 +617,20 @@ async function updateUnreadCount(chatName) {
 
       const fragment = document.createDocumentFragment();
 
-const messagesToProcess = prepend ? newMessages : [...newMessages];
-    messagesToProcess.sort((a, b) => new Date(a.Date) - new Date(b.Date));
-    
-    if (!prepend && messagesDiv.children.length > 0) {
+      const messagesToProcess = prepend ? newMessages : [...newMessages];
+      messagesToProcess.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+
+      if (!prepend && messagesDiv.children.length > 0) {
         lastMessageDiv = messagesDiv.lastChild;
         lastUser = lastMessageDiv.dataset.user;
         lastTimestamp = new Date(lastMessageDiv.dataset.date);
-    }
-    
-    const wasNearBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop - messagesDiv.clientHeight <= 20;
+      }
+
+      const wasNearBottom =
+        messagesDiv.scrollHeight -
+          messagesDiv.scrollTop -
+          messagesDiv.clientHeight <=
+        20;
 
       for (const message of messagesToProcess) {
         if (appendedMessages.has(message.id)) continue;
@@ -907,51 +885,56 @@ const messagesToProcess = prepend ? newMessages : [...newMessages];
     }
   });
 
-async function markAllMessagesAsRead() {
+  async function markAllMessagesAsRead() {
     try {
-        document.querySelectorAll('.message.unread').forEach(msg => {
-            msg.classList.remove('unread');
-        });
-        
-        document.querySelectorAll('.unread-badge').forEach(badge => {
-            badge.style.display = 'none';
-            badge.textContent = '0';
-        });
-        
-        const chatInfoRef = ref(database, 'Chat Info');
-        const chatInfoSnapshot = await get(chatInfoRef);
-        const chatInfo = chatInfoSnapshot.val();
-        
-        const readMessagesUpdates = {};
-        
-        for (const [chatName, chatDetails] of Object.entries(chatInfo)) {
-            const isAccessible = chatDetails.Type === 'Public' || 
-                (chatDetails.Type === 'Private' && chatDetails.Members.split(',').includes(email.replace(/\./g, '*')));
-            
-            if (isAccessible) {
-                const chatRef = ref(database, `Chats/${chatName}`);
-                const chatSnapshot = await get(chatRef);
-                const messages = chatSnapshot.val();
-                
-                if (messages) {
-                    const messageIds = Object.keys(messages).sort();
-                    const latestMessageId = messageIds[messageIds.length - 1];
-                    
-                    const readMessageRef = ref(database, `Accounts/${email.replace(/\./g, '*')}/readMessages/${chatName}`);
-                    await set(readMessageRef, latestMessageId);
-                    
-                    readMessages[chatName] = latestMessageId;
-                }
-            }
+      document.querySelectorAll(".message.unread").forEach((msg) => {
+        msg.classList.remove("unread");
+      });
+
+      document.querySelectorAll(".unread-badge").forEach((badge) => {
+        badge.style.display = "none";
+        badge.textContent = "0";
+      });
+
+      const chatInfoRef = ref(database, "Chat Info");
+      const chatInfoSnapshot = await get(chatInfoRef);
+      const chatInfo = chatInfoSnapshot.val();
+
+      const readMessagesUpdates = {};
+
+      for (const [chatName, chatDetails] of Object.entries(chatInfo)) {
+        const isAccessible =
+          chatDetails.Type === "Public" ||
+          (chatDetails.Type === "Private" &&
+            chatDetails.Members.split(",").includes(email.replace(/\./g, "*")));
+
+        if (isAccessible) {
+          const chatRef = ref(database, `Chats/${chatName}`);
+          const chatSnapshot = await get(chatRef);
+          const messages = chatSnapshot.val();
+
+          if (messages) {
+            const messageIds = Object.keys(messages).sort();
+            const latestMessageId = messageIds[messageIds.length - 1];
+
+            const readMessageRef = ref(
+              database,
+              `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+            );
+            await set(readMessageRef, latestMessageId);
+
+            readMessages[chatName] = latestMessageId;
+          }
         }
-        
-        updateReadAllStatus();
+      }
+
+      updateReadAllStatus();
       updateFavicon();
     } catch (error) {
-        console.error('Error marking all messages as read:', error);
-        alert('Failed to mark all messages as read. Please try again.');
+      console.error("Error marking all messages as read:", error);
+      alert("Failed to mark all messages as read. Please try again.");
     }
-}
+  }
 
   const hideSidebarButton = document.getElementById("hide-left-sidebar");
   let isSidebarHidden = false;
