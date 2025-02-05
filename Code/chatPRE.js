@@ -140,7 +140,7 @@
 
 async function scrollToFirstUnread(chatName) {
     const messagesDiv = document.getElementById("messages");
-    
+  
     await new Promise((resolve) => {
         const checkMessages = () => {
             if (messagesDiv.children.length > 0) {
@@ -151,33 +151,70 @@ async function scrollToFirstUnread(chatName) {
         };
         checkMessages();
     });
-    
-    async function findAndScrollToUnread() {
-        const unreadMessages = Array.from(document.querySelectorAll('.message.unread'));
-        if (unreadMessages.length === 0) return false;
+
+    const unreadMessages = Array.from(document.querySelectorAll('.message.unread'));
+    if (unreadMessages.length === 0) return;
+
+    const firstUnread = unreadMessages[0];
+    if (!firstUnread) return;
+
+    const isInView = await new Promise(resolve => {
+        const observer = new IntersectionObserver(entries => {
+            resolve(entries[0].isIntersecting);
+            observer.disconnect();
+        });
+        observer.observe(firstUnread);
+    });
+
+    if (isInView) return;
+
+    let scrollAttempts = 0;
+    const maxAttempts = 3;
+
+    const smoothScroll = async () => {
+        if (scrollAttempts >= maxAttempts) return;
+        scrollAttempts++;
+
+        const startPosition = messagesDiv.scrollTop;
+        const targetPosition = firstUnread.offsetTop - (messagesDiv.clientHeight / 3);
         
-        const firstUnread = unreadMessages[0];
-        if (!firstUnread) return false;
-        
-        const rect = firstUnread.getBoundingClientRect();
-        const containerRect = messagesDiv.getBoundingClientRect();
-        if (rect.top >= containerRect.top && rect.bottom <= containerRect.bottom) {
-            return true;
+        await new Promise(resolve => {
+            const step = () => {
+                const currentPosition = messagesDiv.scrollTop;
+                const distance = targetPosition - currentPosition;
+                const step = distance * 0.2;
+
+                if (Math.abs(distance) < 1 || scrollAttempts >= maxAttempts) {
+                    messagesDiv.scrollTop = targetPosition;
+                    resolve();
+                } else {
+                    messagesDiv.scrollTop = currentPosition + step;
+                    requestAnimationFrame(step);
+                }
+            };
+            requestAnimationFrame(step);
+        });
+
+        const finalPosition = messagesDiv.scrollTop;
+        if (Math.abs(finalPosition - targetPosition) > 10) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            await smoothScroll();
         }
-        
-        firstUnread.scrollIntoView({ behavior: "auto", block: "center" });
-        
-        await new Promise(resolve => setTimeout(resolve, 200));
-        
-        if (messagesDiv.scrollTop > 0) {
-            await new Promise(resolve => setTimeout(resolve, 300));
-            return await findAndScrollToUnread();
-        }
-        
-        return true;
+    };
+
+    try {
+        await smoothScroll();
+    } catch (error) {
+        console.error('Error during smooth scroll:', error);
+        firstUnread.scrollIntoView({ block: "center" });
     }
-    
-    await findAndScrollToUnread();
+=
+    await new Promise(resolve => setTimeout(resolve, 100));
+    unreadMessages.forEach(msg => {
+        if (!msg.classList.contains('unread')) {
+            msg.classList.add('unread');
+        }
+    });
 }
 
   async function updateFavicon() {
@@ -495,7 +532,7 @@ async function updateUnreadCount(chatName) {
     let isLoadingMore = false;
     let initialLoad = true;
     let oldestLoadedIndex = null;
-    const MESSAGES_PER_LOAD = 50;
+    const MESSAGES_PER_LOAD = 100;
 
     messagesDiv.addEventListener("scroll", async () => {
       if (
