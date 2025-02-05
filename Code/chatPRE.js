@@ -152,50 +152,16 @@
       checkMessages();
     });
 
-    async function findUnreadMessage() {
-      let unreadMessages = Array.from(
-        document.querySelectorAll(".message.unread"),
-      );
-      if (unreadMessages.length > 0) {
+    let findUnreadMessage = async () => {
+        let unreadMessages = Array.from(document.querySelectorAll(".message.unread"));
+        if (unreadMessages.length === 0) {
+            return null;
+        }
         return unreadMessages[0];
-      }
+    };
 
-      if (messagesDiv.scrollTop > 0) {
-        let previousHeight = messagesDiv.scrollHeight;
-        messagesDiv.scrollTop = Math.max(
-          0,
-          messagesDiv.scrollTop - messagesDiv.clientHeight,
-        );
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        if (messagesDiv.scrollHeight > previousHeight) {
-          return findUnreadMessage();
-        }
-      }
-      return null;
-    }
-
-    let firstUnread;
-    do {
-      firstUnread = await findUnreadMessage();
-    } while (!firstUnread && messagesDiv.scrollTop > 0);
-
+    const firstUnread = await findUnreadMessage();
     if (!firstUnread) return;
-
-    async function ensureScrollCompletion(targetPosition) {
-      let previousScrollHeight = messagesDiv.scrollHeight;
-
-      while (true) {
-        messagesDiv.scrollTop = targetPosition;
-        await new Promise((resolve) => setTimeout(resolve, 300));
-
-        if (messagesDiv.scrollHeight > previousScrollHeight) {
-          previousScrollHeight = messagesDiv.scrollHeight;
-        } else {
-          break;
-        }
-      }
-    }
 
     const smoothScroll = () => {
       const targetPosition =
@@ -211,7 +177,8 @@
 
         if (progress < 1) {
           const ease = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
-          messagesDiv.scrollTop = startPosition + distance * ease(progress);
+          const currentPosition = startPosition + distance * ease(progress);
+          messagesDiv.scrollTop = currentPosition;
           window.requestAnimationFrame(animation);
         } else {
           messagesDiv.scrollTop = targetPosition;
@@ -223,13 +190,18 @@
 
     try {
       smoothScroll();
-      await ensureScrollCompletion(
-        firstUnread.offsetTop - messagesDiv.clientHeight / 3,
-      );
     } catch (error) {
       console.error("Error during smooth scroll:", error);
       firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const unreadMessages = document.querySelectorAll(".message.unread");
+    unreadMessages.forEach((msg) => {
+      if (!msg.classList.contains("unread")) {
+        msg.classList.add("unread");
+      }
+    });
   }
 
   async function updateFavicon() {
