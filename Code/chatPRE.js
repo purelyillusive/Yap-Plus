@@ -138,40 +138,47 @@
     updateBadgeStyles();
   }
 
-  async function scrollToFirstUnread(chatName) {
+async function scrollToFirstUnread(chatName) {
     const messagesDiv = document.getElementById("messages");
-
+    
     await new Promise((resolve) => {
-      const checkMessages = () => {
-        if (messagesDiv.children.length > 0) {
-          resolve();
-        } else {
-          setTimeout(checkMessages, 50);
-        }
-      };
-      checkMessages();
+        const checkMessages = () => {
+            if (messagesDiv.children.length > 0) {
+                resolve();
+            } else {
+                setTimeout(checkMessages, 50);
+            }
+        };
+        checkMessages();
     });
-
-    const unreadMessages = Array.from(
-      document.querySelectorAll(".message.unread"),
-    );
-    if (unreadMessages.length === 0) return;
-
-    const firstUnread = unreadMessages[0];
-    if (!firstUnread) return;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          firstUnread.scrollIntoView({ behavior: "auto", block: "center" });
+    
+    async function findAndScrollToUnread() {
+        const unreadMessages = Array.from(document.querySelectorAll('.message.unread'));
+        if (unreadMessages.length === 0) return false;
+        
+        const firstUnread = unreadMessages[0];
+        if (!firstUnread) return false;
+        
+        const rect = firstUnread.getBoundingClientRect();
+        const containerRect = messagesDiv.getBoundingClientRect();
+        if (rect.top >= containerRect.top && rect.bottom <= containerRect.bottom) {
+            return true;
         }
-      });
-      observer.disconnect();
-    });
-
-    observer.observe(firstUnread);
-    firstUnread.scrollIntoView({ behavior: "auto", block: "center" });
-  }
+        
+        firstUnread.scrollIntoView({ behavior: "auto", block: "center" });
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        if (messagesDiv.scrollTop > 0) {
+            await new Promise(resolve => setTimeout(resolve, 300));
+            return await findAndScrollToUnread();
+        }
+        
+        return true;
+    }
+    
+    await findAndScrollToUnread();
+}
 
   async function updateFavicon() {
     const currentUrl = window.location.href;
@@ -412,52 +419,54 @@
     updateReadAllStatus();
   }
 
-  async function updateUnreadCount(chatName) {
+async function updateUnreadCount(chatName) {
     const chatRef = ref(database, `Chats/${chatName}`);
     const snapshot = await get(chatRef);
     const messages = snapshot.val() || {};
-
-    const accountRef = ref(
-      database,
-      `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
-    );
+    
+    const accountRef = ref(database, `Accounts/${email.replace(/\./g, '*')}/readMessages/${chatName}`);
     const lastReadSnapshot = await get(accountRef);
     const lastReadMessage = lastReadSnapshot.val() || "";
     let unreadCount = 0;
-
-    Object.entries(messages).forEach(([messageId, message]) => {
-      if (
-        message.User !== email &&
-        (!lastReadMessage || messageId > lastReadMessage)
-      ) {
-        unreadCount++;
-      }
+    
+    const sortedMessages = Object.entries(messages)
+        .sort(([, a], [, b]) => new Date(a.Date) - new Date(b.Date));
+    
+    let lastReadIndex = -1;
+    sortedMessages.forEach(([messageId, message], index) => {
+        if (messageId === lastReadMessage) {
+            lastReadIndex = index;
+        }
     });
 
-    const chatElement = Array.from(document.querySelectorAll(".server")).find(
-      (el) => el.textContent.trim().includes(chatName.trim()),
-    );
-
+    sortedMessages.forEach(([messageId, message], index) => {
+        if (message.User !== email && index > lastReadIndex) {
+            unreadCount++;
+        }
+    });
+    
+    const chatElement = Array.from(document.querySelectorAll('.server'))
+        .find(el => el.textContent.trim().includes(chatName.trim()));
+    
     if (chatElement) {
-      const badge = chatElement.querySelector(".unread-badge");
-      chatElement.setAttribute("data-unread", unreadCount);
-
-      if (unreadCount > 0) {
-        badge.textContent = unreadCount > 99 ? "99+" : unreadCount;
-        badge.style.display = "inline";
-      } else {
-        badge.style.display = "none";
-      }
-
-      if (badge) {
-        badge.style.backgroundColor = isDark ? "#ff6b6b" : "#ff4444";
-        badge.style.color = "white";
-      }
+        const badge = chatElement.querySelector('.unread-badge');
+        chatElement.setAttribute('data-unread', unreadCount);
+        
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+        
+        if (badge) {
+            badge.style.backgroundColor = isDark ? '#ff6b6b' : '#ff4444';
+            badge.style.color = 'white';
+        }
     }
-
+    
     updateReadAllStatus();
-  }
-
+}
   async function loadMessages(chatName) {
     document.getElementById("bookmarklet-gui").scrollTop = 0;
     const messagesDiv = document.getElementById("messages");
@@ -566,21 +575,16 @@
 
       const fragment = document.createDocumentFragment();
 
-      const messagesToProcess = prepend
-        ? [...newMessages].reverse()
-        : newMessages;
-
-      if (!prepend && messagesDiv.children.length > 0) {
+const messagesToProcess = prepend ? newMessages : [...newMessages];
+    messagesToProcess.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+    
+    if (!prepend && messagesDiv.children.length > 0) {
         lastMessageDiv = messagesDiv.lastChild;
         lastUser = lastMessageDiv.dataset.user;
         lastTimestamp = new Date(lastMessageDiv.dataset.date);
-      }
-
-      const wasNearBottom =
-        messagesDiv.scrollHeight -
-          messagesDiv.scrollTop -
-          messagesDiv.clientHeight <=
-        20;
+    }
+    
+    const wasNearBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop - messagesDiv.clientHeight <= 20;
 
       for (const message of messagesToProcess) {
         if (appendedMessages.has(message.id)) continue;
@@ -835,55 +839,51 @@
     }
   });
 
-  async function markAllMessagesAsRead() {
+async function markAllMessagesAsRead() {
     try {
-      const chatInfoRef = ref(database, "Chat Info");
-      const chatInfoSnapshot = await get(chatInfoRef);
-      const chatInfo = chatInfoSnapshot.val();
-
-      const readMessagesUpdates = {};
-      const unreadBadges = document.querySelectorAll(".unread-badge");
-
-      for (const [chatName, chatDetails] of Object.entries(chatInfo)) {
-        const isAccessible =
-          chatDetails.Type === "Public" ||
-          (chatDetails.Type === "Private" &&
-            chatDetails.Members.split(",").includes(email.replace(/\./g, "*")));
-
-        if (isAccessible) {
-          const chatRef = ref(database, `Chats/${chatName}`);
-          const chatSnapshot = await get(chatRef);
-          const messages = chatSnapshot.val();
-
-          if (messages) {
-            const messageIds = Object.keys(messages).sort();
-            const latestMessageId = messageIds[messageIds.length - 1];
-
-            const readMessageRef = ref(
-              database,
-              `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
-            );
-            await set(readMessageRef, latestMessageId);
-
-            readMessages[chatName] = latestMessageId;
-          }
+        document.querySelectorAll('.message.unread').forEach(msg => {
+            msg.classList.remove('unread');
+        });
+        
+        document.querySelectorAll('.unread-badge').forEach(badge => {
+            badge.style.display = 'none';
+            badge.textContent = '0';
+        });
+        
+        const chatInfoRef = ref(database, 'Chat Info');
+        const chatInfoSnapshot = await get(chatInfoRef);
+        const chatInfo = chatInfoSnapshot.val();
+        
+        const readMessagesUpdates = {};
+        
+        for (const [chatName, chatDetails] of Object.entries(chatInfo)) {
+            const isAccessible = chatDetails.Type === 'Public' || 
+                (chatDetails.Type === 'Private' && chatDetails.Members.split(',').includes(email.replace(/\./g, '*')));
+            
+            if (isAccessible) {
+                const chatRef = ref(database, `Chats/${chatName}`);
+                const chatSnapshot = await get(chatRef);
+                const messages = chatSnapshot.val();
+                
+                if (messages) {
+                    const messageIds = Object.keys(messages).sort();
+                    const latestMessageId = messageIds[messageIds.length - 1];
+                    
+                    const readMessageRef = ref(database, `Accounts/${email.replace(/\./g, '*')}/readMessages/${chatName}`);
+                    await set(readMessageRef, latestMessageId);
+                    
+                    readMessages[chatName] = latestMessageId;
+                }
+            }
         }
-      }
-
-      document.querySelectorAll(".message.unread").forEach((msg) => {
-        msg.classList.remove("unread");
-      });
-      unreadBadges.forEach((badge) => {
-        badge.style.display = "none";
-        badge.textContent = "0";
-      });
-
-      updateReadAllStatus();
+        
+        updateReadAllStatus();
+      updateFavicon();
     } catch (error) {
-      console.error("Error marking all messages as read:", error);
-      alert("Failed to mark all messages as read. Please try again.");
+        console.error('Error marking all messages as read:', error);
+        alert('Failed to mark all messages as read. Please try again.');
     }
-  }
+}
 
   const hideSidebarButton = document.getElementById("hide-left-sidebar");
   let isSidebarHidden = false;
@@ -907,13 +907,13 @@
       isSidebarHidden = true;
     } else {
       leftSidebar.style.transition = "all 0.3s ease";
-      leftSidebar.style.width = "250px";
+      leftSidebar.style.width = "20%";
       leftSidebar.style.opacity = "1";
       leftSidebar.style.overflow = "visible";
       leftSidebar.style.display = "block";
 
-      rightSidebar.style.width = "calc(100% - 250px)";
-      rightSidebar.style.left = "250px";
+      rightSidebar.style.width = "80%";
+      rightSidebar.style.left = "20%";
 
       hideSidebarButton.textContent = "Hide Left Sidebar";
       isSidebarHidden = false;
