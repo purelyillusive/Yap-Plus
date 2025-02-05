@@ -157,25 +157,26 @@
         document.querySelectorAll(".message.unread"),
       );
       if (unreadMessages.length === 0) {
-        if (messagesDiv.scrollTop > 0) {
-          let previousHeight = messagesDiv.scrollHeight;
-          messagesDiv.scrollTop = Math.max(
-            0,
-            messagesDiv.scrollTop - messagesDiv.clientHeight,
-          );
-
-          await new Promise((resolve) => setTimeout(resolve, 300));
-          if (messagesDiv.scrollHeight > previousHeight) {
-            return findUnreadMessage();
-          }
-        }
         return null;
       }
       return unreadMessages[0];
     };
 
-    const firstUnread = await findUnreadMessage();
+    let firstUnread = await findUnreadMessage();
+
     if (!firstUnread) return;
+
+    let previousScrollHeight = messagesDiv.scrollHeight;
+    let previousScrollTop = messagesDiv.scrollTop;
+
+    let ensureScrollCompletion = async () => {
+      while (messagesDiv.scrollHeight > previousScrollHeight) {
+        previousScrollHeight = messagesDiv.scrollHeight;
+        messagesDiv.scrollTop =
+          messagesDiv.scrollHeight - messagesDiv.clientHeight;
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
+    };
 
     const smoothScroll = () => {
       const targetPosition =
@@ -191,8 +192,7 @@
 
         if (progress < 1) {
           const ease = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
-          const currentPosition = startPosition + distance * ease(progress);
-          messagesDiv.scrollTop = currentPosition;
+          messagesDiv.scrollTop = startPosition + distance * ease(progress);
           window.requestAnimationFrame(animation);
         } else {
           messagesDiv.scrollTop = targetPosition;
@@ -204,19 +204,13 @@
 
     try {
       smoothScroll();
+      await ensureScrollCompletion();
     } catch (error) {
       console.error("Error during smooth scroll:", error);
       firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    const unreadMessages = document.querySelectorAll(".message.unread");
-    unreadMessages.forEach((msg) => {
-      if (!msg.classList.contains("unread")) {
-        msg.classList.add("unread");
-      }
-    });
   }
+
   async function updateFavicon() {
     const currentUrl = window.location.href;
     const hasUnreadMessages = !readAll;
