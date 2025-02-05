@@ -152,31 +152,50 @@
       checkMessages();
     });
 
-    let findUnreadMessage = async () => {
+    async function findUnreadMessage() {
       let unreadMessages = Array.from(
         document.querySelectorAll(".message.unread"),
       );
-      if (unreadMessages.length === 0) {
-        return null;
+      if (unreadMessages.length > 0) {
+        return unreadMessages[0];
       }
-      return unreadMessages[0];
-    };
 
-    let firstUnread = await findUnreadMessage();
+      if (messagesDiv.scrollTop > 0) {
+        let previousHeight = messagesDiv.scrollHeight;
+        messagesDiv.scrollTop = Math.max(
+          0,
+          messagesDiv.scrollTop - messagesDiv.clientHeight,
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (messagesDiv.scrollHeight > previousHeight) {
+          return findUnreadMessage();
+        }
+      }
+      return null;
+    }
+
+    let firstUnread;
+    do {
+      firstUnread = await findUnreadMessage();
+    } while (!firstUnread && messagesDiv.scrollTop > 0);
 
     if (!firstUnread) return;
 
-    let previousScrollHeight = messagesDiv.scrollHeight;
-    let previousScrollTop = messagesDiv.scrollTop;
+    async function ensureScrollCompletion(targetPosition) {
+      let previousScrollHeight = messagesDiv.scrollHeight;
 
-    let ensureScrollCompletion = async () => {
-      while (messagesDiv.scrollHeight > previousScrollHeight) {
-        previousScrollHeight = messagesDiv.scrollHeight;
-        messagesDiv.scrollTop =
-          messagesDiv.scrollHeight - messagesDiv.clientHeight;
+      while (true) {
+        messagesDiv.scrollTop = targetPosition;
         await new Promise((resolve) => setTimeout(resolve, 300));
+
+        if (messagesDiv.scrollHeight > previousScrollHeight) {
+          previousScrollHeight = messagesDiv.scrollHeight;
+        } else {
+          break;
+        }
       }
-    };
+    }
 
     const smoothScroll = () => {
       const targetPosition =
@@ -204,7 +223,9 @@
 
     try {
       smoothScroll();
-      await ensureScrollCompletion();
+      await ensureScrollCompletion(
+        firstUnread.offsetTop - messagesDiv.clientHeight / 3,
+      );
     } catch (error) {
       console.error("Error during smooth scroll:", error);
       firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
