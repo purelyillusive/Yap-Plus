@@ -140,7 +140,7 @@
 
 async function scrollToFirstUnread(chatName) {
     const messagesDiv = document.getElementById("messages");
-  
+    
     await new Promise((resolve) => {
         const checkMessages = () => {
             if (messagesDiv.children.length > 0) {
@@ -152,10 +152,41 @@ async function scrollToFirstUnread(chatName) {
         checkMessages();
     });
 
-    const unreadMessages = Array.from(document.querySelectorAll('.message.unread'));
-    if (unreadMessages.length === 0) return;
+    const findFirstUnread = async () => {
+        let previousLength = messagesDiv.children.length;
+        let previousScrollTop = messagesDiv.scrollTop;
 
-    const firstUnread = unreadMessages[0];
+        while (true) {
+            const unreadMessages = Array.from(document.querySelectorAll('.message.unread'));
+            if (unreadMessages.length > 0) {
+                return unreadMessages[0];
+            }
+
+            if (messagesDiv.scrollTop <= 100) {
+                messagesDiv.scrollTop = 0;
+
+                await new Promise(resolve => {
+                    const checkNewMessages = () => {
+                        if (messagesDiv.children.length > previousLength || 
+                            (messagesDiv.scrollTop !== previousScrollTop && messagesDiv.scrollTop > 0)) {
+                            previousLength = messagesDiv.children.length;
+                            previousScrollTop = messagesDiv.scrollTop;
+                            setTimeout(resolve, 100);
+                        } else if (messagesDiv.scrollTop === 0 && messagesDiv.children.length === previousLength) {
+                            resolve();
+                        } else {
+                            setTimeout(checkNewMessages, 50);
+                        }
+                    };
+                    setTimeout(checkNewMessages, 50);
+                });
+            } else {
+                return null;
+            }
+        }
+    };
+
+    const firstUnread = await findFirstUnread();
     if (!firstUnread) return;
 
     const isInView = await new Promise(resolve => {
@@ -210,7 +241,7 @@ async function scrollToFirstUnread(chatName) {
     }
 
     await new Promise(resolve => setTimeout(resolve, 100));
-    unreadMessages.forEach(msg => {
+    Array.from(document.querySelectorAll('.message.unread')).forEach(msg => {
         if (!msg.classList.contains('unread')) {
             msg.classList.add('unread');
         }
