@@ -40,7 +40,7 @@
   }
 
   fetch(
-    "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/gui.js",
+    "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/guiPRE.js",
   )
     .then((r) => r.text())
     .then((code) => {
@@ -51,11 +51,11 @@
       var login_username;
       var login_password;
 
-      async function openChatScreen() {
+async function openChatScreen() {
         document.getElementById("email-saved-here").textContent = email;
 
         fetch(
-          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chat.js",
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js",
         )
           .then((r) => r.text())
           .then((chatCode) => eval(chatCode))
@@ -64,6 +64,7 @@
             alert("Failed to load chat.js. Check the console for details.");
           });
       }
+
       /* Screens */
       const mainScreen = document.getElementById("main-screen");
       const loginScreen = document.getElementById("login-screen");
