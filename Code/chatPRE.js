@@ -333,7 +333,7 @@
     });
 
     const closeButton = document.createElement("button");
-    closeButton.style.backgroundColor = isDark ? "#4c4c4c" : "#eee";
+    closeButton.style.backgroundColor = isDark ? "#bf21a7" : "#fc8dec";
     closeButton.textContent = "Close";
     closeButton.onclick = () => popup.remove();
     popup.appendChild(closeButton);
