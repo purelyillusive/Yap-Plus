@@ -242,7 +242,7 @@
 }
 
 #read-all {
-  background: ${isDark ? "#753573" : "#fc03f4"};
+  background: ${isDark ? "#404040" : "#e9ecef"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -252,7 +252,7 @@
 }
 
 #read-all:hover {
-  background: ${isDark ? "#401b3f" : "#94048f"};
+  background: ${isDark ? "#505050" : "#dee2e6"};
 }
 
 #hide-left-sidebar {
