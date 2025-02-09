@@ -4,6 +4,10 @@
   var readMessages = {};
   var readAll = true;
   var isDark = false;
+  const BOT_USERS = {
+    AI: "[AI]",
+    RNG: "[RNG]",
+  };
   /* Firebase Config */
   const firebaseConfig = {
     apiKey: "AIzaSyA48Uv_v5c7-OCnkQ8nBkjIW8MN4STDcJs",
@@ -633,7 +637,7 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if (message.User === "[AI]") {
+          if (Object.values(BOT_USERS).includes(message.User)) {
             messageDiv.classList.add("bot");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
@@ -787,9 +791,10 @@
     );
     await set(readMessagesRef, lastMessageId);
 
-    document.querySelectorAll(`.message.received`).forEach((msg) => {
+    document.querySelectorAll(".message").forEach((msg) => {
       const msgId = msg.dataset.lastMessageId;
-      if (msgId && msgId <= lastMessageId && msg.dataset.user !== email) {
+      const msgUser = msg.dataset.user;
+      if (msgId && msgId <= lastMessageId && msgUser !== email) {
         msg.classList.remove("unread");
       }
     });
@@ -805,6 +810,7 @@
     message = convertHtmlToEmoji(joypixels.shortnameToImage(message));
 
     if (message) {
+      messageInput.value = "";
       if (message.startsWith("/ai ")) {
         const question = message.substring(4).trim();
 
@@ -848,6 +854,71 @@
             Date: Date.now(),
           });
         }
+      } else if (message.startsWith("/coinflip")) {
+        const parts = message.split(" ");
+        let headsChance = 50;
+        let tailsChance = 50;
+
+        if (parts.length === 3) {
+          headsChance = parseFloat(parts[1]);
+          tailsChance = parseFloat(parts[2]);
+
+          if (headsChance + tailsChance !== 100) {
+            const total = headsChance + tailsChance;
+            if (total > 0) {
+              headsChance = (headsChance / total) * 100;
+              tailsChance = (tailsChance / total) * 100;
+            } else {
+              headsChance = 50;
+              tailsChance = 50;
+            }
+          }
+        }
+
+        const userMessageRef = push(messagesRef);
+        await update(userMessageRef, {
+          User: email,
+          Message: message,
+          Date: Date.now(),
+        });
+
+        const random = Math.random() * 100;
+        const result = random < headsChance ? "Heads" : "Tails";
+        const chances = `(${headsChance.toFixed(1)}% Heads, ${tailsChance.toFixed(1)}% Tails)`;
+
+        const botMessageRef = push(messagesRef);
+        await update(botMessageRef, {
+          User: "[AI]",
+          Message: `🎲 Coin flip result: ${result}`,
+          Date: Date.now(),
+        });
+      } else if (message.startsWith("/roll ")) {
+        const sides = parseInt(message.split(" ")[1]);
+
+        if (isNaN(sides) || sides < 1) {
+          const errorMessageRef = push(messagesRef);
+          await update(errorMessageRef, {
+            User: BOT_USERS.RNG,
+            Message: "Please specify a valid number of sides (e.g., /roll 6)",
+            Date: Date.now(),
+          });
+          return;
+        }
+
+        const userMessageRef = push(messagesRef);
+        await update(userMessageRef, {
+          User: email,
+          Message: message,
+          Date: Date.now(),
+        });
+
+        const result = Math.floor(Math.random() * sides) + 1;
+        const botMessageRef = push(messagesRef);
+        await update(botMessageRef, {
+          User: BOT_USERS.RNG,
+          Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
+          Date: Date.now(),
+        });
       } else {
         const newMessageRef = push(messagesRef);
         await update(newMessageRef, {
