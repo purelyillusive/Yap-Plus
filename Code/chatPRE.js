@@ -888,7 +888,7 @@
 
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
-          User: "[AI]",
+          User: "[RNG]",
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
