@@ -5,8 +5,8 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = {
-    AI: "[AI says GYATT]",
-    RNG: "[RNG>Eod]",
+    AI: "[AI]",
+    RNG: "[RNG]",
   };
   /* Firebase Config */
   const firebaseConfig = {
