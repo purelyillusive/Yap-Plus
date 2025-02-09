@@ -895,6 +895,13 @@
       } else if (message.startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
+      const userMessageRef = push(messagesRef);
+        await update(userMessageRef, {
+          User: email,
+          Message: message,
+          Date: Date.now(),
+        });
+        
         if (isNaN(sides) || sides < 1) {
           const errorMessageRef = push(messagesRef);
           await update(errorMessageRef, {
@@ -905,18 +912,11 @@
           return;
         }
 
-        const userMessageRef = push(messagesRef);
-        await update(userMessageRef, {
-          User: email,
-          Message: message,
-          Date: Date.now(),
-        });
-
         const result = Math.floor(Math.random() * sides) + 1;
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
           User: BOT_USERS.RNG,
-          Message: `🎲 Rolling an Eliana aproved ${sides}-sided die: ${result}`,
+          Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
           Date: Date.now(),
         });
       } else {
