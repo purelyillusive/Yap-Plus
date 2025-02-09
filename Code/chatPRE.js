@@ -153,11 +153,13 @@
     });
 
     let findUnreadMessage = async () => {
-        let unreadMessages = Array.from(document.querySelectorAll(".message.unread"));
-        if (unreadMessages.length === 0) {
-            return null;
-        }
-        return unreadMessages[0];
+      let unreadMessages = Array.from(
+        document.querySelectorAll(".message.unread"),
+      );
+      if (unreadMessages.length === 0) {
+        return null;
+      }
+      return unreadMessages[0];
     };
 
     const firstUnread = await findUnreadMessage();
@@ -631,17 +633,22 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          messageDiv.classList.add(
-            message.User === email ? "sent" : "received",
-          );
-
-          if (
-            message.User !== email &&
-            (!lastReadMessage || message.id > lastReadMessage)
-          ) {
-            messageDiv.classList.add("unread");
+          if (message.User === "[AI]") {
+            messageDiv.classList.add("bot");
+            if (!lastReadMessage || message.id > lastReadMessage) {
+              messageDiv.classList.add("unread");
+            } else {
+              messageDiv.classList.remove("unread");
+            }
+          } else if (message.User === email) {
+            messageDiv.classList.add("sent");
           } else {
-            messageDiv.classList.remove("unread");
+            messageDiv.classList.add("received");
+            if (!lastReadMessage || message.id > lastReadMessage) {
+              messageDiv.classList.add("unread");
+            } else {
+              messageDiv.classList.remove("unread");
+            }
           }
 
           messageDiv.style.marginTop = "10px";
@@ -798,12 +805,57 @@
     message = convertHtmlToEmoji(joypixels.shortnameToImage(message));
 
     if (message) {
-      const newMessageRef = push(messagesRef);
-      await update(newMessageRef, {
-        User: email,
-        Message: message,
-        Date: Date.now(),
-      });
+      if (message.startsWith("/ai ")) {
+        const question = message.substring(4).trim();
+
+        const userMessageRef = push(messagesRef);
+        await update(userMessageRef, {
+          User: email,
+          Message: message,
+          Date: Date.now(),
+        });
+
+        try {
+          const API_KEY = "AIzaSyDGq_CeBeQ0oeNxlki7HxXWyLoSWFIZHRw";
+          const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" +
+              API_KEY,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ role: "user", parts: [{ text: question }] }],
+              }),
+            },
+          ).then((res) => res.json());
+
+          let aiReply =
+            response.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "No response.";
+
+          const aiMessageRef = push(messagesRef);
+          await update(aiMessageRef, {
+            User: "[AI]",
+            Message: aiReply,
+            Date: Date.now(),
+          });
+        } catch (error) {
+          console.error("Error contacting AI:", error);
+          const errorMessageRef = push(messagesRef);
+          await update(errorMessageRef, {
+            User: "[AI]",
+            Message: "Sorry, I encountered an error processing your request.",
+            Date: Date.now(),
+          });
+        }
+      } else {
+        const newMessageRef = push(messagesRef);
+        await update(newMessageRef, {
+          User: email,
+          Message: message,
+          Date: Date.now(),
+        });
+      }
 
       messageInput.value = "";
 
@@ -818,7 +870,6 @@
     }
     document.getElementById("bookmarklet-gui").scrollTop = 0;
   }
-
   function convertHtmlToEmoji(inputString) {
     return inputString.replace(
       /<img[^>]*alt="([^"]*)"[^>]*>/g,
