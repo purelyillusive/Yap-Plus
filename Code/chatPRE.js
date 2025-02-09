@@ -916,7 +916,7 @@
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
           User: BOT_USERS.RNG,
-          Message: `🎲 Rolling a skibbity ${sides}-sided die: ${result} you know what? Eliana is awesome!`,
+          Message: `🎲 Rolling an Eliana aproved ${sides}-sided die: ${result}`,
           Date: Date.now(),
         });
       } else {
