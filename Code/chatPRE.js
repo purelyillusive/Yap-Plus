@@ -5,7 +5,7 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = {
-    AI: "[AI..am going to take over the world]",
+    AI: "[AI]",
     RNG: "[RNG]",
   };
   /* Firebase Config */
@@ -841,7 +841,7 @@
 
           const aiMessageRef = push(messagesRef);
           await update(aiMessageRef, {
-            User: "[AI..am going to take over the world]",
+            User: "[AI]",
             Message: aiReply,
             Date: Date.now(),
           });
@@ -849,7 +849,7 @@
           console.error("Error contacting AI:", error);
           const errorMessageRef = push(messagesRef);
           await update(errorMessageRef, {
-            User: "[AI..am going to take over the world]",
+            User: "[AI]",
             Message: "Sorry, I encountered an error processing your request.",
             Date: Date.now(),
           });
