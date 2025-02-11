@@ -3,18 +3,13 @@
   style.id = "bookmarklet-style";
 
   let isDark = localStorage.getItem("bookmarklet-mode") === "dark";
-  function toggleDarkMode() {
-    isDark = !isDark;
-    localStorage.setItem("bookmarklet-mode", isDark ? "dark" : "light");
-    document.getElementById("dark-mode").textContent = isDark
-      ? "Light Mode"
-      : "Dark Mode";
-    updateColor();
-  }
+
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.altKey && e.key === "d") {
       e.preventDefault();
-      toggleDarkMode();
+      isDark = !isDark;
+      localStorage.setItem("bookmarklet-mode", isDark ? "dark" : "light");
+      updateColor();
     }
   });
 
@@ -40,7 +35,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	resize: both;
-	overflow: hidden;
+	overflow: auto;
 }
 
 #bookmarklet-gui-header {
@@ -165,164 +160,63 @@
 	justify-items: center;
 }
 
-
 .chat {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-  box-sizing: border-box;
-  background-color: ${isDark ? "#222" : "#fff"};
-  color: ${isDark ? "#ddd" : "#333"};
-  height: 100%;
+	width: 100%;
+	height: calc(100% - 40px);
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	padding: 3px;
+	box-sizing: border-box;
+	margin-top: 40px;
+	background-color: ${isDark ? "#222" : "#fff"};
+	color: ${isDark ? "#ddd" : "#333"};
 }
 
 .chat.hidden {
-  display: none !important;
+	display: none;
 }
-
-#chat-screen {
-  flex-direction: column;
-  margin-top: 40px;
-  padding-top: 0;
-  height: calc(100% - 40px);
-}
-
-#lower-chat {
-  display: flex;
-  flex-direction: row;
-  height: calc(100% - 40px);
-  width: 100%;
-  margin: 0;
-}
-
-/* Settings Bar */
-#settings-bar {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-bottom: 1px solid ${isDark ? "#444" : "#e0e0e0"};
-  background: ${isDark ? "#2a2a2a" : "#f8f9fa"};
-  padding: 0 16px;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-#customize-profile {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-#customize-profile:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#dark-mode {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#dark-mode:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#read-all {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#read-all:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#hide-left-sidebar:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-.setting-button {
-  height: 32px;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-
-
 
 /* Left Sidebar (Server and DM) */
 #left-sidebar {
-  width: 20%;
-  min-width: 180px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  border-right: 2px solid ${isDark ? "#555" : "#ccc"};
-  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
-  padding: 8px;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  margin-bottom: 0;
+	width: 20%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	height: 100%;
+	border-right: 2px solid ${isDark ? "#555" : "#ccc"};
+	overflow-y: hidden;
+	overflow-x: hidden;
+	background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
+	padding: 8px;
+	box-sizing: border-box;
 }
 
 #top-left-sidebar {
-  height: 60%;
-  min-height: 60%;
-  max-height: 60%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 10px;
-  overflow-y: auto;
-  overflow-x: hidden;
+	flex: 1;
+	width: 100%;
+	height: 60%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-bottom: 10px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #bottom-left-sidebar {
-  height: 40%;
-  min-height: 40%;
-  width: 100%;
-  padding: 8px 0 0 0;
-  background-color: ${isDark ? "#333" : "#f1f1f1"};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-top: 1px solid ${isDark ? "#555" : "#ddd"};
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin-bottom: 0;
+	flex: 0;
+	width: 100%;
+	height: 40%;
+	padding: 10px 0;
+	background-color: ${isDark ? "#333" : "#f1f1f1"};
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-top: 1px solid ${isDark ? "#555" : "#ddd"};
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #server-list {
@@ -333,42 +227,35 @@
 }
 
 #create-new-server {
-  padding: 8px 5px;
-  background-color: ${isDark ? "#a65653" : "#5865F2"};
-  color: white;
-  border: none;
-  border-radius: 4px;
-  width: 90%;
-  font-size: 13px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  margin-bottom: 8px;
+	padding: 2px;
+	background-color: ${isDark ? "#4287f5" : "#4287f5"};
+	color: white;
+	border: none;
+	border-radius: 2px;
+	width: 90%;
+	font-size: 10px;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
 }
 
 #create-new-server:hover {
-  background-color: ${isDark ? "#c79d9b" : "#4752C4"};
+	background-color: ${isDark ? "#10457c" : "#10569d"};
 }
 
+
 .server {
-  background-color: ${isDark ? "#555" : "#e0e0e0"};
-  width: 90%;
-  padding: 5px 4px;
-  margin-bottom: 1px;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: center;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+	background-color: ${isDark ? "#555" : "#e0e0e0"};
+	width: 90%;
+	padding: 2px;
+	margin-bottom: 2px;
+	font-size: 14px;
+	font-weight: 600;
+	text-align: center;
+       	border-radius: 2px;
 }
 
 .server:hover {
-  background-color: ${isDark ? "#666" : "#d0d0d0"};
-}
-
-.server.selected {
-  background-color: ${isDark ? "#777" : "#ccc"};
-  box-shadow: 0 0 0 1px ${isDark ? "#888" : "#999"};
+	background-color: ${isDark ? "#666" : "#d0d0d0"};
 }
 
 .dm {
@@ -403,7 +290,6 @@
 	padding-left: 10px;
 	background-color: ${isDark ? "#333" : "#fff"};
 	color: ${isDark ? "#ddd" : "#333"};
-	min-width: 0;
 }
 
 #messages {
@@ -437,23 +323,18 @@
 	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
 	color: ${isDark ? "#cccccc" : "#33691e"};
 }
-.message.received.unread {
-  background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
-  border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
-  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
-}
 
 .send-info {
 	font-size: 8px;
 	color: ${isDark ? "#888" : "#666"};
 }
+
 #message-send {
-  padding: 10px;
-  background-color: ${isDark ? "#444" : "#f1f1f1"};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: auto;
+	padding: 10px;
+	background-color: ${isDark ? "#444" : "#f1f1f1"};
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 #message-input {
@@ -476,7 +357,6 @@
 	cursor: pointer;
 	margin-top: auto;
 	margin-bottom: auto;
-	margin-left: 10px;
 }
 
 #send-button:hover {
@@ -632,7 +512,6 @@
    <p>Press CTRL-ALT-D to switch between light and dark mode</p>
    <button id="login-button">Log In</button>
    <button id="create-account-button">Create Account</button>
-   <p>By using Yap Window, you agree to the Terms and Conditions at https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI<\p>
 </div>
 <div id="saved-account" class="screen hidden">
    <h2>You have an account saved on this computer</h2>
@@ -641,36 +520,27 @@
    <button id="saved-login-button">Okay</button>
    <button id="saved-signout-button">Sign Out</button>
 </div>
-<div id="chat-screen" class="chat hidden">
-  <div id="settings-bar">
-    <button id="customize-profile" class="setting-button">Profile</button>
-    <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
-    <button id="read-all" class="setting-button">Read All</button>
-    <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
-  </div>
-  <div id="lower-chat" class="chat">
-    <div id="left-sidebar">
+<div id="chat-screen" class="chat" style="display: none">
+   <div id="left-sidebar">
       <div id="top-left-sidebar">
-        <button id="create-new-server">Create New Server</button>
-        <div id="server-list">
-          <div class="server" id="general-server">General</div>
-        </div>
+         <div id="server-list">
+            <div class="server" id="general-server">General</div>
+         </div>
+         <button id="create-new-server">Create New Server</button>
       </div>
       <div id="bottom-left-sidebar">
-        <div id="dm-list">
-        </div>
+         <div id="dm-list">
+         </div>
       </div>
-    </div>
-    <div id="right-sidebar">
+   </div>
+   <div id="right-sidebar">
       <div id="messages">
       </div>
       <div id="message-send">
-        <p id="typing-indicator"></p>
-        <input type="text" id="message-input" autocomplete="off" placeholder="Yap away..."/>
-        <button id="send-button">Send</button>
+         <input type="text" id="message-input" autocomplete="off" placeholder="Yap away..."/>
+         <button id="send-button">Send</button>
       </div>
-    </div>
-  </div>
+   </div>
 </div>
 <div id="channel-screen" class="screen hidden">
     <h2>Create/Customize Channel</h2>
@@ -762,10 +632,8 @@
       e.target.innerHTML = "⛶";
     }
   };
-
-  document
-    .getElementById("dark-mode")
-    ?.addEventListener("click", toggleDarkMode);
 })();
+
+
 
 
