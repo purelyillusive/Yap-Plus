@@ -409,7 +409,7 @@
 #messages {
 	flex: 1;
 	overflow-y: auto;
-	background-color: ${isDark ? "#222" : "#f9f9f9"};
+	background-color: ${isDark ? "#520b4c" : "#faf5f9"};
 	padding: 10px;
 	margin-bottom: 10px;
 }
@@ -422,44 +422,34 @@
 	width: 95%;
 	max-width: 95%;
 	word-wrap: break-word;
-	background-color: ${isDark ? "#444" : "#e0e0e0"};
+	background-color: ${isDark ? "#e0e0e0" : "#e0e0e0"};
 	color: ${isDark ? "#ccc" : "#333"};
 }
 
 .message.sent {
 	text-align: right;
-	background-color: ${isDark ? "#4a4a4a" : "#e0f7fa"};
+	background-color: ${isDark ? "#4a4a4a" : "#e8d3e8"};
 	color: ${isDark ? "#cccccc" : "#006064"};
 }
 
 .message.received {
 	text-align: left;
-	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
+	background-color: ${isDark ? "#3a3a3a" : "#fcebfc"};
 	color: ${isDark ? "#cccccc" : "#33691e"};
 }
 .message.received.unread {
-  background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
+  background-color: ${isDark ? "#4a3a3a" : "#e5d1e6"};
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
-.message.bot {
-  text-align: left;
-  background-color: ${isDark ? "#2a323c" : "#f0f7ff"};
-  color: ${isDark ? "#e2e8f0" : "#1a365d"};
-}
 
-.message.bot.unread {
-  background-color: ${isDark ? "#2d3748" : "#ebf8ff"};
-  border-left: 3px solid ${isDark ? "#90cdf4" : "#4299e1"};
-  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
-}
 .send-info {
 	font-size: 8px;
 	color: ${isDark ? "#888" : "#666"};
 }
 #message-send {
   padding: 10px;
-  background-color: ${isDark ? "#444" : "#f1f1f1"};
+  background-color: ${isDark ? "#444" : "#e8d3e8"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -777,5 +767,3 @@
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
 })();
-
-
