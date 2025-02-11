@@ -409,7 +409,7 @@
 #messages {
 	flex: 1;
 	overflow-y: auto;
-	background-color: ${isDark ? "#520b4c" : "#faf5f9"};
+	background-color: ${isDark ? "#222" : "#f9f9f9"};
 	padding: 10px;
 	margin-bottom: 10px;
 }
@@ -422,23 +422,23 @@
 	width: 95%;
 	max-width: 95%;
 	word-wrap: break-word;
-	background-color: ${isDark ? "#e0e0e0" : "#e0e0e0"};
+	background-color: ${isDark ? "#444" : "#e0e0e0"};
 	color: ${isDark ? "#ccc" : "#333"};
 }
 
 .message.sent {
 	text-align: right;
-	background-color: ${isDark ? "#4a4a4a" : "#e8d3e8"};
+	background-color: ${isDark ? "#4a4a4a" : "#e0f7fa"};
 	color: ${isDark ? "#cccccc" : "#006064"};
 }
 
 .message.received {
 	text-align: left;
-	background-color: ${isDark ? "#3a3a3a" : "#fcebfc"};
+	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
 	color: ${isDark ? "#cccccc" : "#33691e"};
 }
 .message.received.unread {
-  background-color: ${isDark ? "#4a3a3a" : "#e5d1e6"};
+  background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
@@ -449,7 +449,7 @@
 }
 #message-send {
   padding: 10px;
-  background-color: ${isDark ? "#444" : "#e8d3e8"};
+  background-color: ${isDark ? "#444" : "#f1f1f1"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -767,3 +767,5 @@
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
 })();
+
+
