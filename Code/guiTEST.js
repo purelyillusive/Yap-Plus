@@ -28,7 +28,7 @@
 	width: 40%;
 	height: 50%;
 	z-index: 1000000;
-	background-color: ${isDark ? "#333" : "#fff"};
+	background-color: ${isDark ? "#692e60" : "#fcdeff"};
 	color: ${isDark ? "#ddd" : "#333"};
 	font-family: 'Aptos',
 		Calibri,
@@ -49,7 +49,7 @@
 	right: 0;
 	left: 0;
 	height: 40px;
-	background-color: ${isDark ? "#444" : "#ccc"};
+	background-color: ${isDark ? "#3b1039" : "#fff0fe"};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -72,7 +72,7 @@
 	align-items: center;
 	font-size: 18px;
 	margin: 0 2px;
-	background-color: ${isDark ? "#444" : "#ccc"};
+	background-color: ${isDark ? "#3b1039" : "#fff0fe"};
 	color: ${isDark ? "#ddd" : "#333"};
 	border: 1px solid ${isDark ? "#444" : "#ccc"};
 	cursor: pointer;
@@ -110,7 +110,7 @@
 	box-sizing: border-box;
 	overflow-y: auto;
 	margin-top: 20px;
-	background-color: ${isDark ? "#333" : "#fff"};
+	background-color: ${isDark ? "#3b1039" : "#fff0fe"};
 	color: ${isDark ? "#ddd" : "#333"};
 }
 
@@ -214,7 +214,7 @@
 }
 
 #customize-profile {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#c400be" : "#ffc7fd"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -228,7 +228,7 @@
 }
 
 #dark-mode {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#c400be" : "#ffc7fd"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -242,7 +242,7 @@
 }
 
 #read-all {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#c400be" : "#ffc7fd"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -256,7 +256,7 @@
 }
 
 #hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#c400be" : "#ffc7fd"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -777,3 +777,4 @@
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
 })();
+
