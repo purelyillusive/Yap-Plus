@@ -1,3 +1,4 @@
+
 (async function () {
   const style = document.createElement("style");
   style.id = "bookmarklet-style";
@@ -28,8 +29,8 @@
 	width: 40%;
 	height: 50%;
 	z-index: 1000000;
-	background-color: ${isDark ? "#692e60" : "#fcdeff"};
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
+	background-color: ${isDark ? "#333" : "#fff"};
+	color: ${isDark ? "#ddd" : "#333"};
 	font-family: 'Aptos',
 		Calibri,
 		sans-serif;
@@ -49,7 +50,7 @@
 	right: 0;
 	left: 0;
 	height: 40px;
-	background-color: ${isDark ? "#3b1039" : "#f5c4f30fe"};
+	background-color: ${isDark ? "#444" : "#ccc"};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -72,16 +73,16 @@
 	align-items: center;
 	font-size: 18px;
 	margin: 0 2px;
-	background-color: ${isDark ? "#3b1039" : "#f5c4f30fe"};
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
-	border: 1px solid ${isDark ? "#8f0b7d" : "#dbb8da"};
+	background-color: ${isDark ? "#444" : "#ccc"};
+	color: ${isDark ? "#ddd" : "#333"};
+	border: 1px solid ${isDark ? "#444" : "#ccc"};
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
 
 #bookmarklet-gui-header button:hover {
-	background-color: ${isDark ? "#d33bd9" : "#a80da3"};
-	color: ${isDark ? "#eee" : "##ad0aa8"};
+	background-color: ${isDark ? "#555" : "#ddd"};
+	color: ${isDark ? "#eee" : "#333"};
 }
 
 #bookmarklet-close:hover {
@@ -91,12 +92,12 @@
 
 #bookmarklet-minimize:hover {
 	background-color: ${isDark ? "#90ee90" : "#90ee90"};
-	color: ${isDark ? "##ad0aa8" : "##ad0aa8"};
+	color: ${isDark ? "#333" : "#333"};
 }
 
 #bookmarklet-maximize:hover {
 	background-color: ${isDark ? "#ffd700" : "#ffd700"};
-	color: ${isDark ? "##ad0aa8" : "##ad0aa8"};
+	color: ${isDark ? "#333" : "#333"};
 }
 
 .screen {
@@ -110,8 +111,8 @@
 	box-sizing: border-box;
 	overflow-y: auto;
 	margin-top: 20px;
-	background-color: ${isDark ? "#cc06c5" : "#f07fec"};
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
+	background-color: ${isDark ? "#333" : "#fff"};
+	color: ${isDark ? "#ddd" : "#333"};
 }
 
 .screen.hidden {
@@ -132,36 +133,36 @@
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
-	background-color: ${isDark ? "#8f0b7d" : "#a80da3"};
-	border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+	color: ${isDark ? "#ddd" : "#333"};
+	background-color: ${isDark ? "#444" : "#ddd"};
+	border: 1px solid ${isDark ? "#555" : "#ccc"};
 }
 
 .screen button:hover {
-	background-color: ${isDark ? "#d33bd9" : "#dbb8da"};
-	color: ${isDark ? "#eee" : "##ad0aa8"};
+	background-color: ${isDark ? "#555" : "#ccc"};
+	color: ${isDark ? "#eee" : "#333"};
 }
 
 .screen h2,
 .screen h3 {
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
+	color: ${isDark ? "#ddd" : "#333"};
 	text-align: center;
 }
 
 .screen label {
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
+	color: ${isDark ? "#ddd" : "#333"};
 }
 
 .screen textarea {
 	min-height: 50px;
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
-	background-color: ${isDark ? "#8f0b7d" : "#f5c4f3"};
-	border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+	color: ${isDark ? "#ddd" : "#333"};
+	background-color: ${isDark ? "#444" : "#fff"};
+	border: 1px solid ${isDark ? "#555" : "#ccc"};
 }
 
 .screen div {
 	width: 90%;
-	border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+	border: 1px solid ${isDark ? "#555" : "#ccc"};
 	justify-items: center;
 }
 
@@ -173,8 +174,8 @@
   align-items: flex-start;
   padding: 0;
   box-sizing: border-box;
-  background-color: ${isDark ? "#ad68ab" : "#dbb8da"};
-  color: ${isDark ? "#a80da3" : "##ad0aa8"};
+  background-color: ${isDark ? "#222" : "#fff"};
+  color: ${isDark ? "#ddd" : "#333"};
   height: 100%;
 }
 
@@ -204,7 +205,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-bottom: 1px solid ${isDark ? "#8f0b7d" : "#e0e0e0"};
+  border-bottom: 1px solid ${isDark ? "#444" : "#e0e0e0"};
   background: ${isDark ? "#2a2a2a" : "#f8f9fa"};
   padding: 0 16px;
   gap: 12px;
@@ -214,8 +215,8 @@
 }
 
 #customize-profile {
-  background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
+  background: ${isDark ? "#404040" : "#e9ecef"};
+  color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -228,8 +229,8 @@
 }
 
 #dark-mode {
-  background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
+  background: ${isDark ? "#404040" : "#e9ecef"};
+  color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -242,8 +243,8 @@
 }
 
 #read-all {
-  background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
+  background: ${isDark ? "#404040" : "#e9ecef"};
+  color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -256,8 +257,8 @@
 }
 
 #hide-left-sidebar {
-  background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
+  background: ${isDark ? "#404040" : "#e9ecef"};
+  color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -289,8 +290,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-right: 2px solid ${isDark ? "#d33bd9" : "#dbb8da"};
-  background: ${isDark ? "linear-gradient(to bottom, #8f0b7d, ##ad0aa8)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
+  border-right: 2px solid ${isDark ? "#555" : "#ccc"};
+  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
   padding: 8px;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -315,11 +316,11 @@
   min-height: 40%;
   width: 100%;
   padding: 8px 0 0 0;
-  background-color: ${isDark ? "##ad0aa8" : "#f1f1f1"};
+  background-color: ${isDark ? "#333" : "#f1f1f1"};
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-top: 1px solid ${isDark ? "#d33bd9" : "#a80da3"};
+  border-top: 1px solid ${isDark ? "#555" : "#ddd"};
   overflow-y: auto;
   overflow-x: hidden;
   margin-bottom: 0;
@@ -350,7 +351,7 @@
 }
 
 .server {
-  background-color: ${isDark ? "#d33bd9" : "#e0e0e0"};
+  background-color: ${isDark ? "#555" : "#e0e0e0"};
   width: 90%;
   padding: 5px 4px;
   margin-bottom: 1px;
@@ -367,7 +368,7 @@
 }
 
 .server.selected {
-  background-color: ${isDark ? "#777" : "#dbb8da"};
+  background-color: ${isDark ? "#777" : "#ccc"};
   box-shadow: 0 0 0 1px ${isDark ? "#888" : "#999"};
 }
 
@@ -379,8 +380,8 @@
 	font-weight: 500;
 	text-align: center;
 	border-radius: 6px;
-	background-color: ${isDark ? "#8f0b7d" : "#e8e8e8"};
-	color: ${isDark ? "#f5c4f3" : "##ad0aa8"};
+	background-color: ${isDark ? "#444" : "#e8e8e8"};
+	color: ${isDark ? "#fff" : "#333"};
 	transition: all 0.2s ease;
 	cursor: pointer;
 	border: 1px solid transparent;
@@ -388,7 +389,7 @@
 }
 
 .dm:hover {
-	background-color: ${isDark ? "#d33bd9" : "#d0d0d0"};
+	background-color: ${isDark ? "#555" : "#d0d0d0"};
 	transform: translateY(-1px);
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -401,15 +402,15 @@
 	justify-content: space-between;
 	height: 100%;
 	padding-left: 10px;
-	background-color: ${isDark ? "##ad0aa8" : "#f5c4f3"};
-	color: ${isDark ? "#a80da3" : "##ad0aa8"};
+	background-color: ${isDark ? "#333" : "#fff"};
+	color: ${isDark ? "#ddd" : "#333"};
 	min-width: 0;
 }
 
 #messages {
 	flex: 1;
 	overflow-y: auto;
-	background-color: ${isDark ? "#222" : "#f9f9f9"};
+	background-color: ${isDark ? "#520b4c" : "#faf5f9"};
 	padding: 10px;
 	margin-bottom: 10px;
 }
@@ -422,44 +423,34 @@
 	width: 95%;
 	max-width: 95%;
 	word-wrap: break-word;
-	background-color: ${isDark ? "#8f0b7d" : "#e0e0e0"};
-	color: ${isDark ? "#dbb8da" : "##ad0aa8"};
+	background-color: ${isDark ? "#e0e0e0" : "#e0e0e0"};
+	color: ${isDark ? "#ccc" : "#333"};
 }
 
 .message.sent {
 	text-align: right;
-	background-color: ${isDark ? "#4a4a4a" : "#e0f7fa"};
-	color: ${isDark ? "#dbb8dadbb8da" : "#006064"};
+	background-color: ${isDark ? "#4a4a4a" : "#e8d3e8"};
+	color: ${isDark ? "#cccccc" : "#006064"};
 }
 
 .message.received {
 	text-align: left;
-	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
-	color: ${isDark ? "#dbb8dadbb8da" : "#33691e"};
+	background-color: ${isDark ? "#3a3a3a" : "#fcebfc"};
+	color: ${isDark ? "#cccccc" : "#33691e"};
 }
 .message.received.unread {
-  background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
+  background-color: ${isDark ? "#4a3a3a" : "#e5d1e6"};
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
-.message.bot {
-  text-align: left;
-  background-color: ${isDark ? "#2a323c" : "#f0f7ff"};
-  color: ${isDark ? "#e2e8f0" : "#1a365d"};
-}
 
-.message.bot.unread {
-  background-color: ${isDark ? "#2d3748" : "#ebf8ff"};
-  border-left: 3px solid ${isDark ? "#90cdf4" : "#4299e1"};
-  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
-}
 .send-info {
 	font-size: 8px;
 	color: ${isDark ? "#888" : "#666"};
 }
 #message-send {
   padding: 10px;
-  background-color: ${isDark ? "#8f0b7d" : "#f1f1f1"};
+  background-color: ${isDark ? "#444" : "#e8d3e8"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -470,11 +461,11 @@
 	width: 80%;
 	padding: 10px;
 	border-radius: 5px;
-	border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+	border: 1px solid ${isDark ? "#555" : "#ccc"};
 	margin-top: auto;
 	margin-bottom: auto;
-	color: ${isDark ? "#a80da3" : "black"};
-	background-color: ${isDark ? "##ad0aa8" : "#f5c4f3"};
+	color: ${isDark ? "#ddd" : "black"};
+	background-color: ${isDark ? "#333" : "#fff"};
 }
 
 #send-button {
@@ -499,13 +490,13 @@
     margin: 8px 0;
     min-height: 24px;
     padding: 4px;
-    border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+    border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
     overflow: hidden;
 }
 
 .selected-member {
-    background: ${isDark ? "#8f0b7d" : "#e0e0e0"};
+    background: ${isDark ? "#444" : "#e0e0e0"};
     padding: 2px 6px;
     border-radius: 12px;
     display: flex;
@@ -517,7 +508,7 @@
 
 .remove-member {
     cursor: pointer;
-    color: ${isDark ? "#f5c4f3" : "#666"};
+    color: ${isDark ? "#fff" : "#666"};
     font-weight: bold;
     font-size: 0.9em;
 }
@@ -527,13 +518,13 @@
 }
 
 .members-list {
-    border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+    border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
     max-height: 200px;
     overflow-y: auto;
     position: absolute;
     width: 100%;
-    background: ${isDark ? "##ad0aa8" : "#f5c4f3"};
+    background: ${isDark ? "#333" : "#fff"};
     display: none;
 }
 
@@ -543,14 +534,14 @@
 }
 
 .member-option:hover {
-    background: ${isDark ? "#8f0b7d" : "#f0f0f0"};
+    background: ${isDark ? "#444" : "#f0f0f0"};
 }
 
 #member-search {
     width: 100%;
     padding: 8px;
     margin: 8px 0;
-    border: 1px solid ${isDark ? "#d33bd9" : "#dbb8da"};
+    border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
 }
 `;
@@ -777,4 +768,3 @@
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
 })();
-
