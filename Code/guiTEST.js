@@ -110,7 +110,7 @@
 	box-sizing: border-box;
 	overflow-y: auto;
 	margin-top: 20px;
-	background-color: ${isDark ? "#3b1039" : "#fff0fe"};
+	background-color: ${isDark ? "#cc06c5" : "#f07fec"};
 	color: ${isDark ? "#ddd" : "#333"};
 }
 
@@ -173,7 +173,7 @@
   align-items: flex-start;
   padding: 0;
   box-sizing: border-box;
-  background-color: ${isDark ? "#222" : "#fff"};
+  background-color: ${isDark ? "#ad68ab" : "#dbb8da"};
   color: ${isDark ? "#ddd" : "#333"};
   height: 100%;
 }
