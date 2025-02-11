@@ -409,7 +409,7 @@
 #messages {
 	flex: 1;
 	overflow-y: auto;
-	background-color: ${isDark ? "#222" : "#f9f9f9"};
+	background-color: ${isDark ? "#520b4c" : "#faf5f9"};
 	padding: 10px;
 	margin-bottom: 10px;
 }
@@ -449,7 +449,7 @@
 }
 #message-send {
   padding: 10px;
-  background-color: ${isDark ? "#444" : "#f1f1f1"};
+  background-color: ${isDark ? "#444" : "#e8d3e8"};
   display: flex;
   justify-content: center;
   align-items: center;
