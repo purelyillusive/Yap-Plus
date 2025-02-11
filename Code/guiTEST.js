@@ -29,7 +29,7 @@
 	height: 50%;
 	z-index: 1000000;
 	background-color: ${isDark ? "#692e60" : "#fcdeff"};
-	color: ${isDark ? "#ddd" : "#333"};
+	color: ${isDark ? "#a80da3" : "#333"};
 	font-family: 'Aptos',
 		Calibri,
 		sans-serif;
@@ -49,7 +49,7 @@
 	right: 0;
 	left: 0;
 	height: 40px;
-	background-color: ${isDark ? "#3b1039" : "#fff0fe"};
+	background-color: ${isDark ? "#3b1039" : "#f5c4f30fe"};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -72,15 +72,15 @@
 	align-items: center;
 	font-size: 18px;
 	margin: 0 2px;
-	background-color: ${isDark ? "#3b1039" : "#fff0fe"};
-	color: ${isDark ? "#ddd" : "#333"};
-	border: 1px solid ${isDark ? "#444" : "#ccc"};
+	background-color: ${isDark ? "#3b1039" : "#f5c4f30fe"};
+	color: ${isDark ? "#a80da3" : "#333"};
+	border: 1px solid ${isDark ? "#444" : "#dbb8da"};
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
 
 #bookmarklet-gui-header button:hover {
-	background-color: ${isDark ? "#555" : "#ddd"};
+	background-color: ${isDark ? "#555" : "#a80da3"};
 	color: ${isDark ? "#eee" : "#333"};
 }
 
@@ -111,7 +111,7 @@
 	overflow-y: auto;
 	margin-top: 20px;
 	background-color: ${isDark ? "#cc06c5" : "#f07fec"};
-	color: ${isDark ? "#ddd" : "#333"};
+	color: ${isDark ? "#a80da3" : "#333"};
 }
 
 .screen.hidden {
@@ -132,36 +132,36 @@
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	color: ${isDark ? "#ddd" : "#333"};
-	background-color: ${isDark ? "#444" : "#ddd"};
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	color: ${isDark ? "#a80da3" : "#333"};
+	background-color: ${isDark ? "#444" : "#a80da3"};
+	border: 1px solid ${isDark ? "#555" : "#dbb8da"};
 }
 
 .screen button:hover {
-	background-color: ${isDark ? "#555" : "#ccc"};
+	background-color: ${isDark ? "#555" : "#dbb8da"};
 	color: ${isDark ? "#eee" : "#333"};
 }
 
 .screen h2,
 .screen h3 {
-	color: ${isDark ? "#ddd" : "#333"};
+	color: ${isDark ? "#a80da3" : "#333"};
 	text-align: center;
 }
 
 .screen label {
-	color: ${isDark ? "#ddd" : "#333"};
+	color: ${isDark ? "#a80da3" : "#333"};
 }
 
 .screen textarea {
 	min-height: 50px;
-	color: ${isDark ? "#ddd" : "#333"};
-	background-color: ${isDark ? "#444" : "#fff"};
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	color: ${isDark ? "#a80da3" : "#333"};
+	background-color: ${isDark ? "#444" : "#f5c4f3"};
+	border: 1px solid ${isDark ? "#555" : "#dbb8da"};
 }
 
 .screen div {
 	width: 90%;
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	border: 1px solid ${isDark ? "#555" : "#dbb8da"};
 	justify-items: center;
 }
 
@@ -174,7 +174,7 @@
   padding: 0;
   box-sizing: border-box;
   background-color: ${isDark ? "#ad68ab" : "#dbb8da"};
-  color: ${isDark ? "#ddd" : "#333"};
+  color: ${isDark ? "#a80da3" : "#333"};
   height: 100%;
 }
 
@@ -215,7 +215,7 @@
 
 #customize-profile {
   background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -229,7 +229,7 @@
 
 #dark-mode {
   background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -243,7 +243,7 @@
 
 #read-all {
   background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -257,7 +257,7 @@
 
 #hide-left-sidebar {
   background: ${isDark ? "#c400be" : "#ffc7fd"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  color: ${isDark ? "#f5c4f3f5c4f3" : "#495057"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -289,7 +289,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-right: 2px solid ${isDark ? "#555" : "#ccc"};
+  border-right: 2px solid ${isDark ? "#555" : "#dbb8da"};
   background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
   padding: 8px;
   box-sizing: border-box;
@@ -319,7 +319,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-top: 1px solid ${isDark ? "#555" : "#ddd"};
+  border-top: 1px solid ${isDark ? "#555" : "#a80da3"};
   overflow-y: auto;
   overflow-x: hidden;
   margin-bottom: 0;
@@ -367,7 +367,7 @@
 }
 
 .server.selected {
-  background-color: ${isDark ? "#777" : "#ccc"};
+  background-color: ${isDark ? "#777" : "#dbb8da"};
   box-shadow: 0 0 0 1px ${isDark ? "#888" : "#999"};
 }
 
@@ -380,7 +380,7 @@
 	text-align: center;
 	border-radius: 6px;
 	background-color: ${isDark ? "#444" : "#e8e8e8"};
-	color: ${isDark ? "#fff" : "#333"};
+	color: ${isDark ? "#f5c4f3" : "#333"};
 	transition: all 0.2s ease;
 	cursor: pointer;
 	border: 1px solid transparent;
@@ -401,8 +401,8 @@
 	justify-content: space-between;
 	height: 100%;
 	padding-left: 10px;
-	background-color: ${isDark ? "#333" : "#fff"};
-	color: ${isDark ? "#ddd" : "#333"};
+	background-color: ${isDark ? "#333" : "#f5c4f3"};
+	color: ${isDark ? "#a80da3" : "#333"};
 	min-width: 0;
 }
 
@@ -423,19 +423,19 @@
 	max-width: 95%;
 	word-wrap: break-word;
 	background-color: ${isDark ? "#444" : "#e0e0e0"};
-	color: ${isDark ? "#ccc" : "#333"};
+	color: ${isDark ? "#dbb8da" : "#333"};
 }
 
 .message.sent {
 	text-align: right;
 	background-color: ${isDark ? "#4a4a4a" : "#e0f7fa"};
-	color: ${isDark ? "#cccccc" : "#006064"};
+	color: ${isDark ? "#dbb8dadbb8da" : "#006064"};
 }
 
 .message.received {
 	text-align: left;
 	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
-	color: ${isDark ? "#cccccc" : "#33691e"};
+	color: ${isDark ? "#dbb8dadbb8da" : "#33691e"};
 }
 .message.received.unread {
   background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
@@ -470,11 +470,11 @@
 	width: 80%;
 	padding: 10px;
 	border-radius: 5px;
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	border: 1px solid ${isDark ? "#555" : "#dbb8da"};
 	margin-top: auto;
 	margin-bottom: auto;
-	color: ${isDark ? "#ddd" : "black"};
-	background-color: ${isDark ? "#333" : "#fff"};
+	color: ${isDark ? "#a80da3" : "black"};
+	background-color: ${isDark ? "#333" : "#f5c4f3"};
 }
 
 #send-button {
@@ -499,7 +499,7 @@
     margin: 8px 0;
     min-height: 24px;
     padding: 4px;
-    border: 1px solid ${isDark ? "#555" : "#ccc"};
+    border: 1px solid ${isDark ? "#555" : "#dbb8da"};
     border-radius: 4px;
     overflow: hidden;
 }
@@ -517,7 +517,7 @@
 
 .remove-member {
     cursor: pointer;
-    color: ${isDark ? "#fff" : "#666"};
+    color: ${isDark ? "#f5c4f3" : "#666"};
     font-weight: bold;
     font-size: 0.9em;
 }
@@ -527,13 +527,13 @@
 }
 
 .members-list {
-    border: 1px solid ${isDark ? "#555" : "#ccc"};
+    border: 1px solid ${isDark ? "#555" : "#dbb8da"};
     border-radius: 4px;
     max-height: 200px;
     overflow-y: auto;
     position: absolute;
     width: 100%;
-    background: ${isDark ? "#333" : "#fff"};
+    background: ${isDark ? "#333" : "#f5c4f3"};
     display: none;
 }
 
@@ -550,7 +550,7 @@
     width: 100%;
     padding: 8px;
     margin: 8px 0;
-    border: 1px solid ${isDark ? "#555" : "#ccc"};
+    border: 1px solid ${isDark ? "#555" : "#dbb8da"};
     border-radius: 4px;
 }
 `;
