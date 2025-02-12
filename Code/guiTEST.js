@@ -291,7 +291,7 @@
   flex-direction: column;
   height: 100%;
   border-right: 2px solid ${isDark ? "#555" : "#ccc"};
-  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
+  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #faf5f9, #d2a6c9)"};
   padding: 8px;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -316,7 +316,7 @@
   min-height: 40%;
   width: 100%;
   padding: 8px 0 0 0;
-  background-color: ${isDark ? "#333" : "#f1f1f1"};
+  background-color: ${isDark ? "#333" : "#faf5f9"};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -402,7 +402,7 @@
 	justify-content: space-between;
 	height: 100%;
 	padding-left: 10px;
-	background-color: ${isDark ? "#333" : "#fff"};
+	background-color: ${isDark ? "#333" : "#faf5f9"};
 	color: ${isDark ? "#ddd" : "#333"};
 	min-width: 0;
 }
