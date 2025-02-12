@@ -291,7 +291,7 @@
   flex-direction: column;
   height: 100%;
   border-right: 2px solid ${isDark ? "#555" : "#ccc"};
-  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #faf5f9, #d2a6c9)"};
+  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #d2a6c9, #dbb8d4)"};
   padding: 8px;
   box-sizing: border-box;
   flex-shrink: 0;
