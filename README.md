@@ -1,3 +1,3 @@
-# Yap-Window says READ THE TandC's or else
+# STOP EDITTING
 
-Eliana says yiyang says ____ likes _____
+Skill Issue
