@@ -1,4 +1,3 @@
-
 (async function () {
   const style = document.createElement("style");
   style.id = "bookmarklet-style";
