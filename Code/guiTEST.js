@@ -206,7 +206,7 @@
   flex-direction: row;
   align-items: center;
   border-bottom: 1px solid ${isDark ? "#444" : "#e0e0e0"};
-  background: ${isDark ? "#2a2a2a" : "#f8f9fa"};
+  background: ${isDark ? "#2a2a2a" : "#f6c1f6"};
   padding: 0 16px;
   gap: 12px;
   position: sticky;
@@ -215,7 +215,7 @@
 }
 
 #customize-profile {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#404040" : "#ec81ec"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -225,11 +225,11 @@
 }
 
 #customize-profile:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#505050" : "#e657e6"};
 }
 
 #dark-mode {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#404040" : "#ec81ec"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -239,11 +239,11 @@
 }
 
 #dark-mode:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#505050" : "#e657e6"};
 }
 
 #read-all {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#404040" : "#ec81ec"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -253,11 +253,11 @@
 }
 
 #read-all:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#505050" : "#e657e6"};
 }
 
 #hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#e9ecef"};
+  background: ${isDark ? "#404040" : "#ec81ec"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -267,7 +267,7 @@
 }
 
 #hide-left-sidebar:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#505050" : "#e657e6"};
 }
 
 .setting-button {
@@ -440,7 +440,7 @@
 }
 .message.received.unread {
   background-color: ${isDark ? "#4a3a3a" : "#e5d1e6"};
-  border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
+  border-left: 3px solid ${isDark ? "#ff6b6b" : "#d2a6c9"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
 
