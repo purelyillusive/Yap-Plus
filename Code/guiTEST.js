@@ -50,7 +50,7 @@
 	right: 0;
 	left: 0;
 	height: 40px;
-	background-color: ${isDark ? "#444" : "#ccc"};
+	background-color: ${isDark ? "#444" : "#f6c1f6"};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -316,7 +316,7 @@
   min-height: 40%;
   width: 100%;
   padding: 8px 0 0 0;
-  background-color: ${isDark ? "#333" : "#faf5f9"};
+  background-color: ${isDark ? "#333" : "#fcebfc"};
   display: flex;
   flex-direction: column;
   align-items: center;
