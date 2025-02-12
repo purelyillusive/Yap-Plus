@@ -215,7 +215,7 @@
 }
 
 #customize-profile {
-  background: ${isDark ? "#404040" : "#ec81ec"};
+  background: ${isDark ? "#404040" : "#e8d3e8"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -225,11 +225,11 @@
 }
 
 #customize-profile:hover {
-  background: ${isDark ? "#505050" : "#e657e6"};
+  background: ${isDark ? "#505050" : "#ca99ca"};
 }
 
 #dark-mode {
-  background: ${isDark ? "#404040" : "#ec81ec"};
+  background: ${isDark ? "#404040" : "#e8d3e8"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -239,11 +239,11 @@
 }
 
 #dark-mode:hover {
-  background: ${isDark ? "#505050" : "#e657e6"};
+  background: ${isDark ? "#505050" : "#ca99ca"};
 }
 
 #read-all {
-  background: ${isDark ? "#404040" : "#ec81ec"};
+  background: ${isDark ? "#404040" : "#e8d3e8"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -253,11 +253,11 @@
 }
 
 #read-all:hover {
-  background: ${isDark ? "#505050" : "#e657e6"};
+  background: ${isDark ? "#505050" : "#ca99ca"};
 }
 
 #hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#ec81ec"};
+  background: ${isDark ? "#404040" : "#e8d3e8"};
   color: ${isDark ? "#ffffff" : "#495057"};
   border: none;
   padding: 6px 16px;
@@ -267,7 +267,7 @@
 }
 
 #hide-left-sidebar:hover {
-  background: ${isDark ? "#505050" : "#e657e6"};
+  background: ${isDark ? "#505050" : "#ca99ca"};
 }
 
 .setting-button {
@@ -439,7 +439,7 @@
 	color: ${isDark ? "#cccccc" : "#33691e"};
 }
 .message.received.unread {
-  background-color: ${isDark ? "#4a3a3a" : "#e5d1e6"};
+  background-color: ${isDark ? "#4a3a3a" : "#fcebfc"};
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#d2a6c9"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
