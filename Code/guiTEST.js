@@ -115,6 +115,7 @@
 }
 
 /* Login and Signup Background Styles */
+#main-screen,
 #login-screen,
 #create-account-screen,
 #stay-login-screen,
