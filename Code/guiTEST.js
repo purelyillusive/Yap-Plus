@@ -1,4 +1,3 @@
-
 (async function () {
   const style = document.createElement("style");
   style.id = "bookmarklet-style";
@@ -113,6 +112,36 @@
 	margin-top: 20px;
 	background-color: ${isDark ? "#333" : "#fff"};
 	color: ${isDark ? "#ddd" : "#333"};
+}
+
+/* Login and Signup Background Styles */
+#login-screen,
+#create-account-screen,
+#stay-login-screen,
+#saved-account {
+    background-color: ${isDark ? "#3a3a3a" : "#fff0f5"};
+}
+
+#email-login-section,
+#email-create-section,
+#google-login-section,
+#google-create-section {
+    background-color: ${isDark ? "#444" : "#ffebf3"};
+    border: 1px solid ${isDark ? "#555" : "#ffd6e7"} !important;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+#login-button,
+#create-account-button {
+    background-color: ${isDark ? "#8c5a72" : "#ffb6c1"};
+    border: 1px solid ${isDark ? "#a67a8e" : "#ff8da1"};
+}
+
+#login-button:hover,
+#create-account-button:hover {
+    background-color: ${isDark ? "#a67a8e" : "#ff8da1"};
 }
 
 .screen.hidden {
@@ -549,6 +578,8 @@
 
   document.head.appendChild(style);
   updateColor();
+
+  // Rest of the code remains unchanged...
 
   const gui = document.createElement("div");
   gui.id = "bookmarklet-gui";
