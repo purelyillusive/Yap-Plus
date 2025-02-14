@@ -429,7 +429,7 @@
 }
 
 .message.received.unread {
-  background-color: ${isDark ? "#704870" : "#ff9ec2"};
+  background-color: ${isDark ? "#704870" : "#ffc1d8"};
   border-left: 3px solid ${isDark ? "#ff69b4" : "#ff69b4"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
