@@ -19,254 +19,473 @@
   });
 
   function updateColor() {
-  style.innerHTML = `
-    /* Dark mode with pink theme */
-    #bookmarklet-gui {
-      background-color: ${isDark ? "#1a1218" : "#fff"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    #bookmarklet-gui-header {
-      background-color: ${isDark ? "#3f2a38" : "#f6c1f6"};
-    }
-
-    #bookmarklet-gui-header button {
-      background-color: ${isDark ? "#5d3f56" : "#ccc"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-      border: 1px solid ${isDark ? "#6d4964" : "#ccc"};
-    }
-
-    #bookmarklet-gui-header button:hover {
-      background-color: ${isDark ? "#7a5371" : "#ddd"};
-      color: ${isDark ? "#ffffff" : "#333"};
-    }
-
-    .screen {
-      background-color: ${isDark ? "#1a1218" : "#fff"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    /* Login and Signup Background Styles - Pink Dark Mode */
-    #main-screen,
-    #login-screen,
-    #create-account-screen,
-    #stay-login-screen,
-    #saved-account {
-      background-color: ${isDark ? "#291824" : "#fff0f5"};
-    }
-
-    #email-login-section,
-    #email-create-section,
-    #google-login-section,
-    #google-create-section {
-      background-color: ${isDark ? "#3d2a36" : "#ffebf3"};
-      border: 1px solid ${isDark ? "#5d3f56" : "#ffd6e7"} !important;
-    }
-
-    #login-button,
-    #create-account-button {
-      background-color: ${isDark ? "#8c5a7f" : "#ffb6c1"};
-      border: 1px solid ${isDark ? "#a67a96" : "#ff8da1"};
-    }
-
-    #login-button:hover,
-    #create-account-button:hover {
-      background-color: ${isDark ? "#a67a96" : "#ff8da1"};
-    }
-
-    /* Profile Customization - make pink in dark mode */
-    #customize-account-screen {
-      background-color: ${isDark ? "#291824" : "#fff0f5"};
-    }
-
-    #customize-account-screen input,
-    #customize-account-screen textarea {
-      background-color: ${isDark ? "#3d2a36" : "#fff"};
-      border: 1px solid ${isDark ? "#5d3f56" : "#ccc"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    #submit-customize {
-      background-color: ${isDark ? "#8c5a7f" : "#ffb6c1"};
-      border: 1px solid ${isDark ? "#a67a96" : "#ff8da1"};
-      color: ${isDark ? "#ffffff" : "#333"};
-    }
-
-    #submit-customize:hover {
-      background-color: ${isDark ? "#a67a96" : "#ff8da1"};
-    }
-
-    /* Channel Creation Screen - pink in dark mode */
-    #channel-screen {
-      background-color: ${isDark ? "#291824" : "#fff0f5"};
-    }
-
-    #channel-screen input,
-    #channel-screen textarea,
-    #channel-screen select {
-      background-color: ${isDark ? "#3d2a36" : "#fff"};
-      border: 1px solid ${isDark ? "#5d3f56" : "#ccc"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    #submit-channel,
-    #back-channel {
-      background-color: ${isDark ? "#8c5a7f" : "#ffb6c1"};
-      border: 1px solid ${isDark ? "#a67a96" : "#ff8da1"};
-      color: ${isDark ? "#ffffff" : "#333"};
-    }
-
-    #submit-channel:hover,
-    #back-channel:hover {
-      background-color: ${isDark ? "#a67a96" : "#ff8da1"};
-    }
-
-    /* Chat elements */
-    #chat-screen {
-      background-color: ${isDark ? "#1a1218" : "#faf5f9"};
-    }
-
-    #settings-bar {
-      background: ${isDark ? "#3f2a38" : "#f6c1f6"};
-    }
-
-    #customize-profile,
-    #dark-mode,
-    #read-all,
-    #hide-left-sidebar {
-      background: ${isDark ? "#5d3f56" : "#e8d3e8"};
-      color: ${isDark ? "#f8e1f4" : "#495057"};
-    }
-
-    #customize-profile:hover,
-    #dark-mode:hover,
-    #read-all:hover,
-    #hide-left-sidebar:hover {
-      background: ${isDark ? "#7a5371" : "#ca99ca"};
-    }
-
-    #left-sidebar {
-      background: ${isDark ? "linear-gradient(to bottom, #3f2a38, #291824)" : "linear-gradient(to bottom, #d2a6c9, #dbb8d4)"};
-      border-right: 2px solid ${isDark ? "#5d3f56" : "#ccc"};
-    }
-
-    #bottom-left-sidebar {
-      background-color: ${isDark ? "#291824" : "#fcebfc"};
-      border-top: 1px solid ${isDark ? "#5d3f56" : "#ddd"};
-    }
-
-    #create-new-server {
-      background-color: ${isDark ? "#8c5a7f" : "#5865F2"};
-    }
-
-    #create-new-server:hover {
-      background-color: ${isDark ? "#a67a96" : "#4752C4"};
-    }
-
-    .server {
-      background-color: ${isDark ? "#5d3f56" : "#e0e0e0"};
-    }
-
-    .server:hover {
-      background-color: ${isDark ? "#7a5371" : "#d0d0d0"};
-    }
-
-    .server.selected {
-      background-color: ${isDark ? "#8c5a7f" : "#ccc"};
-      box-shadow: 0 0 0 1px ${isDark ? "#a67a96" : "#999"};
-    }
-
-    .dm {
-      background-color: ${isDark ? "#3d2a36" : "#e8e8e8"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    .dm:hover {
-      background-color: ${isDark ? "#5d3f56" : "#d0d0d0"};
-    }
-
-    #right-sidebar {
-      background-color: ${isDark ? "#1a1218" : "#faf5f9"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    #messages {
-      background-color: ${isDark ? "#291824" : "#faf5f9"};
-    }
-
-    .message {
-      background-color: ${isDark ? "#3d2a36" : "#e0e0e0"};
-      color: ${isDark ? "#f8e1f4" : "#333"};
-    }
-
-    .message.sent {
-      background-color: ${isDark ? "#5d3f56" : "#e8d3e8"};
-      color: ${isDark ? "#f8e1f4" : "#006064"};
-    }
-
-    .message.received {
-      background-color: ${isDark ? "#3d2a36" : "#fcebfc"};
-      color: ${isDark ? "#f8e1f4" : "#33691e"};
-    }
-
-    .message.received.unread {
-      background-color: ${isDark ? "#4d3a3a" : "#fcebfc"};
-      border-left: 3px solid ${isDark ? "#ff6b8b" : "#d2a6c9"};
-    }
-
-    .send-info {
-      color: ${isDark ? "#a67a96" : "#666"};
-    }
-
-    #message-send {
-      background-color: ${isDark ? "#3d2a36" : "#e8d3e8"};
-    }
-
-    #message-input {
-      border: 1px solid ${isDark ? "#5d3f56" : "#ccc"};
-      color: ${isDark ? "#f8e1f4" : "black"};
-      background-color: ${isDark ? "#291824" : "#fff"};
-    }
-
-    #send-button {
-      background-color: ${isDark ? "#8c5a7f" : "#00796b"};
-    }
-
-    #send-button:hover {
-      background-color: ${isDark ? "#a67a96" : "#004d40"};
-    }
-
-    .selected-members-container {
-      border: 1px solid ${isDark ? "#5d3f56" : "#ccc"};
-    }
-
-    .selected-member {
-      background: ${isDark ? "#3d2a36" : "#e0e0e0"};
-    }
-
-    .remove-member {
-      color: ${isDark ? "#f8e1f4" : "#666"};
-    }
-
-    .members-list {
-      border: 1px solid ${isDark ? "#5d3f56" : "#ccc"};
-      background: ${isDark ? "#291824" : "#fff"};
-    }
-
-    .member-option:hover {
-      background: ${isDark ? "#3d2a36" : "#f0f0f0"};
-    }
-
-    #member-search {
-      border: 1px solid ${isDark ? "#5d3f56" : "#ccc"};
-    }
-  `;
+    style.innerHTML = `
+#bookmarklet-gui {
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 40%;
+	height: 50%;
+	z-index: 1000000;
+	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	font-family: 'Aptos',
+		Calibri,
+		sans-serif;
+	border-radius: 10px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	resize: both;
+	overflow: hidden;
 }
+
+#bookmarklet-gui-header {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 40px;
+	background-color: ${isDark ? "#3d243d" : "#ffcce6"};
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+#bookmarklet-gui-header .button-group {
+	display: flex;
+	gap: 5px;
+}
+
+#bookmarklet-gui-header button {
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 18px;
+	margin: 0 2px;
+	background-color: ${isDark ? "#3d243d" : "#ffcce6"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+
+#bookmarklet-gui-header button:hover {
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
+}
+
+#bookmarklet-close:hover {
+	background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
+	color: white;
+}
+
+#bookmarklet-minimize:hover {
+	background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
+	color: ${isDark ? "#4a2d4a" : "#4a2d4a"};
+}
+
+#bookmarklet-maximize:hover {
+	background-color: ${isDark ? "#ffb3d9" : "#ffb3d9"};
+	color: ${isDark ? "#4a2d4a" : "#4a2d4a"};
+}
+
+.screen {
+	width: 100%;
+	height: calc(100% - 40px);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 20px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	margin-top: 20px;
+	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+}
+
+.screen.hidden {
+	display: none;
+}
+
+.screen input,
+.screen textarea,
+.screen button {
+	width: 100%;
+	height: auto;
+	margin: 10px 0;
+	padding: 10px;
+	border-radius: 5px;
+	box-sizing: border-box;
+	font-size: 12px;
+	text-align: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+.screen button:hover {
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
+}
+
+.screen h2,
+.screen h3 {
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	text-align: center;
+}
+
+.screen label {
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+}
+
+.screen textarea {
+	min-height: 50px;
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	background-color: ${isDark ? "#3d243d" : "#fff5fa"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+.screen div {
+	width: 90%;
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	justify-items: center;
+}
+
+.chat {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: ${isDark ? "#1d111d" : "#fff5fa"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  height: 100%;
+}
+
+.chat.hidden {
+  display: none !important;
+}
+
+#chat-screen {
+  flex-direction: column;
+  margin-top: 40px;
+  padding-top: 0;
+  height: calc(100% - 40px);
+}
+
+#lower-chat {
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 40px);
+  width: 100%;
+  margin: 0;
+}
+
+#settings-bar {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  background: ${isDark ? "#2d1a2d" : "#fff0f5"};
+  padding: 0 16px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#customize-profile {
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+#customize-profile:hover {
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+#dark-mode {
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+#dark-mode:hover {
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+#read-all {
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+#read-all:hover {
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+#hide-left-sidebar {
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+#hide-left-sidebar:hover {
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+.setting-button {
+  height: 32px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#left-sidebar {
+  width: 20%;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 2px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  background: ${isDark ? "linear-gradient(to bottom, #3d243d, #2d1a2d)" : "linear-gradient(to bottom, #ffe6f2, #ffd6eb)"};
+  padding: 8px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+#top-left-sidebar {
+  height: 60%;
+  min-height: 60%;
+  max-height: 60%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#bottom-left-sidebar {
+  height: 40%;
+  min-height: 40%;
+  width: 100%;
+  padding: 8px 0 0 0;
+  background-color: ${isDark ? "#2d1a2d" : "#fff0f5"};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 0;
+}
+
+#server-list {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#create-new-server {
+  padding: 8px 5px;
+  background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 90%;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-bottom: 8px;
+}
+
+#create-new-server:hover {
+  background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
+}
+
+.server {
+  background-color: ${isDark ? "#4d2e4d" : "#ffe6f2"};
+  width: 90%;
+  padding: 5px 4px;
+  margin-bottom: 1px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.server:hover {
+  background-color: ${isDark ? "#5d3e5d" : "#ffb3d9"};
+}
+
+.server.selected {
+  background-color: ${isDark ? "#6d4e6d" : "#ff99cc"};
+  box-shadow: 0 0 0 1px ${isDark ? "#7d5e7d" : "#ff69b4"};
+}
+
+.dm {
+	width: 90%;
+	padding: 8px 12px;
+	margin: 0;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	border-radius: 6px;
+	background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	transition: all 0.2s ease;
+	cursor: pointer;
+	border: 1px solid transparent;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dm:hover {
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	transform: translateY(-1px);
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#right-sidebar {
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+	padding-left: 10px;
+	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	min-width: 0;
+}
+
+#messages {
+	flex: 1;
+	overflow-y: auto;
+	background-color: ${isDark ? "#1d111d" : "#fff5fa"};
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+.message {
+	padding: 3px 8px;
+	margin-bottom: 3px;
+	border-radius: 5px;
+	font-size: 12px;
+	width: 95%;
+	max-width: 95%;
+	word-wrap: break-word;
+	background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+}
+
+.message.sent {
+	text-align: right;
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
+}
+
+.message.received {
+	text-align: left;
+	background-color: ${isDark ? "#3d243d" : "#fff0f5"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+}
+    .message.received.unread {
+  background-color: ${isDark ? "#4d2e4d" : "#ffcce6"};
+  border-left: 3px solid ${isDark ? "#ff69b4" : "#ff69b4"};
+  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
+}
+
+.send-info {
+  color: ${isDark ? "#ff99cc" : "#ff69b4"};
+}
+
+#message-send {
+  background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+}
+
+#message-input {
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+}
+
+#send-button {
+  background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
+}
+
+#send-button:hover {
+  background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
+}
+
+.selected-members-container {
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+
+.selected-member {
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+}
+
+.remove-member {
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+}
+
+.members-list {
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  background: ${isDark ? "#2d1a2d" : "#fff5fa"};
+}
+
+.member-option:hover {
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+}
+
+#member-search {
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+}
+  `;
+  }
 
   document.head.appendChild(style);
   updateColor();
-
-  // Rest of the code remains unchanged...
 
   const gui = document.createElement("div");
   gui.id = "bookmarklet-gui";
