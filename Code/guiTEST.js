@@ -437,6 +437,7 @@
 }
 
 .send-info {
+  font-size: 8px;
   color: ${isDark ? "#ff99cc" : "#ff69b4"};
 }
 
