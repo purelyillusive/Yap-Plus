@@ -30,7 +30,7 @@
 	z-index: 1000000;
 	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
 	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
-	font-family: 'Quicksand', 'Aptos', Calibri, sans-serif;
+	font-family: 'Quicksand', 'Aptos', Calibri, sans-serif !important;
 	border-radius: 10px;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 	display: flex;
@@ -418,7 +418,7 @@
 
 .message.sent {
   text-align: right;
-  background-color: ${isDark ? "#4d2e4d" : "#ffc9e0"};
+  background-color: ${isDark ? "#5d3a5d" : "#ffd6eb"};
   color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
 }
 
@@ -429,7 +429,7 @@
 }
 
 .message.received.unread {
-  background-color: ${isDark ? "#4d2e4d" : "#ffb7d5"};
+  background-color: ${isDark ? "#704870" : "#ff9ec2"};
   border-left: 3px solid ${isDark ? "#ff69b4" : "#ff69b4"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
