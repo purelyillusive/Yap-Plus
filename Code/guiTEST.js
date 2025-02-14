@@ -20,7 +20,7 @@
 
   function updateColor() {
     style.innerHTML = `
-@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap');
     
 #bookmarklet-gui {
 	position: fixed;
@@ -32,7 +32,7 @@
 	z-index: 1000000;
 	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
 	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
-	font-family: 'Satisfy', 'Quicksand', 'Aptos', Calibri, sans-serif !important;
+	font-family: 'Patrick Hand SC', 'Quicksand', 'Aptos', Calibri, sans-serif !important;
 	border-radius: 10px;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 	display: flex;
