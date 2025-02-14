@@ -30,9 +30,7 @@
 	z-index: 1000000;
 	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
 	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
-	font-family: 'Aptos',
-		Calibri,
-		sans-serif;
+	font-family: 'Quicksand', 'Aptos', Calibri, sans-serif;
 	border-radius: 10px;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 	display: flex;
@@ -419,18 +417,19 @@
 }
 
 .message.sent {
-	text-align: right;
-	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
-	color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
+  text-align: right;
+  background-color: ${isDark ? "#4d2e4d" : "#ffc9e0"};
+  color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
 }
 
 .message.received {
-	text-align: left;
-	background-color: ${isDark ? "#3d243d" : "#fff0f5"};
-	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  text-align: left;
+  background-color: ${isDark ? "#3d243d" : "#ffe0eb"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 }
-    .message.received.unread {
-  background-color: ${isDark ? "#4d2e4d" : "#ffcce6"};
+
+.message.received.unread {
+  background-color: ${isDark ? "#4d2e4d" : "#ffb7d5"};
   border-left: 3px solid ${isDark ? "#ff69b4" : "#ff69b4"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
@@ -440,23 +439,40 @@
 }
 
 #message-send {
+  padding: 10px;
   background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
 }
 
 #message-input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 5px;
   border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  margin-top: auto;
+  margin-bottom: auto;
   color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
   background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
 }
 
 #send-button {
+  padding: 10px 30px;
   background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
 }
 
 #send-button:hover {
   background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
 }
-
 .selected-members-container {
   border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
