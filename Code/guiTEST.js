@@ -20,6 +20,8 @@
 
   function updateColor() {
     style.innerHTML = `
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+    
 #bookmarklet-gui {
 	position: fixed;
 	top: 10%;
@@ -30,7 +32,7 @@
 	z-index: 1000000;
 	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
 	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
-	font-family: 'Quicksand', 'Aptos', Calibri, sans-serif !important;
+	font-family: 'Satisfy', 'Quicksand', 'Aptos', Calibri, sans-serif !important;
 	border-radius: 10px;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 	display: flex;
@@ -429,7 +431,7 @@
 }
 
 .message.received.unread {
-  background-color: ${isDark ? "#704870" : "#ffc1d8"};
+  background-color: ${isDark ? "#704870" : "#ff9ec2"};
   border-left: 3px solid ${isDark ? "#ff69b4" : "#ff69b4"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
