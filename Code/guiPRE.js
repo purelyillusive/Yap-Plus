@@ -20,6 +20,7 @@
 
   function updateColor() {
     style.innerHTML = `
+    
 #bookmarklet-gui {
 	position: fixed;
 	top: 10%;
@@ -28,11 +29,9 @@
 	width: 40%;
 	height: 50%;
 	z-index: 1000000;
-	background-color: ${isDark ? "#333" : "#fff"};
-	color: ${isDark ? "#ddd" : "#333"};
-	font-family: 'Aptos',
-		Calibri,
-		sans-serif;
+	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	font-family: 'Quicksand', 'Aptos', Calibri, sans-serif !important;
 	border-radius: 10px;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 	display: flex;
@@ -49,7 +48,7 @@
 	right: 0;
 	left: 0;
 	height: 40px;
-	background-color: ${isDark ? "#444" : "#ccc"};
+	background-color: ${isDark ? "#3d243d" : "#ffcce6"};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -72,31 +71,31 @@
 	align-items: center;
 	font-size: 18px;
 	margin: 0 2px;
-	background-color: ${isDark ? "#444" : "#ccc"};
-	color: ${isDark ? "#ddd" : "#333"};
-	border: 1px solid ${isDark ? "#444" : "#ccc"};
+	background-color: ${isDark ? "#3d243d" : "#ffcce6"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
 
 #bookmarklet-gui-header button:hover {
-	background-color: ${isDark ? "#555" : "#ddd"};
-	color: ${isDark ? "#eee" : "#333"};
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
 }
 
 #bookmarklet-close:hover {
-	background-color: ${isDark ? "#ff4d4d" : "#ff4d4d"};
+	background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
 	color: white;
 }
 
 #bookmarklet-minimize:hover {
-	background-color: ${isDark ? "#90ee90" : "#90ee90"};
-	color: ${isDark ? "#333" : "#333"};
+	background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
+	color: ${isDark ? "#4a2d4a" : "#4a2d4a"};
 }
 
 #bookmarklet-maximize:hover {
-	background-color: ${isDark ? "#ffd700" : "#ffd700"};
-	color: ${isDark ? "#333" : "#333"};
+	background-color: ${isDark ? "#ffb3d9" : "#ffb3d9"};
+	color: ${isDark ? "#4a2d4a" : "#4a2d4a"};
 }
 
 .screen {
@@ -110,8 +109,8 @@
 	box-sizing: border-box;
 	overflow-y: auto;
 	margin-top: 20px;
-	background-color: ${isDark ? "#333" : "#fff"};
-	color: ${isDark ? "#ddd" : "#333"};
+	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 }
 
 .screen.hidden {
@@ -132,39 +131,38 @@
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	color: ${isDark ? "#ddd" : "#333"};
-	background-color: ${isDark ? "#444" : "#ddd"};
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 .screen button:hover {
-	background-color: ${isDark ? "#555" : "#ccc"};
-	color: ${isDark ? "#eee" : "#333"};
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
+	color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
 }
 
 .screen h2,
 .screen h3 {
-	color: ${isDark ? "#ddd" : "#333"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 	text-align: center;
 }
 
 .screen label {
-	color: ${isDark ? "#ddd" : "#333"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 }
 
 .screen textarea {
 	min-height: 50px;
-	color: ${isDark ? "#ddd" : "#333"};
-	background-color: ${isDark ? "#444" : "#fff"};
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+	background-color: ${isDark ? "#3d243d" : "#fff5fa"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 .screen div {
 	width: 90%;
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
+	border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 	justify-items: center;
 }
-
 
 .chat {
   width: 100%;
@@ -173,8 +171,8 @@
   align-items: flex-start;
   padding: 0;
   box-sizing: border-box;
-  background-color: ${isDark ? "#222" : "#fff"};
-  color: ${isDark ? "#ddd" : "#333"};
+  background-color: ${isDark ? "#1d111d" : "#fff5fa"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
   height: 100%;
 }
 
@@ -197,15 +195,14 @@
   margin: 0;
 }
 
-/* Settings Bar */
 #settings-bar {
   width: 100%;
   height: 40px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-bottom: 1px solid ${isDark ? "#444" : "#e0e0e0"};
-  background: ${isDark ? "#2a2a2a" : "#f8f9fa"};
+  border-bottom: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  background: ${isDark ? "#2d1a2d" : "#fff0f5"};
   padding: 0 16px;
   gap: 12px;
   position: sticky;
@@ -214,8 +211,8 @@
 }
 
 #customize-profile {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -224,12 +221,12 @@
 }
 
 #customize-profile:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 #dark-mode {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -238,12 +235,12 @@
 }
 
 #dark-mode:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 #read-all {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -252,12 +249,12 @@
 }
 
 #read-all:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 #hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
   border: none;
   padding: 6px 16px;
   border-radius: 4px;
@@ -266,7 +263,7 @@
 }
 
 #hide-left-sidebar:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
+  background: ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 .setting-button {
@@ -278,19 +275,14 @@
   justify-content: center;
 }
 
-
-
-
-
-/* Left Sidebar (Server and DM) */
 #left-sidebar {
   width: 20%;
   min-width: 180px;
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-right: 2px solid ${isDark ? "#555" : "#ccc"};
-  background: ${isDark ? "linear-gradient(to bottom, #444, #333)" : "linear-gradient(to bottom, #f7f7f7, #e0e0e0)"};
+  border-right: 2px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  background: ${isDark ? "linear-gradient(to bottom, #3d243d, #2d1a2d)" : "linear-gradient(to bottom, #ffe6f2, #ffd6eb)"};
   padding: 8px;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -315,11 +307,11 @@
   min-height: 40%;
   width: 100%;
   padding: 8px 0 0 0;
-  background-color: ${isDark ? "#333" : "#f1f1f1"};
+  background-color: ${isDark ? "#2d1a2d" : "#fff0f5"};
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-top: 1px solid ${isDark ? "#555" : "#ddd"};
+  border-top: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
   overflow-y: auto;
   overflow-x: hidden;
   margin-bottom: 0;
@@ -334,7 +326,7 @@
 
 #create-new-server {
   padding: 8px 5px;
-  background-color: ${isDark ? "#a65653" : "#5865F2"};
+  background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
   color: white;
   border: none;
   border-radius: 4px;
@@ -346,11 +338,11 @@
 }
 
 #create-new-server:hover {
-  background-color: ${isDark ? "#c79d9b" : "#4752C4"};
+  background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
 }
 
 .server {
-  background-color: ${isDark ? "#555" : "#e0e0e0"};
+  background-color: ${isDark ? "#4d2e4d" : "#ffe6f2"};
   width: 90%;
   padding: 5px 4px;
   margin-bottom: 1px;
@@ -363,12 +355,12 @@
 }
 
 .server:hover {
-  background-color: ${isDark ? "#666" : "#d0d0d0"};
+  background-color: ${isDark ? "#5d3e5d" : "#ffb3d9"};
 }
 
 .server.selected {
-  background-color: ${isDark ? "#777" : "#ccc"};
-  box-shadow: 0 0 0 1px ${isDark ? "#888" : "#999"};
+  background-color: ${isDark ? "#6d4e6d" : "#ff99cc"};
+  box-shadow: 0 0 0 1px ${isDark ? "#7d5e7d" : "#ff69b4"};
 }
 
 .dm {
@@ -379,8 +371,8 @@
 	font-weight: 500;
 	text-align: center;
 	border-radius: 6px;
-	background-color: ${isDark ? "#444" : "#e8e8e8"};
-	color: ${isDark ? "#fff" : "#333"};
+	background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 	transition: all 0.2s ease;
 	cursor: pointer;
 	border: 1px solid transparent;
@@ -388,12 +380,11 @@
 }
 
 .dm:hover {
-	background-color: ${isDark ? "#555" : "#d0d0d0"};
+	background-color: ${isDark ? "#4d2e4d" : "#ffb3d9"};
 	transform: translateY(-1px);
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Right Sidebar (Messages Area) */
 #right-sidebar {
 	width: 80%;
 	display: flex;
@@ -401,15 +392,15 @@
 	justify-content: space-between;
 	height: 100%;
 	padding-left: 10px;
-	background-color: ${isDark ? "#333" : "#fff"};
-	color: ${isDark ? "#ddd" : "#333"};
+	background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 	min-width: 0;
 }
 
 #messages {
 	flex: 1;
 	overflow-y: auto;
-	background-color: ${isDark ? "#222" : "#f9f9f9"};
+	background-color: ${isDark ? "#1d111d" : "#fff5fa"};
 	padding: 10px;
 	margin-bottom: 10px;
 }
@@ -422,44 +413,36 @@
 	width: 95%;
 	max-width: 95%;
 	word-wrap: break-word;
-	background-color: ${isDark ? "#444" : "#e0e0e0"};
-	color: ${isDark ? "#ccc" : "#333"};
+	background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
+	color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 }
 
 .message.sent {
-	text-align: right;
-	background-color: ${isDark ? "#4a4a4a" : "#e0f7fa"};
-	color: ${isDark ? "#cccccc" : "#006064"};
+  text-align: right;
+  background-color: ${isDark ? "#5d3a5d" : "#ffd6eb"};
+  color: ${isDark ? "#ffe6f2" : "#4a2d4a"};
 }
 
 .message.received {
-	text-align: left;
-	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
-	color: ${isDark ? "#cccccc" : "#33691e"};
-}
-.message.received.unread {
-  background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
-  border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
-  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
-}
-.message.bot {
   text-align: left;
-  background-color: ${isDark ? "#2a323c" : "#f0f7ff"};
-  color: ${isDark ? "#e2e8f0" : "#1a365d"};
+  background-color: ${isDark ? "#3d243d" : "#ffe0eb"};
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 }
 
-.message.bot.unread {
-  background-color: ${isDark ? "#2d3748" : "#ebf8ff"};
-  border-left: 3px solid ${isDark ? "#90cdf4" : "#4299e1"};
+.message.received.unread {
+  background-color: ${isDark ? "#704870" : "#ffcce1"};
+  border-left: 3px solid ${isDark ? "#ff69b4" : "#ff69b4"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
+
 .send-info {
-	font-size: 8px;
-	color: ${isDark ? "#888" : "#666"};
+  font-size: 8px;
+  color: ${isDark ? "#ff99cc" : "#ff69b4"};
 }
+
 #message-send {
   padding: 10px;
-  background-color: ${isDark ? "#444" : "#f1f1f1"};
+  background-color: ${isDark ? "#3d243d" : "#ffe6f2"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -467,93 +450,56 @@
 }
 
 #message-input {
-	width: 80%;
-	padding: 10px;
-	border-radius: 5px;
-	border: 1px solid ${isDark ? "#555" : "#ccc"};
-	margin-top: auto;
-	margin-bottom: auto;
-	color: ${isDark ? "#ddd" : "black"};
-	background-color: ${isDark ? "#333" : "#fff"};
+  width: 80%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  margin-top: auto;
+  margin-bottom: auto;
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
+  background-color: ${isDark ? "#2d1a2d" : "#fff5fa"};
 }
 
 #send-button {
-	padding: 10px 30px;
-	background-color: ${isDark ? "#4a4a4a" : "#00796b"};
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	margin-top: auto;
-	margin-bottom: auto;
-	margin-left: 10px;
+  padding: 10px 30px;
+  background-color: ${isDark ? "#ff69b4" : "#ff69b4"};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
 }
 
 #send-button:hover {
-	background-color: ${isDark ? "#3a3a3a" : "#004d40"};
+  background-color: ${isDark ? "#ff99cc" : "#ff99cc"};
 }
 .selected-members-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin: 8px 0;
-    min-height: 24px;
-    padding: 4px;
-    border: 1px solid ${isDark ? "#555" : "#ccc"};
-    border-radius: 4px;
-    overflow: hidden;
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
 
 .selected-member {
-    background: ${isDark ? "#444" : "#e0e0e0"};
-    padding: 2px 6px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.85em;
-    white-space: nowrap;
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
 }
 
 .remove-member {
-    cursor: pointer;
-    color: ${isDark ? "#fff" : "#666"};
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-.members-dropdown {
-    position: relative;
+  color: ${isDark ? "#ffd6eb" : "#4a2d4a"};
 }
 
 .members-list {
-    border: 1px solid ${isDark ? "#555" : "#ccc"};
-    border-radius: 4px;
-    max-height: 200px;
-    overflow-y: auto;
-    position: absolute;
-    width: 100%;
-    background: ${isDark ? "#333" : "#fff"};
-    display: none;
-}
-
-.member-option {
-    padding: 8px;
-    cursor: pointer;
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
+  background: ${isDark ? "#2d1a2d" : "#fff5fa"};
 }
 
 .member-option:hover {
-    background: ${isDark ? "#444" : "#f0f0f0"};
+  background: ${isDark ? "#3d243d" : "#ffe6f2"};
 }
 
 #member-search {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-    border: 1px solid ${isDark ? "#555" : "#ccc"};
-    border-radius: 4px;
+  border: 1px solid ${isDark ? "#4d2e4d" : "#ffb3d9"};
 }
-`;
+  `;
   }
 
   document.head.appendChild(style);
