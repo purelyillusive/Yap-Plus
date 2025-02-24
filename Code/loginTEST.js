@@ -69,6 +69,7 @@
       const loginScreen = document.getElementById("login-screen");
       const createScreen = document.getElementById("create-account-screen");
       const customizeScreen = document.getElementById("customize-account-screen");
+      const verificationScreen = document.getElementById("verification-screen");
       const stayloginScreen = document.getElementById("stay-login-screen");
       const savedAccountScreen = document.getElementById("saved-account");
 
