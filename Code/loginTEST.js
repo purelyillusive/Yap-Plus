@@ -44,7 +44,7 @@
   }
 
   fetch(
-    "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/guiPRE.js",
+    "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/guiTEST.js",
   )
     .then((r) => r.text())
     .then((code) => {
@@ -55,7 +55,7 @@
         document.getElementById("email-saved-here").textContent = email;
 
         fetch(
-          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatPRE.js",
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatTEST.js",
         )
           .then((r) => r.text())
           .then((chatCode) => eval(chatCode))
