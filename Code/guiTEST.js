@@ -564,6 +564,14 @@
    </div>
    <hr style="margin: 20px 0">
 </div>
+<div id="verification-screen" class="screen hidden">
+    <h2>Email Verification</h2>
+    <p>Please check your email for a verification link.</p>
+    <p>Once you verify your email, click continue below.</p>
+    <button id="check-verification">Continue</button>
+    <button id="resend-verification">Resend Verification Email</button>
+    <p id="verification-error" class="error-text"></p>
+</div>
 <div id="customize-account-screen" class="screen hidden">
    <h2>Final Steps</h2>
    <label for="create-username">Username</label>
