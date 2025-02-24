@@ -51,20 +51,6 @@
       eval(code);
       const gui = document.getElementById("bookmarklet-gui");
 
-      // Add verification screen HTML
-      const verificationScreen = document.createElement('div');
-      verificationScreen.id = 'verification-screen';
-      verificationScreen.classList.add('hidden');
-      verificationScreen.innerHTML = `
-        <h2>Email Verification</h2>
-        <p>Please check your email for a verification link.</p>
-        <p>Once you verify your email, click continue below.</p>
-        <button id="check-verification">Continue</button>
-        <button id="resend-verification">Resend Verification Email</button>
-        <p id="verification-error" class="error-text"></p>
-      `;
-      gui.appendChild(verificationScreen);
-
       async function openChatScreen() {
         document.getElementById("email-saved-here").textContent = email;
 
@@ -128,11 +114,11 @@
           };
       }
 
-      // Handle email verification
       async function handleEmailVerification(user) {
         try {
           await sendEmailVerification(user);
           verificationScreen.classList.remove('hidden');
+          createScreem.classList.add('hidden');
           return new Promise((resolve, reject) => {
             document.getElementById('check-verification').onclick = async () => {
               await auth.currentUser.reload();
@@ -189,7 +175,6 @@
           const user = result.user;
           email = user.email;
           
-          // Handle email verification before proceeding
           await handleEmailVerification(user);
           
           emailInput.value = "";
