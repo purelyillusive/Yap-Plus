@@ -173,11 +173,13 @@
         }
 
         try {
+          await handleEmailVerification(user);
+          
           const result = await createUserWithEmailAndPassword(auth, email, password);
           const user = result.user;
           email = user.email;
           
-          await handleEmailVerification(user);
+
           
           emailInput.value = "";
           passwordInput.value = "";
