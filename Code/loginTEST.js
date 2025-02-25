@@ -125,11 +125,10 @@
               await auth.currentUser.reload();
               if (auth.currentUser.emailVerified) {
                 verificationScreen.classList.add('hidden');
-                // Only create the account after successful verification
-                await create_account();
-                resolve();
+                resolve(true);
               } else {
                 document.getElementById('verification-error').textContent = 'Email not yet verified. Please check your email and click the verification link.';
+                resolve(false);
               }
             };
             
@@ -178,16 +177,21 @@
           const user = result.user;
           email = user.email;
           
-          await handleEmailVerification(user);
+          const verificationSuccessful = await handleEmailVerification(user);
           
-          emailInput.value = "";
-          passwordInput.value = "";
-          errorLabel.textContent = "";
-          
-          customizeScreen.classList.remove("hidden");
-          verificationScreen.classList.add("hidden");
-          document.getElementById("create-username").value = "Anonymous";
-          document.getElementById("create-picture").value = "";
+          if (verificationSuccessful) {
+            // Only proceed to account customization after verification
+            await create_account();
+            
+            emailInput.value = "";
+            passwordInput.value = "";
+            errorLabel.textContent = "";
+            
+            customizeScreen.classList.remove("hidden");
+            document.getElementById("create-username").value = "Anonymous";
+            document.getElementById("create-picture").value = "";
+          }
+          // If not verified, stay on verification screen
         } catch (error) {
           errorLabel.textContent = error.message;
         }
@@ -200,18 +204,23 @@
           const user = result.user;
           email = user.email;
           
-          // Google accounts are pre-verified, so we can create the account immediately
-          await create_account();
+          // Check if account already exists first
+          const accountsRef = ref(
+            database,
+            `Accounts/${email.replace(/\./g, "*")}`,
+          );
+          
+          const snapshot = await get(accountsRef);
+          if (!snapshot.exists()) {
+            // Create account for Google users (they're pre-verified)
+            await create_account();
+          }
           
           customizeScreen.classList.remove("hidden");
           createScreen.classList.add("hidden");
           document.getElementById("create-username").value = "Anonymous";
           document.getElementById("create-picture").value = "";
 
-          const accountsRef = ref(
-            database,
-            `Accounts/${email.replace(/\./g, "*")}`,
-          );
           get(accountsRef).then((snapshot) => {
             if (snapshot.exists()) {
               const accountData = snapshot.val();
@@ -258,13 +267,13 @@
           const user = result.user;
 
           if (!user.emailVerified) {
-            await handleEmailVerification(user);
+            const verificationSuccessful = await handleEmailVerification(user);
+            if (!verificationSuccessful) {
+              return; // Stay on verification screen if not verified
+            }
           }
 
           email = user.email;
-          emailInput.value = "";
-          passwordInput.value = "";
-          errorLabel.textContent = "";
           
           // Check if account exists in database
           const accountsRef = ref(
@@ -275,13 +284,12 @@
           const snapshot = await get(accountsRef);
           if (!snapshot.exists()) {
             // If account doesn't exist but email is verified, create it now
-            if (user.emailVerified) {
-              await create_account();
-            } else {
-              errorLabel.textContent = "Please verify your email first.";
-              return;
-            }
+            await create_account();
           }
+          
+          emailInput.value = "";
+          passwordInput.value = "";
+          errorLabel.textContent = "";
           
           if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
             loginScreen.classList.add("hidden");
