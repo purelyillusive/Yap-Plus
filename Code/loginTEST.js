@@ -10,7 +10,7 @@
     appId: "1:1092146908435:web:f72b90362cc86c5f83dee6",
   };
 
-  var database, auth, provider, email, mostRecentVersionKey;
+  var database, auth, provider, email, mostRecentVersionKey, tempUser;
   try {
     /* Dynamically load Firebase modules */
     var { initializeApp } = await import(
@@ -29,6 +29,7 @@
       sendSignInLinkToEmail,
       isSignInWithEmailLink,
       signInWithEmailLink,
+      deleteUser
     } = await import(
       "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
     );
@@ -120,14 +121,19 @@
           await sendEmailVerification(user);
           verificationScreen.classList.remove('hidden');
           createScreen.classList.add('hidden');
+          
           return new Promise((resolve, reject) => {
             document.getElementById('check-verification').onclick = async () => {
-              await auth.currentUser.reload();
-              if (auth.currentUser.emailVerified) {
-                verificationScreen.classList.add('hidden');
-                resolve();
-              } else {
-                document.getElementById('verification-error').textContent = 'Email not yet verified. Please check your email and click the verification link.';
+              try {
+                await auth.currentUser.reload();
+                if (auth.currentUser.emailVerified) {
+                  verificationScreen.classList.add('hidden');
+                  resolve(true);
+                } else {
+                  document.getElementById('verification-error').textContent = 'Email not yet verified. Please check your email and click the verification link.';
+                }
+              } catch (error) {
+                document.getElementById('verification-error').textContent = 'Error checking verification status: ' + error.message;
               }
             };
             
@@ -137,6 +143,22 @@
                 document.getElementById('verification-error').textContent = 'Verification email resent!';
               } catch (error) {
                 document.getElementById('verification-error').textContent = error.message;
+              }
+            };
+            
+            // Add cancel button functionality
+            document.getElementById('cancel-verification').onclick = async () => {
+              try {
+                // Delete the temporary auth user if they cancel verification
+                await deleteUser(auth.currentUser);
+                verificationScreen.classList.add('hidden');
+                mainScreen.classList.remove('hidden');
+                reject(new Error('Verification cancelled by user'));
+              } catch (error) {
+                console.error("Error deleting unverified user:", error);
+                verificationScreen.classList.add('hidden');
+                mainScreen.classList.remove('hidden');
+                reject(error);
               }
             };
           });
@@ -191,27 +213,15 @@
           // Show customize screen after account is created
           customizeScreen.classList.remove("hidden");
           
-          // Populate with existing data if available
-          get(accountsRef).then((snapshot) => {
-            if (snapshot.exists()) {
-              const accountData = snapshot.val();
-              document.getElementById("create-username").value =
-                accountData.Username || "Anonymous";
-              if (accountData.Image && accountData.Image !== "None") {
-                const imgPreview = document.createElement("img");
-                imgPreview.src = accountData.Image;
-                imgPreview.style.maxWidth = "100px";
-                imgPreview.style.borderRadius = "50%";
-                document
-                  .getElementById("create-picture")
-                  .parentElement.appendChild(imgPreview);
-              }
-            }
-          });
+          // Prepopulate with default values
+          document.getElementById("create-username").value = "Anonymous";
+          document.getElementById("create-bio").value = "I'm a yapper";
           
+          return true;
         } catch (error) {
           console.error("Error creating account:", error);
           alert("Failed to create account. Please try again.");
+          return false;
         }
       }
 
@@ -227,37 +237,52 @@
         createScreen.classList.remove("hidden");
       };
 
+      /* Add "Cancel" button to verification screen */
+      if (!document.getElementById('cancel-verification')) {
+        const cancelButton = document.createElement('button');
+        cancelButton.id = 'cancel-verification';
+        cancelButton.className = 'btn btn-secondary';
+        cancelButton.textContent = 'Cancel';
+        document.getElementById('verification-actions').appendChild(cancelButton);
+      }
+
       /* Account creation using email and password */
       document.getElementById("submit-create-email").onclick = async function () {
         const emailInput = document.getElementById("create-email");
         const passwordInput = document.getElementById("create-password");
         const errorLabel = document.getElementById("create-email-error");
-        email = emailInput.value.trim();
+        const tempEmail = emailInput.value.trim();
         const password = passwordInput.value.trim();
         
-        if (!email || !password) {
+        if (!tempEmail || !password) {
           errorLabel.textContent = "Please enter both email and password.";
           return;
         }
 
         try {
-          const result = await createUserWithEmailAndPassword(auth, email, password);
-          const user = result.user;
-          email = user.email;
+          // Create the auth user but don't create the database entry yet
+          const result = await createUserWithEmailAndPassword(auth, tempEmail, password);
+          tempUser = result.user;
           
-          // Wait for verification to complete before creating account
-          await handleEmailVerification(user);
+          // Send verification email and wait for confirmation
+          const verified = await handleEmailVerification(tempUser);
           
-          // Now create the account after verification is confirmed
-          await create_account();
-          
-          emailInput.value = "";
-          passwordInput.value = "";
-          errorLabel.textContent = "";
-          
-          // Customize screen is now shown inside create_account after successful creation
+          if (verified) {
+            // Only now do we set the email and create the account
+            email = tempUser.email;
+            
+            // Create the account in the database after verification
+            await create_account();
+            
+            emailInput.value = "";
+            passwordInput.value = "";
+            errorLabel.textContent = "";
+          }
         } catch (error) {
           errorLabel.textContent = error.message;
+          // Return to create account screen if verification fails/is cancelled
+          verificationScreen.classList.add('hidden');
+          createScreen.classList.remove('hidden');
         }
       };
 
@@ -266,10 +291,18 @@
         try {
           result = await signInWithPopup(auth, provider);
           const user = result.user;
+          
+          // Google accounts are pre-verified, so we can set the email
           email = user.email;
           
-          // Google accounts are pre-verified, so we can create the account right away
-          await create_account();
+          // Create the account since Google users are pre-verified
+          const accountCreated = await create_account();
+          
+          if (!accountCreated) {
+            document.getElementById("create-email-error").textContent = 
+              "Failed to create account. Please try again.";
+            return;
+          }
           
         } catch (error) {
           document.getElementById("create-email-error").textContent =
