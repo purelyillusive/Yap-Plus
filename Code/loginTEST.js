@@ -118,6 +118,7 @@
 
       async function handleEmailVerification(user, screen) {
         try {
+          console.log("attempting verification!" + String(screen))
           await sendEmailVerification(user);
           verificationScreen.classList.remove('hidden');
           screen.classList.add('hidden');
