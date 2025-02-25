@@ -144,6 +144,7 @@
           });
         } catch (error) {
           console.error("Error sending verification email:", error);
+          console.log("trying again")
           setTimeout(() => {
           handleEmailVerification(user,screen);
           }, 5000);
