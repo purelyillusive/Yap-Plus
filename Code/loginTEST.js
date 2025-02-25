@@ -121,6 +121,7 @@
           await sendEmailVerification(user);
           verificationScreen.classList.remove('hidden');
           createScreen.classList.add('hidden');
+          loginScreen.classList.add('hidden');
           return new Promise((resolve, reject) => {
             document.getElementById('check-verification').onclick = async () => {
               await auth.currentUser.reload();
