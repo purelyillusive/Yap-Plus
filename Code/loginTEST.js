@@ -279,8 +279,9 @@
         try {
           const result = await signInWithEmailAndPassword(auth, email, password);
           const user = result.user;
-
+    
           if (!user.emailVerified) {
+            console.log("yay!")
             await handleEmailVerification(user);
           }
 
