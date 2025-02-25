@@ -116,12 +116,11 @@
           };
       }
 
-      async function handleEmailVerification(user) {
+      async function handleEmailVerification(user, screen) {
         try {
           await sendEmailVerification(user);
           verificationScreen.classList.remove('hidden');
-          createScreen.classList.add('hidden');
-          loginScreen.classList.add('hidden');
+          screen.classList.add('hidden');
           return new Promise((resolve, reject) => {
             document.getElementById('check-verification').onclick = async () => {
               await auth.currentUser.reload();
@@ -182,7 +181,7 @@
           
           email = user.email;
           
-          await handleEmailVerification(user);
+          await handleEmailVerification(user, createScreen);
 
           
           emailInput.value = "";
@@ -283,7 +282,7 @@
     
           if (!user.emailVerified) {
             console.log("yay!")
-            await handleEmailVerification(user);
+            await handleEmailVerification(user, loginScreen);
           }
 
           email = user.email;
