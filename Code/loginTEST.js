@@ -125,6 +125,8 @@
               await auth.currentUser.reload();
               if (auth.currentUser.emailVerified) {
                 verificationScreen.classList.add('hidden');
+                // Only create the account after successful verification
+                await create_account();
                 resolve();
               } else {
                 document.getElementById('verification-error').textContent = 'Email not yet verified. Please check your email and click the verification link.';
@@ -181,32 +183,11 @@
           emailInput.value = "";
           passwordInput.value = "";
           errorLabel.textContent = "";
-          create_account();
+          
           customizeScreen.classList.remove("hidden");
-          createScreen.classList.add("hidden");
+          verificationScreen.classList.add("hidden");
           document.getElementById("create-username").value = "Anonymous";
           document.getElementById("create-picture").value = "";
-
-          const accountsRef = ref(
-            database,
-            `Accounts/${email.replace(/\./g, "*")}`,
-          );
-          get(accountsRef).then((snapshot) => {
-            if (snapshot.exists()) {
-              const accountData = snapshot.val();
-              document.getElementById("create-username").value =
-                accountData.Username || "Anonymous";
-              if (accountData.Image && accountData.Image !== "None") {
-                const imgPreview = document.createElement("img");
-                imgPreview.src = accountData.Image;
-                imgPreview.style.maxWidth = "100px";
-                imgPreview.style.borderRadius = "50%";
-                document
-                  .getElementById("create-picture")
-                  .parentElement.appendChild(imgPreview);
-              }
-            }
-          });
         } catch (error) {
           errorLabel.textContent = error.message;
         }
@@ -217,9 +198,11 @@
         try {
           result = await signInWithPopup(auth, provider);
           const user = result.user;
-          email = result.user;
-          email = user.email = user.email;
-          create_account();
+          email = user.email;
+          
+          // Google accounts are pre-verified, so we can create the account immediately
+          await create_account();
+          
           customizeScreen.classList.remove("hidden");
           createScreen.classList.add("hidden");
           document.getElementById("create-username").value = "Anonymous";
@@ -283,6 +266,23 @@
           passwordInput.value = "";
           errorLabel.textContent = "";
           
+          // Check if account exists in database
+          const accountsRef = ref(
+            database,
+            `Accounts/${email.replace(/\./g, "*")}`,
+          );
+          
+          const snapshot = await get(accountsRef);
+          if (!snapshot.exists()) {
+            // If account doesn't exist but email is verified, create it now
+            if (user.emailVerified) {
+              await create_account();
+            } else {
+              errorLabel.textContent = "Please verify your email first.";
+              return;
+            }
+          }
+          
           if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
             loginScreen.classList.add("hidden");
             stayloginScreen.classList.remove("hidden");
@@ -301,6 +301,19 @@
           result = await signInWithPopup(auth, provider);
           const user = result.user;
           email = user.email;
+          
+          // Check if account exists in database
+          const accountsRef = ref(
+            database,
+            `Accounts/${email.replace(/\./g, "*")}`,
+          );
+          
+          const snapshot = await get(accountsRef);
+          if (!snapshot.exists()) {
+            // Create account for Google users if it doesn't exist
+            await create_account();
+          }
+          
           if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
             loginScreen.classList.add("hidden");
             stayloginScreen.classList.remove("hidden");
@@ -321,7 +334,7 @@
       };
 
       /* Account Creation */
-      function create_account() {
+      async function create_account() {
         const accountsRef = ref(
           database,
           `Accounts/${email.replace(/\./g, "*")}`,
@@ -329,50 +342,42 @@
 
         const updatesRef = ref(database, "Updates");
 
-        get(updatesRef)
-          .then((updatesSnapshot) => {
-            const updates = updatesSnapshot.val();
+        try {
+          const updatesSnapshot = await get(updatesRef);
+          const updates = updatesSnapshot.val();
 
-            const versionKeys = Object.keys(updates).sort((a, b) => {
-              const aParts = a.split("*").map(Number);
-              const bParts = b.split("*").map(Number);
+          const versionKeys = Object.keys(updates).sort((a, b) => {
+            const aParts = a.split("*").map(Number);
+            const bParts = b.split("*").map(Number);
 
-              for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-                const aSegment = aParts[i] || 0;
-                const bSegment = bParts[i] || 0;
+            for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+              const aSegment = aParts[i] || 0;
+              const bSegment = bParts[i] || 0;
 
-                if (aSegment < bSegment) return -1;
-                if (aSegment > bSegment) return 1;
-              }
+              if (aSegment < bSegment) return -1;
+              if (aSegment > bSegment) return 1;
+            }
 
-              return 0;
-            });
-
-            mostRecentVersionKey = versionKeys[versionKeys.length - 1];
-
-            const accountData = {
-              Bio: "None",
-              Image: "None",
-              Username: "Anonymous",
-              Version: mostRecentVersionKey,
-            };
-
-            set(accountsRef, accountData)
-              .then(() => {
-                console.log(
-                  "Account created successfully with version:",
-                  mostRecentVersionKey,
-                );
-              })
-              .catch((error) => {
-                console.error("Error creating account:", error);
-                alert("Failed to create account. Please try again.");
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching updates:", error);
-            alert("Failed to fetch the latest version. Please try again.");
+            return 0;
           });
+
+          mostRecentVersionKey = versionKeys[versionKeys.length - 1];
+
+          const accountData = {
+            Bio: "None",
+            Image: "None",
+            Username: "Anonymous",
+            Version: mostRecentVersionKey,
+          };
+
+          await set(accountsRef, accountData);
+          console.log("Account created successfully with version:", mostRecentVersionKey);
+          return true;
+        } catch (error) {
+          console.error("Error creating account:", error);
+          alert("Failed to create account. Please try again.");
+          return false;
+        }
       }
 
       /* Customize Account Button */
