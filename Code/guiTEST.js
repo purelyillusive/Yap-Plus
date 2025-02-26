@@ -567,8 +567,7 @@
 <div id="verification-screen" class="screen hidden">
     <h2>Email Verification</h2>
     <p>Please check your email for a verification link.</p>
-    <p>Once you verify your email, click continue below.</p>
-    <button id="check-verification">Continue</button>
+    <p>Once you verify your email, you will automatically be taken to the next page</p>
     <button id="resend-verification">Resend Verification Email</button>
     <p id="verification-error" class="error-text"></p>
 </div>
