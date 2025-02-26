@@ -145,9 +145,9 @@
         } catch (error) {
           console.error("Error sending verification email:", error);
           console.log("trying again")
-          setTimeout(() => {
-          await handleEmailVerification(user,screen);
-          }, 5000);
+          setTimeout(async () => {
+  await handleEmailVerification(user, screen);
+}, 5000);
           return new Promise((resolve,reject) => {
             resolve();
           };
