@@ -595,7 +595,7 @@
    <p>Press CTRL-ALT-D to switch between light and dark mode</p>
    <button id="login-button">Log In</button>
    <button id="create-account-button">Create Account</button>
-   <p>By using Yap Window, you agree to the Terms and Conditions at https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI<\p>
+   <p style="width:40%; text-align: center;">By using Yap Window, you agree to the Terms and Conditions at https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI<\p>
 </div>
 <div id="saved-account" class="screen hidden">
    <h2>You have an account saved on this computer</h2>
