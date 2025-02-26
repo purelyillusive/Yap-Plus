@@ -1,4 +1,3 @@
-
 (async function () {
   /* Firebase Config */
   const firebaseConfig = {
@@ -69,7 +68,9 @@
       const mainScreen = document.getElementById("main-screen");
       const loginScreen = document.getElementById("login-screen");
       const createScreen = document.getElementById("create-account-screen");
-      const customizeScreen = document.getElementById("customize-account-screen");
+      const customizeScreen = document.getElementById(
+        "customize-account-screen",
+      );
       const verificationScreen = document.getElementById("verification-screen");
       const stayloginScreen = document.getElementById("stay-login-screen");
       const savedAccountScreen = document.getElementById("saved-account");
@@ -118,39 +119,44 @@
 
       async function handleEmailVerification(user, screen) {
         try {
-          console.log("attempting verification!" + String(screen))
+          console.log("attempting verification!" + String(screen));
           await sendEmailVerification(user);
-          verificationScreen.classList.remove('hidden');
-          screen.classList.add('hidden');
+          verificationScreen.classList.remove("hidden");
+          screen.classList.add("hidden");
           return new Promise((resolve, reject) => {
-            document.getElementById('check-verification').onclick = async () => {
-              await auth.currentUser.reload();
-              if (auth.currentUser.emailVerified) {
-                verificationScreen.classList.add('hidden');
-                resolve();
-              } else {
-                document.getElementById('verification-error').textContent = 'Email not yet verified. Please check your email and click the verification link.';
-              }
-            };
-            
-            document.getElementById('resend-verification').onclick = async () => {
-              try {
-                await sendEmailVerification(auth.currentUser);
-                document.getElementById('verification-error').textContent = 'Verification email resent!';
-              } catch (error) {
-                document.getElementById('verification-error').textContent = error.message;
-              }
-            };
+            document.getElementById("check-verification").onclick =
+              async () => {
+                await auth.currentUser.reload();
+                if (auth.currentUser.emailVerified) {
+                  verificationScreen.classList.add("hidden");
+                  resolve();
+                } else {
+                  document.getElementById("verification-error").textContent =
+                    "Email not yet verified. Please check your email and click the verification link.";
+                }
+              };
+
+            document.getElementById("resend-verification").onclick =
+              async () => {
+                try {
+                  await sendEmailVerification(auth.currentUser);
+                  document.getElementById("verification-error").textContent =
+                    "Verification email resent!";
+                } catch (error) {
+                  document.getElementById("verification-error").textContent =
+                    error.message;
+                }
+              };
           });
         } catch (error) {
           console.error("Error sending verification email:", error);
-          console.log("trying again")
+          console.log("trying again");
           setTimeout(async () => {
-  await handleEmailVerification(user, screen);
-}, 5000);
-          return new Promise((resolve,reject) => {
+            await handleEmailVerification(user, screen);
+          }, 5000);
+          return new Promise((resolve, reject) => {
             resolve();
-          };
+          });
         }
       }
 
@@ -167,166 +173,175 @@
       };
 
       /* Account creation using email and password */
-      document.getElementById("submit-create-email").onclick = async function () {
-        const emailInput = document.getElementById("create-email");
-        const passwordInput = document.getElementById("create-password");
-        const errorLabel = document.getElementById("create-email-error");
-        email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-        
-        if (!email || !password) {
-          errorLabel.textContent = "Please enter both email and password.";
-          return;
-        }
+      document.getElementById("submit-create-email").onclick =
+        async function () {
+          const emailInput = document.getElementById("create-email");
+          const passwordInput = document.getElementById("create-password");
+          const errorLabel = document.getElementById("create-email-error");
+          email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
 
-        try {
-          
-          
-          const result = await createUserWithEmailAndPassword(auth, email, password);
-          const user = result.user;
+          if (!email || !password) {
+            errorLabel.textContent = "Please enter both email and password.";
+            return;
+          }
 
-          
-          email = user.email;
-          
-          await handleEmailVerification(user, createScreen);
+          try {
+            const result = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password,
+            );
+            const user = result.user;
 
-          
-          emailInput.value = "";
-          passwordInput.value = "";
-          errorLabel.textContent = "";
-          create_account();
-          customizeScreen.classList.remove("hidden");
-          createScreen.classList.add("hidden");
-          document.getElementById("create-username").value = "Anonymous";
-          document.getElementById("create-picture").value = "";
+            email = user.email;
 
-          const accountsRef = ref(
-            database,
-            `Accounts/${email.replace(/\./g, "*")}`,
-          );
-          get(accountsRef).then((snapshot) => {
-            if (snapshot.exists()) {
-              const accountData = snapshot.val();
-              document.getElementById("create-username").value =
-                accountData.Username || "Anonymous";
-              if (accountData.Image && accountData.Image !== "None") {
-                const imgPreview = document.createElement("img");
-                imgPreview.src = accountData.Image;
-                imgPreview.style.maxWidth = "100px";
-                imgPreview.style.borderRadius = "50%";
-                document
-                  .getElementById("create-picture")
-                  .parentElement.appendChild(imgPreview);
+            await handleEmailVerification(user, createScreen);
+
+            emailInput.value = "";
+            passwordInput.value = "";
+            errorLabel.textContent = "";
+            create_account();
+            customizeScreen.classList.remove("hidden");
+            createScreen.classList.add("hidden");
+            document.getElementById("create-username").value = "Anonymous";
+            document.getElementById("create-picture").value = "";
+
+            const accountsRef = ref(
+              database,
+              `Accounts/${email.replace(/\./g, "*")}`,
+            );
+            get(accountsRef).then((snapshot) => {
+              if (snapshot.exists()) {
+                const accountData = snapshot.val();
+                document.getElementById("create-username").value =
+                  accountData.Username || "Anonymous";
+                if (accountData.Image && accountData.Image !== "None") {
+                  const imgPreview = document.createElement("img");
+                  imgPreview.src = accountData.Image;
+                  imgPreview.style.maxWidth = "100px";
+                  imgPreview.style.borderRadius = "50%";
+                  document
+                    .getElementById("create-picture")
+                    .parentElement.appendChild(imgPreview);
+                }
               }
-            }
-          });
-        } catch (error) {
-          errorLabel.textContent = error.message;
-        }
-      };
+            });
+          } catch (error) {
+            errorLabel.textContent = error.message;
+          }
+        };
 
       /* Account creation using Google */
-      document.getElementById("google-create-button").onclick = async function () {
-        try {
-          result = await signInWithPopup(auth, provider);
-          const user = result.user;
-          email = result.user;
-          email = user.email = user.email;
-          create_account();
-          customizeScreen.classList.remove("hidden");
-          createScreen.classList.add("hidden");
-          document.getElementById("create-username").value = "Anonymous";
-          document.getElementById("create-picture").value = "";
+      document.getElementById("google-create-button").onclick =
+        async function () {
+          try {
+            result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            email = result.user;
+            email = user.email = user.email;
+            create_account();
+            customizeScreen.classList.remove("hidden");
+            createScreen.classList.add("hidden");
+            document.getElementById("create-username").value = "Anonymous";
+            document.getElementById("create-picture").value = "";
 
-          const accountsRef = ref(
-            database,
-            `Accounts/${email.replace(/\./g, "*")}`,
-          );
-          get(accountsRef).then((snapshot) => {
-            if (snapshot.exists()) {
-              const accountData = snapshot.val();
-              document.getElementById("create-username").value =
-                accountData.Username || "Anonymous";
-              if (accountData.Image && accountData.Image !== "None") {
-                const imgPreview = document.createElement("img");
-                imgPreview.src = accountData.Image;
-                imgPreview.style.maxWidth = "100px";
-                imgPreview.style.borderRadius = "50%";
-                document
-                  .getElementById("create-picture")
-                  .parentElement.appendChild(imgPreview);
+            const accountsRef = ref(
+              database,
+              `Accounts/${email.replace(/\./g, "*")}`,
+            );
+            get(accountsRef).then((snapshot) => {
+              if (snapshot.exists()) {
+                const accountData = snapshot.val();
+                document.getElementById("create-username").value =
+                  accountData.Username || "Anonymous";
+                if (accountData.Image && accountData.Image !== "None") {
+                  const imgPreview = document.createElement("img");
+                  imgPreview.src = accountData.Image;
+                  imgPreview.style.maxWidth = "100px";
+                  imgPreview.style.borderRadius = "50%";
+                  document
+                    .getElementById("create-picture")
+                    .parentElement.appendChild(imgPreview);
+                }
               }
-            }
-          });
-        } catch (error) {
-          document.getElementById("create-email-error").textContent =
-            error.message;
-        }
-      };
+            });
+          } catch (error) {
+            document.getElementById("create-email-error").textContent =
+              error.message;
+          }
+        };
 
       /* Back Create Button */
-      document.getElementById("back-create-button").onclick = async function () {
-        mainScreen.classList.remove("hidden");
-        createScreen.classList.add("hidden");
-      };
+      document.getElementById("back-create-button").onclick =
+        async function () {
+          mainScreen.classList.remove("hidden");
+          createScreen.classList.add("hidden");
+        };
 
       /* Log In Submit Button */
-      document.getElementById("submit-login-email").onclick = async function () {
-        const emailInput = document.getElementById("login-email");
-        const passwordInput = document.getElementById("login-password");
-        const errorLabel = document.getElementById("login-email-error");
-        email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-        
-        if (!email || !password) {
-          errorLabel.textContent = "Please enter your email and password.";
-          return;
-        }
+      document.getElementById("submit-login-email").onclick =
+        async function () {
+          const emailInput = document.getElementById("login-email");
+          const passwordInput = document.getElementById("login-password");
+          const errorLabel = document.getElementById("login-email-error");
+          email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
 
-        try {
-          const result = await signInWithEmailAndPassword(auth, email, password);
-          const user = result.user;
-    
-          if (!user.emailVerified) {
-            console.log("yay!")
-            await handleEmailVerification(user, loginScreen);
+          if (!email || !password) {
+            errorLabel.textContent = "Please enter your email and password.";
+            return;
           }
 
-          email = user.email;
-          emailInput.value = "";
-          passwordInput.value = "";
-          errorLabel.textContent = "";
-          
-          if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
-            loginScreen.classList.add("hidden");
-            stayloginScreen.classList.remove("hidden");
-          } else {
-            loginScreen.classList.add("hidden");
-            openChatScreen();
+          try {
+            const result = await signInWithEmailAndPassword(
+              auth,
+              email,
+              password,
+            );
+            const user = result.user;
+
+            if (!user.emailVerified) {
+              console.log("yay!");
+              await handleEmailVerification(user, loginScreen);
+            }
+
+            email = user.email;
+            emailInput.value = "";
+            passwordInput.value = "";
+            errorLabel.textContent = "";
+
+            if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
+              loginScreen.classList.add("hidden");
+              stayloginScreen.classList.remove("hidden");
+            } else {
+              loginScreen.classList.add("hidden");
+              openChatScreen();
+            }
+          } catch (error) {
+            errorLabel.textContent = error.message;
           }
-        } catch (error) {
-          errorLabel.textContent = error.message;
-        }
-      };
+        };
 
       /* Google Log In */
-      document.getElementById("google-login-button").onclick = async function () {
-        try {
-          result = await signInWithPopup(auth, provider);
-          const user = result.user;
-          email = user.email;
-          if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
-            loginScreen.classList.add("hidden");
-            stayloginScreen.classList.remove("hidden");
-          } else {
-            loginScreen.classList.add("hidden");
-            openChatScreen();
+      document.getElementById("google-login-button").onclick =
+        async function () {
+          try {
+            result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            email = user.email;
+            if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
+              loginScreen.classList.add("hidden");
+              stayloginScreen.classList.remove("hidden");
+            } else {
+              loginScreen.classList.add("hidden");
+              openChatScreen();
+            }
+          } catch (error) {
+            const errorLabel = document.getElementById("login-email-error");
+            errorLabel.textContent = error.message;
           }
-        } catch (error) {
-          const errorLabel = document.getElementById("login-email-error");
-          errorLabel.textContent = error.message;
-        }
-      };
+        };
 
       /* Back Login Button */
       document.getElementById("back-login-button").onclick = async function () {
@@ -423,7 +438,8 @@
 
         set(accountsRef, updatedAccountData)
           .then(() => {})
-          .catch((error) => {console.error("Error updating profile:", error);
+          .catch((error) => {
+            console.error("Error updating profile:", error);
             alert("Failed to update profile. Please try again.");
           });
         stayloginScreen.classList.remove("hidden");
