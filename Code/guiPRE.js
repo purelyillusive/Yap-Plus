@@ -564,6 +564,13 @@
    </div>
    <hr style="margin: 20px 0">
 </div>
+<div id="verification-screen" class="screen hidden">
+    <h2>Email Verification</h2>
+    <p>Please check your email for a verification link.</p>
+    <p>Once you verify your email, you will automatically be taken to the next page</p>
+    <button id="resend-verification">Resend Verification Email</button>
+    <p id="verification-error" class="error-text"></p>
+</div>
 <div id="customize-account-screen" class="screen hidden">
    <h2>Final Steps</h2>
    <label for="create-username">Username</label>
@@ -588,7 +595,12 @@
    <p>Press CTRL-ALT-D to switch between light and dark mode</p>
    <button id="login-button">Log In</button>
    <button id="create-account-button">Create Account</button>
-   <p>By using Yap Window, you agree to the Terms and Conditions at https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI<\p>
+<p style="width:80%; text-align: center;">
+  By using Yap Window, you agree to the 
+  <a href="https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI" target="_blank">
+    Terms and Conditions
+  </a>.
+</p>
 </div>
 <div id="saved-account" class="screen hidden">
    <h2>You have an account saved on this computer</h2>
