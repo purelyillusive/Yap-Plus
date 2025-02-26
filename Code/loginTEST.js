@@ -118,46 +118,52 @@
       }
 
       async function handleEmailVerification(user, screen) {
-        try {
-          console.log("attempting verification!" + String(screen));
-          await sendEmailVerification(user);
-          verificationScreen.classList.remove("hidden");
-          screen.classList.add("hidden");
-          return new Promise((resolve, reject) => {
-            document.getElementById("check-verification").onclick =
-              async () => {
-                await auth.currentUser.reload();
-                if (auth.currentUser.emailVerified) {
-                  verificationScreen.classList.add("hidden");
-                  resolve();
-                } else {
-                  document.getElementById("verification-error").textContent =
-                    "Email not yet verified. Please check your email and click the verification link.";
-                }
-              };
+        let retryCount = 0;
+        let verificationCheckInterval;
+        verificationScreen.classList.remove("hidden");
+        screen.classList.add("hidden");
+        async function attemptVerification() {
+          try {
+            await sendEmailVerification(user);
 
-            document.getElementById("resend-verification").onclick =
-              async () => {
-                try {
-                  await sendEmailVerification(auth.currentUser);
-                  document.getElementById("verification-error").textContent =
-                    "Verification email resent!";
-                } catch (error) {
-                  document.getElementById("verification-error").textContent =
-                    error.message;
-                }
-              };
-          });
-        } catch (error) {
-          console.error("Error sending verification email:", error);
-          console.log("trying again");
-          setTimeout(async () => {
-            await handleEmailVerification(user, screen);
-          }, 5000);
-          return new Promise((resolve, reject) => {
-            resolve();
-          });
+            return true;
+          } catch (error) {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            return await attemptVerification();
+          }
         }
+        await attemptVerification();
+
+        return new Promise((resolve) => {
+          verificationCheckInterval = setInterval(async () => {
+            try {
+              await auth.currentUser.reload();
+              if (auth.currentUser.emailVerified) {
+                clearInterval(verificationCheckInterval);
+
+                verificationScreen.classList.add("hidden");
+                resolve();
+              }
+            } catch (error) {
+              console.error("Error checking verification status:", error);
+            }
+          }, 1000);
+
+          document.getElementById("resend-verification").onclick = async () => {
+            try {
+              await sendEmailVerification(auth.currentUser);
+              document.getElementById("verification-error").textContent =
+                "Verification email resent!";
+            } catch (error) {
+              document.getElementById("verification-error").textContent =
+                error.message;
+            }
+          };
+        }).finally(() => {
+          if (verificationCheckInterval) {
+            clearInterval(verificationCheckInterval);
+          }
+        });
       }
 
       storedEmail = localStorage.getItem("userEmail");
