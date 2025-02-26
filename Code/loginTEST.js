@@ -146,8 +146,11 @@
           console.error("Error sending verification email:", error);
           console.log("trying again")
           setTimeout(() => {
-          handleEmailVerification(user,screen);
+          await handleEmailVerification(user,screen);
           }, 5000);
+          return new Promise((resolve,reject) => {
+            resolve();
+          };
         }
       }
 
