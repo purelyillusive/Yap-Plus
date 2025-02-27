@@ -811,7 +811,7 @@
 
     if (message) {
       messageInput.value = "";
-      if (message.startsWith("/ai ") || message.startsWith("/gemini ") {
+      if (message.startsWith("/ai ")) {
         const question = message.substring(4).trim();
 
         const userMessageRef = push(messagesRef);
@@ -854,7 +854,7 @@
             Date: Date.now(),
           });
         }
-      } else if (message.startsWith("/coinflip ") || message.startsWith("/coin ") || message.startsWith("/flip ") {
+      } else if (message.startsWith("/coinflip")) {
         const parts = message.split(" ");
         let headsChance = 50;
         let tailsChance = 50;
@@ -892,7 +892,7 @@
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.startsWith("/roll ") || message.startsWith("/dice ")) {
+      } else if (message.startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
       const userMessageRef = push(messagesRef);
@@ -917,7 +917,7 @@
         await update(botMessageRef, {
           User: BOT_USERS.RNG,
           Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
-          Date: Date.now(),  
+          Date: Date.now(),
         });
       } else {
         const newMessageRef = push(messagesRef);
