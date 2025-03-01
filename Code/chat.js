@@ -65,7 +65,7 @@
 
   const gui = document.getElementById("bookmarklet-gui");
   chatScreen = document.getElementById("chat-screen");
-  chatScreen.style.display = "flex";
+  chatScreen.classList.remove("hidden");
 
   async function checkForUpdates() {
     const userRef = ref(
