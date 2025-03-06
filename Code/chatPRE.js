@@ -842,7 +842,13 @@
           })
           .join("\n");
 
-        const fullPrompt = `${chatHistory}\n\nUser: ${question}`;
+        const fullPrompt = `The following is a chat log for context. Do not reference it directly. Instead, answer only the final question based on relevant context if needed.
+
+Chat Log:
+${chatHistory}
+
+Now, answer the user's question:
+User: ${question}`;
 
         let aiReply = null;
         let successfulRequest = false;
