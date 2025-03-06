@@ -842,12 +842,14 @@
           })
           .join("\n");
 
-        const fullPrompt = `The following is a chat log for context. Do not reference it directly. Instead, answer only the final question based on relevant context if needed.
+        const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+
+Current User: ${email}
 
 Chat Log:
 ${chatHistory}
 
-Now, answer the user's question:
+Now, respond to the user's question naturally:
 User: ${question}`;
 
         let aiReply = null;
