@@ -589,7 +589,7 @@
    <div id="email-login-section" style="border:1px solid black">
       <h3>Login with Email</h3>
       <label for="login-email">Email</label>
-      <input id="login-email" type="email" placeholder="37" required="">
+      <input id="login-email" type="email" placeholder="37@37.37" required="">
       <label for="login-password">Password</label>
       <input id="login-password" type="password" placeholder="37" required="">
       <button id="submit-login-email">Log In</button>
@@ -609,7 +609,7 @@
    <div id="email-create-section" style="border:1px solid black">
       <h3>Create Account with Email</h3>
       <label for="create-email">Email</label>
-      <input id="create-email" type="email" placeholder="37" required="">
+      <input id="create-email" type="email" placeholder="37@37.37" required="">
       <label for="create-email">Password</label>
       <input id="create-password" type="password" placeholder="37" required="">
       <button id="submit-create-email">Create Account</button>
@@ -671,6 +671,8 @@
     <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
     <button id="read-all" class="setting-button">Read All</button>
     <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
+    <button id="37-button" class="setting-button">37!</button>
+    <button id="iltg-button" class="setting-button">I Lost The Game!</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
@@ -800,6 +802,19 @@
   document.getElementById("bookmarklet-close").onmouseenter = function () {
     document.getElementById("bookmarklet-close").textContent = "37";
   };
+  d;
+  ocument.getElementById("customize-profile").onmouseenter = function () {
+    document.getElementById("customize-profile").textContent = "37";
+  };
+  document.getElementById("dark-mode").onmouseenter = function () {
+    document.getElementById("dark-mode").textContent = "37";
+  };
+  document.getElementById("read-all").onmouseenter = function () {
+    document.getElementById("read-all").textContent = "37";
+  };
+  document.getElementById("hide-left-sidebar").onmouseenter = function () {
+    document.getElementById("hide-left-sidebar").textContent = "37";
+  };
   document.getElementById("bookmarklet-minimize").onmouseleave = function () {
     document.getElementById("bookmarklet-minimize").textContent = "−";
   };
@@ -808,5 +823,19 @@
   };
   document.getElementById("bookmarklet-close").onmouseleave = function () {
     document.getElementById("bookmarklet-close").textContent = "×";
+  };
+  ocument.getElementById("customize-profile").onmouseenter = function () {
+    document.getElementById("customize-profile").textContent = "Profile";
+  };
+  document.getElementById("dark-mode").onmouseenter = function () {
+    document.getElementById("dark-mode").textContent =
+      "${isDark ? 'Light Mode' : 'Dark Mode'}";
+  };
+  document.getElementById("read-all").onmouseenter = function () {
+    document.getElementById("read-all").textContent = "Read All";
+  };
+  document.getElementById("hide-left-sidebar").onmouseenter = function () {
+    document.getElementById("hide-left-sidebar").textContent =
+      "Hide Left Sidebar";
   };
 })();
