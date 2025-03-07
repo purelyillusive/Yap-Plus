@@ -823,7 +823,7 @@
   document.getElementById("bookmarklet-close").onmouseleave = function () {
     document.getElementById("bookmarklet-close").textContent = "×";
   };
-  ocument.getElementById("customize-profile").onmouseenter = function () {
+  document.getElementById("customize-profile").onmouseenter = function () {
     document.getElementById("customize-profile").textContent = "Profile";
   };
   document.getElementById("dark-mode").onmouseenter = function () {
