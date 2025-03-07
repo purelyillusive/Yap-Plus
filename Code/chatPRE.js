@@ -811,7 +811,7 @@
 
     if (message) {
       messageInput.value = "";
-      if (message.startsWith("/ai ")) {
+      if (message.toLowerCase().startsWith("/ai ")) {
         let d = Date.now();
         const question = message.substring(4).trim();
 
@@ -829,11 +829,13 @@
         });
 
         const API_KEYS = [
-          "AIzaSyDJEIVUqeVkrbtMPnBvB8QWd9VuUQQQBjg",
-          "AIzaSyB42CD-hXRnfq3eNpLWnF9at5kHePI5qgQ",
-          "AIzaSyAzipn1IBvbNyQUiiJq6cAkE6hAlShce94",
-          "AIzaSyC1fFINANR_tuOM18Lo3HF9WXosX-6BHLM",
-          "AIzaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
+          "AIzaSyDJEIVUqeVkrbtMPnBvB8QWd9VuUQQQBjg"
+"AIzaSyB42CD-hXRnfq3eNpLWnF9at5kHePI5qgQ",
+"AIzaSyAzipn1IBvbNyQUiiJq6cAkE6hAlShce94",
+"AIzaSyBkR_XbsH9F-eWarriJ8Vc1KqmjEWhh7-s",
+"AIzaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
+"AIzaSyC1fFINANR_tuOM18Lo3HF9WXosX-6BHLM",
+"AIzaSyCJeCvi3Br0gPVH0ccL279wSkAEjOdlnx4"
         ];
 
         const chatHistory = messageEntries
@@ -842,7 +844,7 @@
           })
           .join("\n");
 
-        const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+        const fullPrompt = `The following is a chat log for context. Most of the users are 7th graders in Lakeside school in Washington, US. Please do not assume genders or age of anyone. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
 
 Current User: ${email}
 
@@ -892,7 +894,7 @@ User: ${question}`;
           Message: aiReply,
           Date: d,
         });
-      } else if (message.startsWith("/coinflip")) {
+      } else if (message.toLowerCase().startsWith("/coinflip")) {
         const parts = message.split(" ");
         let headsChance = 50;
         let tailsChance = 50;
@@ -930,7 +932,7 @@ User: ${question}`;
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.startsWith("/roll ")) {
+      } else if (message.toLowerCase().startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
         const userMessageRef = push(messagesRef);
