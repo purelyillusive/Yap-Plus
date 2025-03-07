@@ -852,7 +852,9 @@ Chat Log:
 ${chatHistory}
 
 Now, respond to the user's question naturally:
-User: ${question}`;
+User: ${question}
+
+In your responce, please use the phrase "AT THE SAME TIME" as much as you can. whenever you say "at the same time", it MUST BE ALL CAPITALIZED`;
 
         let aiReply = null;
         let successfulRequest = false;
@@ -923,9 +925,11 @@ User: ${question}`;
         });
 
         const random = Math.random() * 100;
-        const result = random < headsChance ? "Heads" : "Tails";
+        let result = random < headsChance ? "Heads" : "Tails";
         const chances = `(${headsChance.toFixed(1)}% Heads, ${tailsChance.toFixed(1)}% Tails)`;
-
+        if (Math.floor(Math.random() * 37) == 0) {
+          result = "THE RIM!";
+        }
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
           User: "[RNG]",
@@ -952,7 +956,13 @@ User: ${question}`;
           return;
         }
 
-        const result = Math.floor(Math.random() * sides) + 1;
+        let result = Math.floor(Math.random() * sides) + 1;
+        if (Math.floor(Math.random() * 3.7) == 0) {
+          result = 37;
+        }
+        if (result == 37) {
+          result = "37!!!";
+        }
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
           User: BOT_USERS.RNG,
@@ -1127,6 +1137,181 @@ User: ${question}`;
     } catch (error) {
       console.error("Error marking all messages as read:", error);
     }
+  });
+
+  document.getElementById("iltg-button").addEventListener("click", async () => {
+    const messagesRef = ref(database, `Chats/${currentChat}`);
+    const userMessageRef = push(messagesRef);
+    await update(userMessageRef, {
+      User: email,
+      Message: "I Lost The Game!!!",
+      Date: Date.now(),
+    });
+  });
+
+  document.getElementById("37-button").addEventListener("click", async () => {
+    const element = document.createElement("div");
+
+    const textOptions = ["37", "37!", "37!!", "37!!!"];
+    const randomText =
+      textOptions[Math.floor(Math.random() * textOptions.length)];
+
+    const colorOptions = [
+      "#FF5733",
+      "#33FF57",
+      "#3357FF",
+      "#FF33F5",
+      "#F5FF33",
+      "#33FFF5",
+      "#FF3333",
+      "#33FF33",
+      "#3333FF",
+      "#FF33FF",
+    ];
+    const randomColor =
+      colorOptions[Math.floor(Math.random() * colorOptions.length)];
+
+    element.textContent = randomText;
+    element.style.position = "absolute";
+    element.style.fontWeight = "bold";
+    element.style.fontSize = Math.floor(Math.random() * 30 + 20) + "px";
+    element.style.color = randomColor;
+    element.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+    element.style.padding = "5px 10px";
+    element.style.borderRadius = "10px";
+    element.style.boxShadow = "0 0 15px " + randomColor;
+    element.style.zIndex = "9999";
+    element.style.cursor = "pointer";
+    element.style.userSelect = "none";
+
+    const gui = document.querySelector("#bookmarklet-gui-header").parentElement;
+    const guiRect = gui.getBoundingClientRect();
+
+    const maxX = guiRect.width - 100;
+    const maxY = guiRect.height - 50;
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+
+    element.style.left = randomX + "px";
+    element.style.top = randomY + "px";
+
+    const randomRotation = Math.floor(Math.random() * 360);
+    element.style.transform = `rotate(${randomRotation}deg)`;
+
+    element.style.transition = "transform 0.3s, opacity 0.3s";
+
+    const uniqueId =
+      "effect-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+
+    const style = document.createElement("style");
+    style.id = uniqueId;
+    style.textContent = `
+    @keyframes bounce-${uniqueId} {
+      0%, 20%, 50%, 80%, 100% {transform: rotate(${randomRotation}deg) translateY(0);}
+      40% {transform: rotate(${randomRotation}deg) translateY(-20px);}
+      60% {transform: rotate(${randomRotation}deg) translateY(-10px);}
+    }
+    @keyframes glitter-${uniqueId} {
+      0% {text-shadow: 0 0 10px ${randomColor}, 0 0 20px ${randomColor};}
+      50% {text-shadow: 0 0 20px ${randomColor}, 0 0 30px ${randomColor};}
+      100% {text-shadow: 0 0 10px ${randomColor}, 0 0 20px ${randomColor};}
+    }
+  `;
+    document.head.appendChild(style);
+
+    element.style.animation = `bounce-${uniqueId} 1s ease infinite, glitter-${uniqueId} 0.8s ease infinite`;
+
+    const confettiColors = ["#fd0", "#0ff", "#f0f", "#0f0", "#f00", "#00f"];
+
+    element.addEventListener("click", async () => {
+      const maxConfetti = 25;
+      const existingConfetti = document.querySelectorAll(".party-confetti");
+
+      if (existingConfetti.length > 50) {
+        existingConfetti.forEach((c, index) => {
+          if (index < existingConfetti.length - 25) {
+            c.remove();
+          }
+        });
+      }
+
+      const isEasterEgg = Math.floor(Math.random() * 37) === 0;
+
+      if (isEasterEgg) {
+        const atTheSameTimeText = document.createElement("div");
+        atTheSameTimeText.textContent = "AT THE SAME TIME";
+        atTheSameTimeText.style.position = "absolute";
+        atTheSameTimeText.style.fontWeight = "bold";
+        atTheSameTimeText.style.fontSize = "24px";
+        atTheSameTimeText.style.color = "#FF0000";
+        atTheSameTimeText.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+        atTheSameTimeText.style.padding = "10px 15px";
+        atTheSameTimeText.style.borderRadius = "10px";
+        atTheSameTimeText.style.boxShadow = "0 0 20px #FF0000";
+        atTheSameTimeText.style.zIndex = "10000";
+        atTheSameTimeText.style.left = randomX + "px";
+        atTheSameTimeText.style.top = randomY + "px";
+        atTheSameTimeText.style.transition = "opacity 2s";
+
+        gui.appendChild(atTheSameTimeText);
+
+        try {
+          const messagesRef = ref(database, `Chats/${currentChat}`);
+          const userMessageRef = push(messagesRef);
+          await update(userMessageRef, {
+            User: email,
+            Message: "AT THE SAME TIME",
+            Date: Date.now(),
+          });
+        } catch (error) {
+          console.error("Error sending message:", error);
+        }
+
+        setTimeout(() => {
+          atTheSameTimeText.style.opacity = "0";
+          setTimeout(() => {
+            atTheSameTimeText.remove();
+          }, 2000);
+        }, 1000);
+      }
+
+      for (let i = 0; i < maxConfetti; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "party-confetti";
+        confetti.style.position = "absolute";
+        confetti.style.width = "10px";
+        confetti.style.height = "10px";
+        confetti.style.backgroundColor =
+          confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        confetti.style.borderRadius = "50%";
+        confetti.style.left = randomX + Math.random() * 50 + "px";
+        confetti.style.top = randomY + Math.random() * 50 + "px";
+        confetti.style.zIndex = "9998";
+        confetti.style.opacity = "1";
+        confetti.style.transition = "top 1s, left 1s, opacity 1s";
+
+        gui.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.style.top = randomY + (Math.random() * 200 - 100) + "px";
+          confetti.style.left = randomX + (Math.random() * 200 - 100) + "px";
+          confetti.style.opacity = "0";
+
+          setTimeout(() => {
+            confetti.remove();
+          }, 1000);
+        }, 10);
+      }
+
+      element.style.transform = `rotate(${randomRotation}deg) scale(0)`;
+      element.style.opacity = "0";
+      setTimeout(() => {
+        element.remove();
+        document.getElementById(uniqueId)?.remove();
+      }, 300);
+    });
+
+    gui.appendChild(element);
   });
 
   gui.querySelector("#bookmarklet-close").onclick = function () {
