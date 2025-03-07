@@ -940,7 +940,7 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      }
+        
     if (message.toLowerCase().startsWith("/eod")) {
     console.log("EOD command detected");
 
