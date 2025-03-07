@@ -940,7 +940,7 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-        else if (message.toLowerCase().startsWith("/eod")) {
+      } else if (message.toLowerCase().startsWith("/eod")) {
     const parts = message.split(" ");
     let yesChance = 45;
     let noChance = 45;
