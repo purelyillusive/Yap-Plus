@@ -638,6 +638,7 @@
       </div>
       <div id="bottom-left-sidebar">
         <div id="dm-list">
+		<button id="kill-button" class="setting-button">Click ME!</button>
         </div>
       </div>
     </div>
@@ -756,7 +757,10 @@
   document.getElementById("bookmarklet-close").onmouseenter = function () {
     document.getElementById("bookmarklet-close").textContent = "37";
   };
-document.getElementById("send-button").onmouseenter = function () {
+  document.getElementById("kill-button").onmouseenter = function () {
+    document.getElementById("kill-button").textContent = "DONT";
+  };
+  document.getElementById("send-button").onmouseenter = function () {
     document.getElementById("send-button").textContent = "37";
   };
   document.getElementById("bookmarklet-minimize").onmouseleave = function () {
@@ -768,7 +772,10 @@ document.getElementById("send-button").onmouseenter = function () {
   document.getElementById("bookmarklet-close").onmouseleave = function () {
     document.getElementById("bookmarklet-close").textContent = "×";
   };
-	document.getElementById("send-button").onmouseleave = function () {
+  document.getElementById("send-button").onmouseleave = function () {
     document.getElementById("send-button").textContent = "Send";
+  };
+  document.getElementById("kill-button").onmouseleave = function () {
+    document.getElementById("kill-button").textContent = "Click ME!";
   };
 })();
