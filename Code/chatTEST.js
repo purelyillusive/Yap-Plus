@@ -313,8 +313,10 @@
     popup.appendChild(title);
 
     newUpdates.forEach((version) => {
-      const update = updates[version];
-
+      let update = updates[version];
+      if (update == "2*2") {
+        update = "3*7";
+      }
       const updateElement = document.createElement("div");
 
       const updateHeader = document.createElement("strong");
