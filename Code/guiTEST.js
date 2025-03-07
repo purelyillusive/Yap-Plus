@@ -756,18 +756,6 @@
   document.getElementById("bookmarklet-close").onmouseenter = function () {
     document.getElementById("bookmarklet-close").textContent = "37";
   };
-  document.getElementById("customize-profile").onmouseenter = function () {
-    document.getElementById("customize-profile").textContent = "37";
-  };
-  document.getElementById("dark-mode").onmouseenter = function () {
-    document.getElementById("dark-mode").textContent = "37";
-  };
-  document.getElementById("read-all").onmouseenter = function () {
-    document.getElementById("read-all").textContent = "37";
-  };
-  document.getElementById("hide-left-sidebar").onmouseenter = function () {
-    document.getElementById("hide-left-sidebar").textContent = "37";
-  };
   document.getElementById("bookmarklet-minimize").onmouseleave = function () {
     document.getElementById("bookmarklet-minimize").textContent = "−";
   };
@@ -776,19 +764,5 @@
   };
   document.getElementById("bookmarklet-close").onmouseleave = function () {
     document.getElementById("bookmarklet-close").textContent = "×";
-  };
-  document.getElementById("customize-profile").onmouseleave = function () {
-    document.getElementById("customize-profile").textContent = "Profile";
-  };
-  document.getElementById("dark-mode").onmouseleave = function () {
-    document.getElementById("dark-mode").textContent =
-      `${isDark ? 'Light Mode' : 'Dark Mode'}`;
-  };
-  document.getElementById("read-all").onmouseleave = function () {
-    document.getElementById("read-all").textContent = "Read All";
-  };
-  document.getElementById("hide-left-sidebar").onmouseleave = function () {
-    document.getElementById("hide-left-sidebar").textContent =
-      "Hide Left Sidebar";
   };
 })();
