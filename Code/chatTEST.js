@@ -1527,6 +1527,7 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
       "WHEEEE!",
       "I LOST THE GAME!",
       "AT THE SAME TIME!",
+      "Eliana is alive",
       " W RIZZ!",
       "I ATE IT!",
       "no comment.",
@@ -1539,6 +1540,7 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
       "Jalice!",
       "Ju-bin!",
       "Shimmy!",
+      "ur mom",
       "[Insert Ship Name Here!]",
     ];
     const addChaosText = () => {
