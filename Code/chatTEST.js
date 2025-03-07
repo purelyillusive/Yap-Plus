@@ -1453,7 +1453,7 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
       chaosText.className = "text-scramble";
       if (Math.floor(Math.random() * 37) == 0) {
         chaosText.textContent =
-          sptext[Math.floor(Math.random() * pctext.length)];
+          sptext[Math.floor(Math.random() * sptext.length)];
       } else {
         chaosText.textContent =
           pctext[Math.floor(Math.random() * pctext.length)];
