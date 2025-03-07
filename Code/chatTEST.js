@@ -811,50 +811,90 @@
 
     if (message) {
       messageInput.value = "";
-      if (message.startsWith("/ai ")) {
+      if (message.toLowerCase().startsWith("/ai ")) {
+        let d = Date.now();
         const question = message.substring(4).trim();
+
+        const messagesSnapshot = await get(messagesRef);
+        const messages = messagesSnapshot.val() || {};
+        const messageEntries = Object.entries(messages)
+          .sort((a, b) => new Date(a[1].Date) - new Date(b[1].Date))
+          .slice(-20);
 
         const userMessageRef = push(messagesRef);
         await update(userMessageRef, {
           User: email,
           Message: message,
-          Date: Date.now(),
+          Date: d,
         });
 
-        try {
-          const API_KEY = "AIzaSyDGq_CeBeQ0oeNxlki7HxXWyLoSWFIZHRw";
-          const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" +
-              API_KEY,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                contents: [{ role: "user", parts: [{ text: question }] }],
-              }),
-            },
-          ).then((res) => res.json());
+        const API_KEYS = [
+          "AIzaSyDJEIVUqeVkrbtMPnBvB8QWd9VuUQQQBjg",
+          "AIzaSyB42CD-hXRnfq3eNpLWnF9at5kHePI5qgQ",
+          "AIzaSyAzipn1IBvbNyQUiiJq6cAkE6hAlShce94",
+          "AIzaSyBkR_XbsH9F-eWarriJ8Vc1KqmjEWhh7-s",
+          "AIzaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
+          "AIzaSyC1fFINANR_tuOM18Lo3HF9WXosX-6BHLM",
+          "AIzaSyCJeCvi3Br0gPVH0ccL279wSkAEjOdlnx4",
+        ];
 
-          let aiReply =
-            response.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "No response.";
+        const chatHistory = messageEntries
+          .map(([id, msg]) => {
+            return `${msg.User}: ${msg.Message}`;
+          })
+          .join("\n");
 
-          const aiMessageRef = push(messagesRef);
-          await update(aiMessageRef, {
-            User: "[AI]",
-            Message: aiReply,
-            Date: Date.now(),
-          });
-        } catch (error) {
-          console.error("Error contacting AI:", error);
-          const errorMessageRef = push(messagesRef);
-          await update(errorMessageRef, {
-            User: "[AI]",
-            Message: "Sorry, I encountered an error processing your request.",
-            Date: Date.now(),
-          });
+        const fullPrompt = `The following is a chat log for context. Most of the users are 7th graders in Lakeside school in Washington, US. Please do not assume genders or age of anyone. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+
+Current User: ${email}
+
+Chat Log:
+${chatHistory}
+
+Now, respond to the user's question naturally:
+User: ${question}`;
+
+        let aiReply = null;
+        let successfulRequest = false;
+
+        for (const API_KEY of API_KEYS) {
+          try {
+            const response = await fetch(
+              "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=" +
+                API_KEY,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
+                }),
+              },
+            ).then((res) => res.json());
+
+            const responseText =
+              response.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (responseText && responseText.trim() !== "") {
+              aiReply = responseText;
+              successfulRequest = true;
+              break;
+            }
+          } catch (error) {
+            console.error(`Error with API key ${API_KEY}:`, error);
+          }
         }
-      } else if (message.startsWith("/coinflip")) {
+
+        if (!successfulRequest) {
+          aiReply =
+            "Sorry, AI assistance is temporarily unavailable. Please try again later.";
+        }
+
+        const aiMessageRef = push(messagesRef);
+        await update(aiMessageRef, {
+          User: "[AI]",
+          Message: aiReply,
+          Date: d,
+        });
+      } else if (message.toLowerCase().startsWith("/coinflip")) {
         const parts = message.split(" ");
         let headsChance = 50;
         let tailsChance = 50;
@@ -892,16 +932,16 @@
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.startsWith("/roll ")) {
+      } else if (message.toLowerCase().startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
-      const userMessageRef = push(messagesRef);
+        const userMessageRef = push(messagesRef);
         await update(userMessageRef, {
           User: email,
           Message: message,
           Date: Date.now(),
         });
-        
+
         if (isNaN(sides) || sides < 1) {
           const errorMessageRef = push(messagesRef);
           await update(errorMessageRef, {
