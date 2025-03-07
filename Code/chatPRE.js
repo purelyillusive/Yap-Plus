@@ -1444,7 +1444,7 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
       "bruh.",
     ];
     const sptext = [
-      "Yu-heng!",
+      "Yiyen!",
       "Jalice!",
       "Ju-bin!",
       "Shimmy!",
