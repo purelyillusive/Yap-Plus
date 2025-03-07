@@ -941,7 +941,7 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Date: Date.now(),
         });
       }
-    else if (message.toLowerCase().startsWith("/eod")) {
+    if (message.toLowerCase().startsWith("/eod")) {
     console.log("EOD command detected");
 
     const parts = message.split(" ");
