@@ -938,35 +938,32 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
         Message: `🎲 Coin flip result: ${result}`,
         Date: Date.now(),
     });
-
 } else if (message.toLowerCase().startsWith("/eod")) {  
-    console.log("EOD command detected");
-
     const parts = message.split(" ");
     let yesChance = 45;
     let noChance = 45;
     let maybeChance = 10;
 
     if (parts.length === 4) {
-        yesChance = parseFloat(parts[1]);
-        noChance = parseFloat(parts[2]);
-        maybeChance = parseFloat(parts[3]);
+        const parsedYes = parseFloat(parts[1]);
+        const parsedNo = parseFloat(parts[2]);
+        const parsedMaybe = parseFloat(parts[3]);
 
-        if (yesChance + noChance + maybeChance !== 100) {
-            const total = yesChance + noChance + maybeChance;
-            if (total > 0) {
-                yesChance = (yesChance / total) * 100;
-                noChance = (noChance / total) * 100;
-                maybeChance = (maybeChance / total) * 100;
+        if (!isNaN(parsedYes) && !isNaN(parsedNo) && !isNaN(parsedMaybe)) {
+            if (parsedYes + parsedNo + parsedMaybe === 100) {
+                yesChance = parsedYes;
+                noChance = parsedNo;
+                maybeChance = parsedMaybe;
             } else {
-                yesChance = 45;
-                noChance = 45;
-                maybeChance = 10;
+                const total = parsedYes + parsedNo + parsedMaybe;
+                if (total > 0) {
+                    yesChance = (parsedYes / total) * 100;
+                    noChance = (parsedNo / total) * 100;
+                    maybeChance = (parsedMaybe / total) * 100;
+                }
             }
         }
     }
-
-    console.log(`Chances: Yes=${yesChance}%, No=${noChance}%, Maybe=${maybeChance}%`);
 
     const userMessageRef = push(messagesRef);
     await update(userMessageRef, {
@@ -976,9 +973,15 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
     });
 
     const random = Math.random() * 100;
-    let result = random < yesChance ? "Yes" : random < yesChance + noChance ? "No" : "Maybe";
-
-    console.log(`EOD result: ${result}`);
+    let result;
+    
+    if (random < yesChance) {
+        result = "Yes";
+    } else if (random < yesChance + noChance) {
+        result = "No";
+    } else {
+        result = "Maybe";
+    }
 
     const botMessageRef = push(messagesRef);
     await update(botMessageRef, {
@@ -986,6 +989,9 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
         Message: `🎲 EOD decision: ${result}`,
         Date: Date.now(),
     });
+
+}
+
 
 } else if (message.toLowerCase().startsWith("/roll ")) {
     const sides = parseInt(message.split(" ")[1]);
