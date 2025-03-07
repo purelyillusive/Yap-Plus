@@ -901,47 +901,45 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Date: d,
         });
       } else if (message.toLowerCase().startsWith("/coinflip")) {
-        const parts = message.split(" ");
-        let headsChance = 50;
-        let tailsChance = 50;
+    const parts = message.split(" ");
+    let headsChance = 50;
+    let tailsChance = 50;
 
-        if (parts.length === 3) {
-          headsChance = parseFloat(parts[1]);
-          tailsChance = parseFloat(parts[2]);
+    if (parts.length === 3) {
+        headsChance = parseFloat(parts[1]);
+        tailsChance = parseFloat(parts[2]);
 
-          if (headsChance + tailsChance !== 100) {
+        if (headsChance + tailsChance !== 100) {
             const total = headsChance + tailsChance;
             if (total > 0) {
-              headsChance = (headsChance / total) * 100;
-              tailsChance = (tailsChance / total) * 100;
+                headsChance = (headsChance / total) * 100;
+                tailsChance = (tailsChance / total) * 100;
             } else {
-              headsChance = 50;
-              tailsChance = 50;
+                headsChance = 50;
+                tailsChance = 50;
             }
-          }
         }
+    }
 
-        const userMessageRef = push(messagesRef);
-        await update(userMessageRef, {
-          User: email,
-          Message: message,
-          Date: Date.now(),
-        });
+    const userMessageRef = push(messagesRef);
+    await update(userMessageRef, {
+        User: email,
+        Message: message,
+        Date: Date.now(),
+    });
 
-        const random = Math.random() * 100;
-        let result = random < headsChance ? "Heads" : "Tails";
-        const chances = `(${headsChance.toFixed(1)}% Heads, ${tailsChance.toFixed(1)}% Tails)`;
-        if (Math.floor(Math.random() * 37) == 0) {
-          result = "THE RIM!";
-        }
-        const botMessageRef = push(messagesRef);
-        await update(botMessageRef, {
-          User: "[RNG]",
-          Message: `🎲 Coin flip result: ${result}`,
-          Date: Date.now(),
-        });
-        
-    if (message.toLowerCase().startsWith("/eod")) {
+    const random = Math.random() * 100;
+    let result = random < headsChance ? "Heads" : "Tails";
+    const chances = `(${headsChance.toFixed(1)}% Heads, ${tailsChance.toFixed(1)}% Tails)`;
+
+    const botMessageRef = push(messagesRef);
+    await update(botMessageRef, {
+        User: "[RNG]",
+        Message: `🎲 Coin flip result: ${result}`,
+        Date: Date.now(),
+    });
+
+} else if (message.toLowerCase().startsWith("/eod")) {  
     console.log("EOD command detected");
 
     const parts = message.split(" ");
@@ -988,8 +986,42 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
         Message: `🎲 EOD decision: ${result}`,
         Date: Date.now(),
     });
-}
 
+} else if (message.toLowerCase().startsWith("/roll ")) {
+    const sides = parseInt(message.split(" ")[1]);
+
+    const userMessageRef = push(messagesRef);
+    await update(userMessageRef, {
+        User: email,
+        Message: message,
+        Date: Date.now(),
+    });
+
+    if (isNaN(sides) || sides < 1) {
+        const errorMessageRef = push(messagesRef);
+        await update(errorMessageRef, {
+            User: BOT_USERS.RNG,
+            Message: "Please specify a valid number of sides (e.g., /roll 6)",
+            Date: Date.now(),
+        });
+        return;
+    }
+
+    let result = Math.floor(Math.random() * sides) + 1;
+    if (Math.floor(Math.random() * 3.7) == 0) {
+        result = 37;
+    }
+    if (result == 37) {
+        result = "37!!!";
+    }
+    const botMessageRef = push(messagesRef);
+    await update(botMessageRef, {
+        User: BOT_USERS.RNG,
+        Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
+        Date: Date.now(),
+    });
+
+}
 
       } else if (message.toLowerCase().startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
