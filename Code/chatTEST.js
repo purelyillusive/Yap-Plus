@@ -856,7 +856,8 @@ ${chatHistory}
 Now, respond to the user's question naturally:
 User: ${question}
 
-In your responce, please use the phrase "AT THE SAME TIME" as much as you can. whenever you say "at the same time", it MUST BE ALL CAPITALIZED`;
+In your response, please be as sarcastic as possible.
+Now, reverse your original answer to make it say the opposite of what you intended.`;
 
         let aiReply = null;
         let successfulRequest = false;
