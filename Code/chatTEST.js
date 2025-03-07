@@ -940,7 +940,9 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.toLowerCase().startsWith("/eod")) {
+      else if (message.toLowerCase().startsWith("/eod")) {
+    console.log("EOD command detected");
+
     const parts = message.split(" ");
     let yesChance = 45;
     let noChance = 45;
@@ -965,6 +967,8 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
         }
     }
 
+    console.log(`Chances: Yes=${yesChance}%, No=${noChance}%, Maybe=${maybeChance}%`);
+
     const userMessageRef = push(messagesRef);
     await update(userMessageRef, {
         User: email,
@@ -974,8 +978,9 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
 
     const random = Math.random() * 100;
     let result = random < yesChance ? "Yes" : random < yesChance + noChance ? "No" : "Maybe";
-    const chances = `(${yesChance.toFixed(1)}% Yes, ${noChance.toFixed(1)}% No, ${maybeChance.toFixed(1)}% Maybe)`;
-    
+
+    console.log(`EOD result: ${result}`);
+
     const botMessageRef = push(messagesRef);
     await update(botMessageRef, {
         User: "[RNG]",
@@ -983,6 +988,7 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
         Date: Date.now(),
     });
 }
+
 
       } else if (message.toLowerCase().startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
