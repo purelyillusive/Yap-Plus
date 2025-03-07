@@ -9,8 +9,8 @@
     messagingSenderId: "1092146908435",
     appId: "1:1092146908435:web:f72b90362cc86c5f83dee6",
   };
-  /* Check if the GUI is already open */
-  var database, auth, provider, email, mostRecentVersionKey, email;
+
+  var database, auth, provider, email, mostRecentVersionKey;
   try {
     /* Dynamically load Firebase modules */
     var { initializeApp } = await import(
@@ -25,14 +25,18 @@
       createUserWithEmailAndPassword,
       signInWithPopup,
       signInWithEmailAndPassword,
+      sendEmailVerification,
+      sendSignInLinkToEmail,
+      isSignInWithEmailLink,
+      signInWithEmailLink,
     } = await import(
       "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
     );
-    /* Initialize Firebase app */
-    var app = initializeApp(firebaseConfig); /* Initialize Firebase services */
+
+    var app = initializeApp(firebaseConfig);
     database = getDatabase(app);
     auth = getAuth(app);
-    var provider = new GoogleAuthProvider();
+    provider = new GoogleAuthProvider();
   } catch (error) {
     console.error("Error initializing Firebase:", error);
     alert("Firebase initialization failed. Check the console for details.");
@@ -46,12 +50,8 @@
     .then((code) => {
       eval(code);
       const gui = document.getElementById("bookmarklet-gui");
-      var create_username;
-      var create_password;
-      var login_username;
-      var login_password;
 
-async function openChatScreen() {
+      async function openChatScreen() {
         document.getElementById("email-saved-here").textContent = email;
 
         fetch(
@@ -65,13 +65,13 @@ async function openChatScreen() {
           });
       }
 
-      /* Screens */
       const mainScreen = document.getElementById("main-screen");
       const loginScreen = document.getElementById("login-screen");
       const createScreen = document.getElementById("create-account-screen");
       const customizeScreen = document.getElementById(
         "customize-account-screen",
       );
+      const verificationScreen = document.getElementById("verification-screen");
       const stayloginScreen = document.getElementById("stay-login-screen");
       const savedAccountScreen = document.getElementById("saved-account");
 
@@ -116,6 +116,56 @@ async function openChatScreen() {
             mainScreen.classList.remove("hidden");
           };
       }
+
+      async function handleEmailVerification(user, screen) {
+        let retryCount = 0;
+        let verificationCheckInterval;
+        verificationScreen.classList.remove("hidden");
+        screen.classList.add("hidden");
+        async function attemptVerification() {
+          try {
+            await sendEmailVerification(user);
+
+            return true;
+          } catch (error) {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            return await attemptVerification();
+          }
+        }
+        await attemptVerification();
+
+        return new Promise((resolve) => {
+          verificationCheckInterval = setInterval(async () => {
+            try {
+              await auth.currentUser.reload();
+              if (auth.currentUser.emailVerified) {
+                clearInterval(verificationCheckInterval);
+
+                verificationScreen.classList.add("hidden");
+                resolve();
+              }
+            } catch (error) {
+              console.error("Error checking verification status:", error);
+            }
+          }, 1000);
+
+          document.getElementById("resend-verification").onclick = async () => {
+            try {
+              await sendEmailVerification(auth.currentUser);
+              document.getElementById("verification-error").textContent =
+                "Verification email resent!";
+            } catch (error) {
+              document.getElementById("verification-error").textContent =
+                error.message;
+            }
+          };
+        }).finally(() => {
+          if (verificationCheckInterval) {
+            clearInterval(verificationCheckInterval);
+          }
+        });
+      }
+
       storedEmail = localStorage.getItem("userEmail");
       /* Login and Create Account functions */
       document.getElementById("login-button").onclick = function () {
@@ -136,18 +186,24 @@ async function openChatScreen() {
           const errorLabel = document.getElementById("create-email-error");
           email = emailInput.value.trim();
           const password = passwordInput.value.trim();
+
           if (!email || !password) {
             errorLabel.textContent = "Please enter both email and password.";
             return;
           }
+
           try {
-            result = await createUserWithEmailAndPassword(
+            const result = await createUserWithEmailAndPassword(
               auth,
               email,
               password,
             );
             const user = result.user;
+
             email = user.email;
+
+            await handleEmailVerification(user, createScreen);
+
             emailInput.value = "";
             passwordInput.value = "";
             errorLabel.textContent = "";
@@ -181,6 +237,7 @@ async function openChatScreen() {
             errorLabel.textContent = error.message;
           }
         };
+
       /* Account creation using Google */
       document.getElementById("google-create-button").onclick =
         async function () {
@@ -236,17 +293,30 @@ async function openChatScreen() {
           const errorLabel = document.getElementById("login-email-error");
           email = emailInput.value.trim();
           const password = passwordInput.value.trim();
+
           if (!email || !password) {
             errorLabel.textContent = "Please enter your email and password.";
             return;
           }
+
           try {
-            result = await signInWithEmailAndPassword(auth, email, password);
+            const result = await signInWithEmailAndPassword(
+              auth,
+              email,
+              password,
+            );
             const user = result.user;
+
+            if (!user.emailVerified) {
+              console.log("yay!");
+              await handleEmailVerification(user, loginScreen);
+            }
+
             email = user.email;
             emailInput.value = "";
             passwordInput.value = "";
             errorLabel.textContent = "";
+
             if ((!storedEmail || storedEmail == "") && storedEmail != "none") {
               loginScreen.classList.add("hidden");
               stayloginScreen.classList.remove("hidden");
@@ -258,6 +328,7 @@ async function openChatScreen() {
             errorLabel.textContent = error.message;
           }
         };
+
       /* Google Log In */
       document.getElementById("google-login-button").onclick =
         async function () {
@@ -277,6 +348,7 @@ async function openChatScreen() {
             errorLabel.textContent = error.message;
           }
         };
+
       /* Back Login Button */
       document.getElementById("back-login-button").onclick = async function () {
         mainScreen.classList.remove("hidden");
@@ -285,16 +357,13 @@ async function openChatScreen() {
 
       /* Account Creation */
       function create_account() {
-        /* Database Ref */
         const accountsRef = ref(
           database,
           `Accounts/${email.replace(/\./g, "*")}`,
         );
 
-        /* Reference to the Updates node to get the most recent version */
         const updatesRef = ref(database, "Updates");
 
-        /* Fetch the list of updates from the database */
         get(updatesRef)
           .then((updatesSnapshot) => {
             const updates = updatesSnapshot.val();
@@ -323,7 +392,6 @@ async function openChatScreen() {
               Version: mostRecentVersionKey,
             };
 
-            /* Write the account data to the database */
             set(accountsRef, accountData)
               .then(() => {
                 console.log(
