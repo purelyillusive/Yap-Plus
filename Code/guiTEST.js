@@ -823,17 +823,17 @@
   document.getElementById("bookmarklet-close").onmouseleave = function () {
     document.getElementById("bookmarklet-close").textContent = "×";
   };
-  document.getElementById("customize-profile").onmouseenter = function () {
+  document.getElementById("customize-profile").onmouseleave = function () {
     document.getElementById("customize-profile").textContent = "Profile";
   };
-  document.getElementById("dark-mode").onmouseenter = function () {
+  document.getElementById("dark-mode").onmouseleave = function () {
     document.getElementById("dark-mode").textContent =
       `${isDark ? 'Light Mode' : 'Dark Mode'}`;
   };
-  document.getElementById("read-all").onmouseenter = function () {
+  document.getElementById("read-all").onmouseleave = function () {
     document.getElementById("read-all").textContent = "Read All";
   };
-  document.getElementById("hide-left-sidebar").onmouseenter = function () {
+  document.getElementById("hide-left-sidebar").onmouseleave = function () {
     document.getElementById("hide-left-sidebar").textContent =
       "Hide Left Sidebar";
   };
