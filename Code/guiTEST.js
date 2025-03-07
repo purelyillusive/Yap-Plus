@@ -573,7 +573,7 @@
 
   gui.innerHTML = `
 <div id="bookmarklet-gui-header">
-   <span>Yap Window</span>   
+   <span style="font-size: 10px">I Lost The Game (Yap Window 3/7 Edition)</span>   
    <div class="button-group">
       <button id="bookmarklet-minimize">−</button>
       <button id="bookmarklet-fullscreen">⛶</button>
@@ -589,9 +589,9 @@
    <div id="email-login-section" style="border:1px solid black">
       <h3>Login with Email</h3>
       <label for="login-email">Email</label>
-      <input id="login-email" type="email" placeholder="Enter your email" required="">
+      <input id="login-email" type="email" placeholder="37" required="">
       <label for="login-password">Password</label>
-      <input id="login-password" type="password" placeholder="Enter your password" required="">
+      <input id="login-password" type="password" placeholder="37" required="">
       <button id="submit-login-email">Log In</button>
       <label id="login-email-error" style="color: #f2545b"></label>
    </div>
@@ -609,9 +609,9 @@
    <div id="email-create-section" style="border:1px solid black">
       <h3>Create Account with Email</h3>
       <label for="create-email">Email</label>
-      <input id="create-email" type="email" placeholder="Enter your email" required="">
+      <input id="create-email" type="email" placeholder="37" required="">
       <label for="create-email">Password</label>
-      <input id="create-password" type="password" placeholder="Enter your password" required="">
+      <input id="create-password" type="password" placeholder="37" required="">
       <button id="submit-create-email">Create Account</button>
       <label id="create-email-error" style="color: #f2545b"></label>
    </div>
@@ -625,29 +625,29 @@
     <p>Please check your email for a verification link.</p>
     <p>Once you verify your email, you will automatically be taken to the next page</p>
     <button id="resend-verification">Resend Verification Email</button>
-    <p id="verification-error" class="error-text"></p>
+    <p id="verification-error" class="error-text">37</p>
 </div>
 <div id="customize-account-screen" class="screen hidden">
    <h2>Final Steps</h2>
    <label for="create-username">Username</label>
-   <input id="create-username" type="text" placeholder="Pick a username" required="">
+   <input id="create-username" type="text" placeholder="37" required="">
    <label for="create-picture">Profile Picture (optional)</label>
    <input id="create-picture" type="file" accept="image/*">
    <label for="create-bio">Bio (optional)</label>   
-   <textarea id="create-bio" rows="8" columns="50" height="100px">I'm a yapper</textarea>
+   <textarea id="create-bio" rows="8" columns="50" height="100px">I lost the game!</textarea>
    <button id="submit-customize">Save</button>
 </div>
 <div id="stay-login-screen" class="screen hidden">
    <h2>Would you like to stay logged in?</h2>
    <h3>Any future logins on this site will automatically sign you into your account</h3>
    <div id="stay-login-buttons" style="justify-content: space-between; align-items: center;">
-      <button id="stay-yes" style="width: 20%">Yes</button>
-      <button id="stay-no" style="width: 20%">No</button>
-      <button id="stay-forget" style="width: 20%">Don't Bother Me</button>
+      <button id="stay-yes" style="width: 20%">37! (Yes)</button>
+      <button id="stay-no" style="width: 20%">37? (No)</button>
+      <button id="stay-forget" style="width: 20%">37. (Don't Bother Me)</button>
    </div>
 </div>
 <div id="main-screen" class="screen">
-   <h2>Welcome to Yap Window</h2>
+   <h2>I Lost The Game</h2>
    <p>Press CTRL-ALT-D to switch between light and dark mode</p>
    <button id="login-button">Log In</button>
    <button id="create-account-button">Create Account</button>
@@ -790,4 +790,23 @@
   document
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
+
+  document.getElementById("bookmarklet-minimize").onmouseenter = function () {
+    document.getElementById("bookmarklet-minimize").textContent = "37";
+  };
+  document.getElementById("bookmarklet-fullscreen").onmouseenter = function () {
+    document.getElementById("bookmarklet-fullscreen").textContent = "37";
+  };
+  document.getElementById("bookmarklet-close").onmouseenter = function () {
+    document.getElementById("bookmarklet-close").textContent = "37";
+  };
+  document.getElementById("bookmarklet-minimize").onmouseleave = function () {
+    document.getElementById("bookmarklet-minimize").textContent = "−";
+  };
+  document.getElementById("bookmarklet-fullscreen").onmouseleave = function () {
+    document.getElementById("bookmarklet-fullscreen").textContent = "⛶";
+  };
+  document.getElementById("bookmarklet-close").onmouseleave = function () {
+    document.getElementById("bookmarklet-close").textContent = "×";
+  };
 })();
