@@ -1442,6 +1442,8 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
       "lol",
       "kIdS tHeSe dAyS!",
       "bruh.",
+      "GIGGLE!",
+      ":) > (:",
     ];
     const sptext = [
       "Yiyen!",
