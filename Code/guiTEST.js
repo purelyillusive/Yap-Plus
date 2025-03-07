@@ -646,7 +646,7 @@
       </div>
       <div id="message-send">
         <p id="typing-indicator"></p>
-        <input type="text" id="message-input" autocomplete="off" placeholder="Yap away..."/>
+        <input type="text" id="message-input" autocomplete="off" placeholder="I lost the game..."/>
         <button id="send-button">Send</button>
       </div>
     </div>
@@ -655,7 +655,7 @@
 <div id="channel-screen" class="screen hidden">
     <h2>Create/Customize Channel</h2>
     <label for="channel-name">Channel Name</label>
-    <input id="channel-name" type="text" placeholder="Name your channel..." required>
+    <input id="channel-name" type="text" placeholder="37..." required>
     
     <label for="channel-type">Channel Type</label>
     <select id="channel-type">
@@ -667,7 +667,7 @@
         <label>Select Members</label>
         <div id="selected-members" class="selected-members-container"></div>
         <div class="members-dropdown">
-            <input type="text" id="member-search" placeholder="Type Emails Here...">
+            <input type="text" id="member-search" placeholder="37...">
             <div id="members-list" class="members-list"></div>
         </div>
     </div>
@@ -756,6 +756,9 @@
   document.getElementById("bookmarklet-close").onmouseenter = function () {
     document.getElementById("bookmarklet-close").textContent = "37";
   };
+document.getElementById("send-button").onmouseenter = function () {
+    document.getElementById("send-button").textContent = "37";
+  };
   document.getElementById("bookmarklet-minimize").onmouseleave = function () {
     document.getElementById("bookmarklet-minimize").textContent = "−";
   };
@@ -764,5 +767,8 @@
   };
   document.getElementById("bookmarklet-close").onmouseleave = function () {
     document.getElementById("bookmarklet-close").textContent = "×";
+  };
+	document.getElementById("send-button").onmouseleave = function () {
+    document.getElementById("send-button").textContent = "Send";
   };
 })();
