@@ -19,8 +19,7 @@
   });
 
   function updateColor() {
-    style.innerHTML = `
-#bookmarklet-gui {
+    style.innerHTML = `#bookmarklet-gui {
 	position: fixed;
 	top: 10%;
 	left: 50%;
@@ -213,62 +212,6 @@
   z-index: 10;
 }
 
-#customize-profile {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-#customize-profile:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#dark-mode {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#dark-mode:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#read-all {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#read-all:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#hide-left-sidebar:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
 .setting-button {
   height: 32px;
   font-size: 13px;
@@ -276,6 +219,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: ${isDark ? "#404040" : "#e9ecef"};
+  color: ${isDark ? "#ffffff" : "#495057"};
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.setting-button:hover {
+  background: ${isDark ? "#505050" : "#dee2e6"};
 }
 
 
@@ -442,6 +395,19 @@
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
+.message.bot {
+  text-align: left;
+  background-color: ${isDark ? "#2a323c" : "#f0f7ff"};
+  color: ${isDark ? "#e2e8f0" : "#1a365d"};
+}
+
+.message.bot.unread {
+  background-color: ${isDark ? "#2d3748" : "#ebf8ff"};
+  border-left: 3px solid ${isDark ? "#90cdf4" : "#4299e1"};
+  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
+}
+
+
 
 .send-info {
 	font-size: 8px;
@@ -543,7 +509,7 @@
     border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
 }
-`;
+  `;
   }
 
   document.head.appendChild(style);
@@ -561,7 +527,7 @@
 
   gui.innerHTML = `
 <div id="bookmarklet-gui-header">
-   <span>Yap Window</span>   
+   <span style="font-size: 10px">I Lost The Game (Yap Window 3/7 Edition)</span>   
    <div class="button-group">
       <button id="bookmarklet-minimize">−</button>
       <button id="bookmarklet-fullscreen">⛶</button>
@@ -577,9 +543,9 @@
    <div id="email-login-section" style="border:1px solid black">
       <h3>Login with Email</h3>
       <label for="login-email">Email</label>
-      <input id="login-email" type="email" placeholder="Enter your email" required="">
+      <input id="login-email" type="email" placeholder="37@37.37" required="">
       <label for="login-password">Password</label>
-      <input id="login-password" type="password" placeholder="Enter your password" required="">
+      <input id="login-password" type="password" placeholder="37" required="">
       <button id="submit-login-email">Log In</button>
       <label id="login-email-error" style="color: #f2545b"></label>
    </div>
@@ -597,9 +563,9 @@
    <div id="email-create-section" style="border:1px solid black">
       <h3>Create Account with Email</h3>
       <label for="create-email">Email</label>
-      <input id="create-email" type="email" placeholder="Enter your email" required="">
+      <input id="create-email" type="email" placeholder="37@37.37" required="">
       <label for="create-email">Password</label>
-      <input id="create-password" type="password" placeholder="Enter your password" required="">
+      <input id="create-password" type="password" placeholder="37" required="">
       <button id="submit-create-email">Create Account</button>
       <label id="create-email-error" style="color: #f2545b"></label>
    </div>
@@ -608,31 +574,43 @@
    </div>
    <hr style="margin: 20px 0">
 </div>
+<div id="verification-screen" class="screen hidden">
+    <h2>Email Verification</h2>
+    <p>Please check your email for a verification link.</p>
+    <p>Once you verify your email, you will automatically be taken to the next page</p>
+    <button id="resend-verification">Resend Verification Email</button>
+    <p id="verification-error" class="error-text">37</p>
+</div>
 <div id="customize-account-screen" class="screen hidden">
    <h2>Final Steps</h2>
    <label for="create-username">Username</label>
-   <input id="create-username" type="text" placeholder="Pick a username" required="">
+   <input id="create-username" type="text" placeholder="37" required="">
    <label for="create-picture">Profile Picture (optional)</label>
    <input id="create-picture" type="file" accept="image/*">
    <label for="create-bio">Bio (optional)</label>   
-   <textarea id="create-bio" rows="8" columns="50" height="100px">I'm a yapper</textarea>
+   <textarea id="create-bio" rows="8" columns="50" height="100px">I lost the game!</textarea>
    <button id="submit-customize">Save</button>
 </div>
 <div id="stay-login-screen" class="screen hidden">
    <h2>Would you like to stay logged in?</h2>
    <h3>Any future logins on this site will automatically sign you into your account</h3>
    <div id="stay-login-buttons" style="justify-content: space-between; align-items: center;">
-      <button id="stay-yes" style="width: 20%">Yes</button>
-      <button id="stay-no" style="width: 20%">No</button>
-      <button id="stay-forget" style="width: 20%">Don't Bother Me</button>
+      <button id="stay-yes" style="width: 20%">37! (Yes)</button>
+      <button id="stay-no" style="width: 20%">37? (No)</button>
+      <button id="stay-forget" style="width: 20%">37. (Don't Bother Me)</button>
    </div>
 </div>
 <div id="main-screen" class="screen">
-   <h2>Welcome to Yap Window</h2>
+   <h2>I Lost The Game</h2>
    <p>Press CTRL-ALT-D to switch between light and dark mode</p>
    <button id="login-button">Log In</button>
    <button id="create-account-button">Create Account</button>
-   <p>By using Yap Window, you agree to the Terms and Conditions at https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI<\p>
+<p style="width:80%; text-align: center;">
+  By using Yap Window, you agree to the 
+  <a href="https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI" target="_blank">
+    Terms and Conditions
+  </a>.
+</p>
 </div>
 <div id="saved-account" class="screen hidden">
    <h2>You have an account saved on this computer</h2>
@@ -647,6 +625,8 @@
     <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
     <button id="read-all" class="setting-button">Read All</button>
     <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
+    <button id="37-button" class="setting-button">37!</button>
+    <button id="iltg-button" class="setting-button">I Lost The Game!</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
@@ -658,6 +638,7 @@
       </div>
       <div id="bottom-left-sidebar">
         <div id="dm-list">
+		<button id="kill-button" class="setting-button">Click ME!</button>
         </div>
       </div>
     </div>
@@ -666,7 +647,7 @@
       </div>
       <div id="message-send">
         <p id="typing-indicator"></p>
-        <input type="text" id="message-input" autocomplete="off" placeholder="Yap away..."/>
+        <input type="text" id="message-input" autocomplete="off" placeholder="I lost the game..."/>
         <button id="send-button">Send</button>
       </div>
     </div>
@@ -675,7 +656,7 @@
 <div id="channel-screen" class="screen hidden">
     <h2>Create/Customize Channel</h2>
     <label for="channel-name">Channel Name</label>
-    <input id="channel-name" type="text" placeholder="Name your channel..." required>
+    <input id="channel-name" type="text" placeholder="37..." required>
     
     <label for="channel-type">Channel Type</label>
     <select id="channel-type">
@@ -687,7 +668,7 @@
         <label>Select Members</label>
         <div id="selected-members" class="selected-members-container"></div>
         <div class="members-dropdown">
-            <input type="text" id="member-search" placeholder="Type Emails Here...">
+            <input type="text" id="member-search" placeholder="37...">
             <div id="members-list" class="members-list"></div>
         </div>
     </div>
@@ -766,4 +747,35 @@
   document
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
+
+  document.getElementById("bookmarklet-minimize").onmouseenter = function () {
+    document.getElementById("bookmarklet-minimize").textContent = "37";
+  };
+  document.getElementById("bookmarklet-fullscreen").onmouseenter = function () {
+    document.getElementById("bookmarklet-fullscreen").textContent = "37";
+  };
+  document.getElementById("bookmarklet-close").onmouseenter = function () {
+    document.getElementById("bookmarklet-close").textContent = "37";
+  };
+  document.getElementById("kill-button").onmouseenter = function () {
+    document.getElementById("kill-button").textContent = "DONT";
+  };
+  document.getElementById("send-button").onmouseenter = function () {
+    document.getElementById("send-button").textContent = "37";
+  };
+  document.getElementById("bookmarklet-minimize").onmouseleave = function () {
+    document.getElementById("bookmarklet-minimize").textContent = "−";
+  };
+  document.getElementById("bookmarklet-fullscreen").onmouseleave = function () {
+    document.getElementById("bookmarklet-fullscreen").textContent = "⛶";
+  };
+  document.getElementById("bookmarklet-close").onmouseleave = function () {
+    document.getElementById("bookmarklet-close").textContent = "×";
+  };
+  document.getElementById("send-button").onmouseleave = function () {
+    document.getElementById("send-button").textContent = "Send";
+  };
+  document.getElementById("kill-button").onmouseleave = function () {
+    document.getElementById("kill-button").textContent = "Click ME!";
+  };
 })();
