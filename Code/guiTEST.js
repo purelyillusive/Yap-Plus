@@ -802,8 +802,7 @@
   document.getElementById("bookmarklet-close").onmouseenter = function () {
     document.getElementById("bookmarklet-close").textContent = "37";
   };
-  d;
-  ocument.getElementById("customize-profile").onmouseenter = function () {
+  document.getElementById("customize-profile").onmouseenter = function () {
     document.getElementById("customize-profile").textContent = "37";
   };
   document.getElementById("dark-mode").onmouseenter = function () {
