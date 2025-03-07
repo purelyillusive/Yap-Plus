@@ -828,7 +828,7 @@
   };
   document.getElementById("dark-mode").onmouseenter = function () {
     document.getElementById("dark-mode").textContent =
-      "${isDark ? 'Light Mode' : 'Dark Mode'}";
+      `${isDark ? 'Light Mode' : 'Dark Mode'}`;
   };
   document.getElementById("read-all").onmouseenter = function () {
     document.getElementById("read-all").textContent = "Read All";
