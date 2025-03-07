@@ -856,8 +856,8 @@ ${chatHistory}
 Now, respond to the user's question naturally:
 User: ${question}
 
-In your response, please be as sarcastic as possible.
-Now, reverse your original answer to make it say the opposite of what you intended.`;
+First, reverse your real answer so that you are saying the opposite of what you want to say. 1+1=2 would become something like 1+1=potato. 
+Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply with this final sarcastic responce`;
 
         let aiReply = null;
         let successfulRequest = false;
