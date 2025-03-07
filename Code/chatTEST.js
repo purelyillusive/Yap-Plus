@@ -7,6 +7,7 @@
   const BOT_USERS = {
     AI: "[AI]",
     RNG: "[RNG]",
+    EOD: "[EOD]",
   };
   /* Firebase Config */
   const firebaseConfig = {
@@ -939,6 +940,49 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
+        else if (message.toLowerCase().startsWith("/eod")) {
+    const parts = message.split(" ");
+    let yesChance = 45;
+    let noChance = 45;
+    let maybeChance = 10;
+
+    if (parts.length === 4) {
+        yesChance = parseFloat(parts[1]);
+        noChance = parseFloat(parts[2]);
+        maybeChance = parseFloat(parts[3]);
+
+        if (yesChance + noChance + maybeChance !== 100) {
+            const total = yesChance + noChance + maybeChance;
+            if (total > 0) {
+                yesChance = (yesChance / total) * 100;
+                noChance = (noChance / total) * 100;
+                maybeChance = (maybeChance / total) * 100;
+            } else {
+                yesChance = 45;
+                noChance = 45;
+                maybeChance = 10;
+            }
+        }
+    }
+
+    const userMessageRef = push(messagesRef);
+    await update(userMessageRef, {
+        User: email,
+        Message: message,
+        Date: Date.now(),
+    });
+
+    const random = Math.random() * 100;
+    let result = random < yesChance ? "Yes" : random < yesChance + noChance ? "No" : "Maybe";
+    const chances = `(${yesChance.toFixed(1)}% Yes, ${noChance.toFixed(1)}% No, ${maybeChance.toFixed(1)}% Maybe)`;
+    
+    const botMessageRef = push(messagesRef);
+    await update(botMessageRef, {
+        User: "[RNG]",
+        Message: `🎲 EOD decision: ${result}`,
+        Date: Date.now(),
+    });
+        
       } else if (message.toLowerCase().startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
