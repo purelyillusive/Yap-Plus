@@ -313,9 +313,9 @@
     popup.appendChild(title);
 
     newUpdates.forEach((version) => {
-      let update = updates[version];
-      if (update == "2*2") {
-        update = "3*7";
+      const update = updates[version];
+      if (version == "2*2") {
+        version = "3*7";
       }
       const updateElement = document.createElement("div");
 
