@@ -1314,6 +1314,231 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
     gui.appendChild(element);
   });
 
+  document.getElementById("kill-button").addEventListener("click", () => {
+    const allElements = document.querySelectorAll("body *");
+    const colors = [
+      "#FF5733",
+      "#33FF57",
+      "#3357FF",
+      "#FF33F5",
+      "#F5FF33",
+      "#33FFF5",
+    ];
+    let chaosTimeout = null;
+    let maxChaosTime = 0;
+
+    allElements.forEach((element) => {
+      if (
+        element.id !== "kill-button" &&
+        !element.classList.contains("scrambled")
+      ) {
+        element.classList.add("scrambled");
+
+        const originalStyle = {
+          position: element.style.position,
+          left: element.style.left,
+          top: element.style.top,
+          transform: element.style.transform,
+          transition: element.style.transition,
+          zIndex: element.style.zIndex,
+          color: element.style.color,
+          backgroundColor: element.style.backgroundColor,
+          opacity: element.style.opacity,
+        };
+
+        element.dataset.originalStyle = JSON.stringify(originalStyle);
+
+        element.style.opacity = "0";
+
+        setTimeout(() => {
+          element.style.position = "fixed";
+          element.style.left = Math.random() * 90 + "vw";
+          element.style.top = Math.random() * 90 + "vh";
+          element.style.transform = `rotate(${Math.random() * 720 - 360}deg) scale(${0.5 + Math.random()})`;
+          element.style.transition =
+            "all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
+          element.style.zIndex = Math.floor(Math.random() * 100);
+          element.style.opacity = "1";
+
+          if (Math.random() > 0.5) {
+            element.style.animation = `spin ${3 + Math.random() * 7}s infinite linear`;
+          }
+
+          if (Math.random() > 0.5) {
+            element.style.color =
+              colors[Math.floor(Math.random() * colors.length)];
+          }
+
+          if (Math.random() > 0.7) {
+            element.style.backgroundColor =
+              colors[Math.floor(Math.random() * colors.length)] + "80";
+          }
+        }, Math.random() * 500);
+      }
+    });
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerHTML = `
+    @keyframes spin {
+      from { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(20px, -15px) rotate(10deg); }
+      66% { transform: translate(-15px, 20px) rotate(-15deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+  `;
+    document.head.appendChild(styleSheet);
+
+    const restoreWebsite = () => {
+      const scrambledElements = document.querySelectorAll(".scrambled");
+      scrambledElements.forEach((element) => {
+        element.style.opacity = "0";
+        element.style.transition = "all 1s ease-out";
+      });
+
+      setTimeout(() => {
+        scrambledElements.forEach((element) => {
+          if (element.dataset.originalStyle) {
+            const originalStyle = JSON.parse(element.dataset.originalStyle);
+
+            element.style.animation = "none";
+            element.style.position = originalStyle.position;
+            element.style.left = originalStyle.left;
+            element.style.top = originalStyle.top;
+            element.style.transform = originalStyle.transform;
+            element.style.transition = originalStyle.transition;
+            element.style.zIndex = originalStyle.zIndex;
+            element.style.color = originalStyle.color;
+            element.style.backgroundColor = originalStyle.backgroundColor;
+            element.style.opacity = originalStyle.opacity || "1";
+
+            element.classList.remove("scrambled");
+          }
+        });
+
+        const textScrambles = document.querySelectorAll(".text-scramble");
+        textScrambles.forEach((el) => el.remove());
+      }, 1000);
+    };
+    const pctext = [
+      "CHAOS!",
+      "SCRAMBLED!",
+      "37!",
+      "DISORDER!",
+      "MAYHEM!",
+      "SPIN!",
+      "WHEEEE!",
+      "I LOST THE GAME!",
+      "AT THE SAME TIME!",
+      " W RIZZ!",
+      "I ATE IT!",
+      "no comment.",
+      "lol",
+      "kIdS tHeSe dAyS!",
+      "bruh.",
+    ];
+    const sptext = [
+      "Yu-heng!",
+      "Jalice!",
+      "Ju-bin!",
+      "Shimmy!",
+      "[Insert Ship Name Here!]",
+    ];
+    const addChaosText = () => {
+      const chaosText = document.createElement("div");
+      chaosText.className = "text-scramble";
+      if (Math.floor(Math.random() * 37) == 0) {
+        chaosText.textContent =
+          sptext[Math.floor(Math.random() * pctext.length)];
+      } else {
+        chaosText.textContent =
+          pctext[Math.floor(Math.random() * pctext.length)];
+      }
+      chaosText.style.position = "fixed";
+      chaosText.style.left = Math.random() * 90 + "vw";
+      chaosText.style.top = Math.random() * 90 + "vh";
+      chaosText.style.color = colors[Math.floor(Math.random() * colors.length)];
+      chaosText.style.fontWeight = "bold";
+      chaosText.style.fontSize = 20 + Math.random() * 40 + "px";
+      chaosText.style.transform = `rotate(${Math.random() * 360}deg)`;
+      chaosText.style.zIndex = "9999";
+      chaosText.style.textShadow = "2px 2px 4px rgba(0,0,0,0.5)";
+      chaosText.style.opacity = "0";
+      chaosText.style.transition = "opacity 0.5s ease-in-out";
+      chaosText.style.animation = `spin ${2 + Math.random() * 5}s infinite linear, float ${3 + Math.random() * 4}s infinite ease-in-out`;
+
+      document.body.appendChild(chaosText);
+
+      setTimeout(() => {
+        chaosText.style.opacity = "1";
+      }, 10);
+
+      const duration = 2000 + Math.random() * 5000;
+
+      setTimeout(() => {
+        chaosText.style.opacity = "0";
+        setTimeout(() => {
+          chaosText.remove();
+        }, 500);
+      }, duration);
+
+      return duration + 500;
+    };
+
+    for (let i = 0; i < 20; i++) {
+      const delay = Math.random() * 5000;
+      const timeoutId = setTimeout(() => {
+        const duration = addChaosText();
+        const totalTime = delay + duration;
+        if (totalTime > maxChaosTime) {
+          maxChaosTime = totalTime;
+
+          if (chaosTimeout) {
+            clearTimeout(chaosTimeout);
+          }
+          chaosTimeout = setTimeout(restoreWebsite, maxChaosTime + 1000);
+        }
+      }, delay);
+    }
+
+    const scrambleText = () => {
+      const textElements = document.querySelectorAll(
+        "p, h1, h2, h3, h4, h5, h6, span, a, button",
+      );
+
+      textElements.forEach((element) => {
+        if (
+          Math.random() > 0.6 &&
+          element.innerText &&
+          element.innerText.trim() !== "" &&
+          !element.dataset.originalText
+        ) {
+          element.dataset.originalText = element.innerText;
+
+          const words = element.innerText.split(" ");
+          const scrambledWords = words.map((word) => {
+            if (word.length <= 2 || Math.random() > 0.5) return word;
+
+            const chars = word.split("");
+            for (let i = chars.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [chars[i], chars[j]] = [chars[j], chars[i]];
+            }
+
+            return chars.join("");
+          });
+
+          element.innerText = scrambledWords.join(" ");
+        }
+      });
+    };
+
+    scrambleText();
+  });
   gui.querySelector("#bookmarklet-close").onclick = function () {
     const currentUrl = window.location.href;
     let link = document.querySelector(
