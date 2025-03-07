@@ -212,62 +212,6 @@
   z-index: 10;
 }
 
-#customize-profile {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-#customize-profile:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#dark-mode {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#dark-mode:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#read-all {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#read-all:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
-#hide-left-sidebar {
-  background: ${isDark ? "#404040" : "#e9ecef"};
-  color: ${isDark ? "#ffffff" : "#495057"};
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#hide-left-sidebar:hover {
-  background: ${isDark ? "#505050" : "#dee2e6"};
-}
-
 .setting-button {
   height: 32px;
   font-size: 13px;
@@ -275,6 +219,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: ${isDark ? "#404040" : "#e9ecef"};
+  color: ${isDark ? "#ffffff" : "#495057"};
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.setting-button:hover {
+  background: ${isDark ? "#505050" : "#dee2e6"};
 }
 
 
