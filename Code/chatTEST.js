@@ -938,13 +938,13 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.toLowerCase().startsWith("/eod ")) {
+      } else if (message.toLowerCase().startsWith("/eod")) {
         const parts = message.split(" ");
         let yesChance = 45;
         let noChance = 45;
         let maybeChance = 10;
 
-        if (parts.length === 4) {
+        if (parts.length >= 4) {
           const parsedYes = parseFloat(parts[1]);
           const parsedNo = parseFloat(parts[2]);
           const parsedMaybe = parseFloat(parts[3]);
@@ -985,8 +985,8 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
 
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
-          User: "[RNG]",
-          Message: `🎲 EOD decision: ${result}`,
+          User: "[EOD]",
+          Message: `${result}`,
           Date: Date.now(),
         });
       } else if (message.toLowerCase().startsWith("/roll ")) {
