@@ -909,7 +909,7 @@ async function sendMessage() {
     messageInput.value = "";
 
     // 3.14 Easter Egg Check
-    if (message === "3.14") {
+if (message === "3.14") {
         console.log("Easter egg triggered: 3.14 detected!"); // Debugging log
 
         try {
