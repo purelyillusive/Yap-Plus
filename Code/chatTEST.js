@@ -964,6 +964,14 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
             }
           }
         }
+if (message.trim() === "3.14") {
+    const botMessageRef = push(messagesRef);
+    await update(botMessageRef, {
+        User: "[RNG]",
+        Message: "I ate your pie",
+        Date: Date.now(),
+    });
+}
 
         const userMessageRef = push(messagesRef);
         await update(userMessageRef, {
