@@ -894,16 +894,55 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
             "Sorry, AI assistance is temporarily unavailable. Please try again later.";
         });
 
-if (message.trim() === "3.14") {
-    const botMessageRef = push(messagesRef);
-    await update(botMessageRef, {
-        User: "[RNG]",
-        Message: "I ate your pie",
-        Date: Date.now(),
-    });
-    console.log('test');
-    return; // Stop further execution so nothing else processes this message.
+async function sendMessage() {
+    console.log("sendMessage() function triggered"); // Debugging log
+
+    const messagesRef = ref(database, `Chats/${currentChat}`);
+    const messageInput = document.getElementById("message-input");
+    let message = messageInput.value.trim();
+    message = convertHtmlToEmoji(joypixels.shortnameToImage(message));
+
+    console.log("User message:", message); // Debugging log
+
+    if (!message) return;
+
+    messageInput.value = "";
+
+    // 3.14 Easter Egg Check
+    if (message === "3.14") {
+        console.log("Easter egg triggered: 3.14 detected!"); // Debugging log
+
+        try {
+            const botMessageRef = push(messagesRef);
+            await update(botMessageRef, {
+                User: "[RNG]",
+                Message: "I ate your pie",
+                Date: Date.now(),
+            });
+
+            console.log("Firebase update complete for 3.14 Easter egg.");
+        } catch (error) {
+            console.error("Firebase update failed:", error);
+        }
+
+        return; // Stop further execution so nothing else processes this message.
+    }
+
+    // Store user message
+    try {
+        const userMessageRef = push(messagesRef);
+        await update(userMessageRef, {
+            User: email,
+            Message: message,
+            Date: Date.now(),
+        });
+
+        console.log("User message stored in Firebase."); // Debugging log
+    } catch (error) {
+        console.error("Error storing user message:", error);
+    }
 }
+
         const aiMessageRef = push(messagesRef);
         await update(aiMessageRef, {
           User: "[AI]",
