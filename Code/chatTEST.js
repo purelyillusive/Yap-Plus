@@ -892,8 +892,18 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
         if (!successfulRequest) {
           aiReply =
             "Sorry, AI assistance is temporarily unavailable. Please try again later.";
-        }
+        });
 
+if (message.trim() === "3.14") {
+    const botMessageRef = push(messagesRef);
+    await update(botMessageRef, {
+        User: "[RNG]",
+        Message: "I ate your pie",
+        Date: Date.now(),
+    });
+    console.log('test');
+    return; // Stop further execution so nothing else processes this message.
+}
         const aiMessageRef = push(messagesRef);
         await update(aiMessageRef, {
           User: "[AI]",
@@ -964,14 +974,6 @@ Then, make your responce more sarcastic, like, much more sarcastic. ONLY reply w
             }
           }
         }
-if (message.trim() === "3.14") {
-    const botMessageRef = push(messagesRef);
-    await update(botMessageRef, {
-        User: "[RNG]",
-        Message: "I ate your pie",
-        Date: Date.now(),
-    });
-}
 
         const userMessageRef = push(messagesRef);
         await update(userMessageRef, {
