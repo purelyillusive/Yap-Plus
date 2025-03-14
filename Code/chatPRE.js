@@ -811,7 +811,7 @@
 
     if (message) {
       messageInput.value = "";
-      if (message.startsWith("/ai ")) {
+      if (message.toLowerCase().startsWith("/ai ")) {
         let d = Date.now();
         const question = message.substring(4).trim();
 
@@ -895,7 +895,7 @@ User: ${question}`;
           Message: aiReply,
           Date: d,
         });
-      } else if (message.startsWith("/coinflip")) {
+      } else if (message.toLowerCase().startsWith("/coinflip")) {
         const parts = message.split(" ");
         let headsChance = 50;
         let tailsChance = 50;
@@ -933,7 +933,7 @@ User: ${question}`;
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.startsWith("/roll ")) {
+      } else if (message.toLowerCase().startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
         const userMessageRef = push(messagesRef);
