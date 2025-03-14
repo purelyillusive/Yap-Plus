@@ -722,6 +722,7 @@
    <button id="back-channel">Back</button>
 </div>
 <p style="display: none" id="email-saved-here"></p>
+    <div class="pie-overlay" id="pie-overlay"></div>
       `;
   document.body.appendChild(gui);
 
