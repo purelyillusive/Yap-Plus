@@ -849,6 +849,9 @@ Current User: ${email}
 Chat Log:
 ${chatHistory}
 
+Some additional information for you: Most emails are in the form xxxxy##@lakesideschool.org. In this case, xxxxxxx is the name of the user, y is their last initial and ## is their year of graduation.
+e.g. bobj33@lakesideschool.org has first name bob, last initial j and will graduate high school 2033. Additioanlly, the user carolynj30@lakesideschool.org (Carolyn J.) prefers to be called Seek J. Please follow these preferences.
+
 Now, respond to the user's question naturally:
 User: ${question}`;
 
