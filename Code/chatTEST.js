@@ -1387,7 +1387,7 @@ function createPieTransition(pi) {
 
 function createPieExplosion() {
 
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 100; i++) {
         createPiePiece();
     }
 
