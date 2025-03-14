@@ -1400,7 +1400,7 @@ function createPieTransition(pi) {
 
 function createPieExplosion() {
 
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 100; i++) {
         createPiePiece();
     }
 
@@ -1450,7 +1450,7 @@ function createPiePiece() {
         createDrip(x, y, pieElement);
     }
 
-    const willCreateStain = Math.random() > 0.7; 
+    const willCreateStain = Math.random() > 0.9; 
 
     let startTime = null;
     const animate = (timestamp) => {
@@ -1536,7 +1536,7 @@ function createDrip(x, y, parent) {
     const dripDistance = 150 + Math.random() * 400;
     const finalY = y + parent.offsetHeight + dripDistance;
 
-    const willStain = Math.random() > 0.5;
+    const willStain = Math.random() > 0.8;
 
     let startTime = null;
     const animate = (timestamp) => {
