@@ -1386,10 +1386,11 @@ function createPieTransition(pi) {
 }
 
 function createPieExplosion() {
-    for (let i = 0; i < 100; i++) {
+
+    for (let i = 0; i < 250; i++) {
         createPiePiece();
     }
-    
+
     setTimeout(() => {
         pieOverlay.innerHTML = '';
     }, 20000);
@@ -1398,7 +1399,7 @@ function createPieExplosion() {
 function createPiePiece() {
     const isPieFilling = Math.random() > 0.3;
     const pieElement = document.createElement('div');
-    
+
     if (isPieFilling) {
         pieElement.className = 'pie-filling';
         pieElement.style.backgroundColor = Math.random() > 0.5 ? '#a62f03' : '#d9480f';
@@ -1407,52 +1408,52 @@ function createPiePiece() {
         pieElement.className = 'pie-crust';
         pieElement.style.boxShadow = '0 0 8px rgba(212, 167, 106, 0.8)';
     }
-    
+
     pieElement.style.zIndex = '9000000';
-    
+
     const x = Math.random() * window.innerWidth;
-    const y = Math.random() * (window.innerHeight / 2);
+    const y = Math.random() * window.innerHeight;
     pieElement.style.left = `${x}px`;
     pieElement.style.top = `${y}px`;
-    
-    const size = 30 + Math.random() * 80;
+
+    const size = 50 + Math.random() * 100;
     pieElement.style.width = `${size}px`;
     pieElement.style.height = `${size}px`;
-    
+
     pieElement.style.transform = `rotate(${Math.random() * 360}deg)`;
     pieElement.style.borderRadius = Math.random() > 0.3 ? '50%' : '50% 50% 20% 50%';
-    
+
     pieOverlay.appendChild(pieElement);
-    
+
     const fallDuration = 8 + Math.random() * 12;
     const finalY = window.innerHeight + size + 100;
-    const wobbleAmount = 50 + Math.random() * 150;
-    
-    if (Math.random() > 0.5) {
+    const wobbleAmount = 100 + Math.random() * 200; 
+
+    if (Math.random() > 0.3) { 
         createDrip(x, y, pieElement);
     }
-    
+
     let startTime = null;
     const animate = (timestamp) => {
         if (!startTime) startTime = timestamp;
         const progress = (timestamp - startTime) / (fallDuration * 1000);
-        
+
         if (progress < 1) {
             const newY = y + (finalY - y) * (progress * progress * 0.8);
             const wobble = Math.sin(progress * 6) * wobbleAmount * (1 - progress * 0.5);
             pieElement.style.left = `${x + wobble}px`;
             pieElement.style.top = `${newY}px`;
-            
+
             if (progress > 0.8) {
                 pieElement.style.opacity = (1 - progress) / 0.2;
             }
-            
+
             requestAnimationFrame(animate);
         } else {
             pieElement.remove();
         }
     };
-    
+
     requestAnimationFrame(animate);
 }
 
@@ -1462,49 +1463,49 @@ function createDrip(x, y, parent) {
     drip.style.left = `${x + Math.random() * 20}px`;
     drip.style.top = `${y + parent.offsetHeight/2}px`;
     drip.style.zIndex = '9000000';
-    
-    const size = 8 + Math.random() * 20;
+
+    const size = 12 + Math.random() * 25; 
     drip.style.width = `${size}px`;
     drip.style.height = `${size * 2}px`;
-    
+
     const colorVariation = Math.random() * 30;
     drip.style.backgroundColor = `rgb(${166 + colorVariation}, ${47 + colorVariation}, ${3 + colorVariation})`;
     drip.style.filter = 'blur(1px)';
     drip.style.boxShadow = '0 0 5px rgba(166, 47, 3, 0.6)';
-    
+
     pieOverlay.appendChild(drip);
-    
+
     const dripDuration = 4 + Math.random() * 6;
-    const dripDistance = 100 + Math.random() * 300;
+    const dripDistance = 150 + Math.random() * 400; 
     const finalY = y + parent.offsetHeight + dripDistance;
-    
+
     let startTime = null;
     const animate = (timestamp) => {
         if (!startTime) startTime = timestamp;
         const progress = (timestamp - startTime) / (dripDuration * 1000);
-        
+
         if (progress < 1) {
             const easing = progress * progress * progress;
             const newY = y + parent.offsetHeight/2 + dripDistance * easing;
             drip.style.top = `${newY}px`;
-            
-            const stretch = 1 + progress * 3;
+
+            const stretch = 1 + progress * 4; 
             drip.style.height = `${size * stretch}px`;
             drip.style.width = `${size * (1 - progress * 0.3)}px`;
-            
+
             if (progress > 0.7) {
                 drip.style.opacity = (1 - progress) / 0.3;
             }
-            
+
             requestAnimationFrame(animate);
         } else {
             drip.remove();
         }
     };
-    
+
     requestAnimationFrame(animate);
-    
-    if (Math.random() > 0.7) {
+
+    if (Math.random() > 0.5) { 
         setTimeout(() => {
             createDrip(x + (Math.random() * 10 - 5), y + parent.offsetHeight * 0.7, parent);
         }, Math.random() * 1000);
