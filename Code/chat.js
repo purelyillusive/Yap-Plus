@@ -314,9 +314,7 @@
 
     newUpdates.forEach((version) => {
       const update = updates[version];
-      if (version == "2*2") {
-        version = "3*7";
-      }
+
       const updateElement = document.createElement("div");
 
       const updateHeader = document.createElement("strong");
@@ -813,7 +811,7 @@
 
     if (message) {
       messageInput.value = "";
-      if (message.toLowerCase().startsWith("/ai ")) {
+      if (message.startsWith("/ai ")) {
         let d = Date.now();
         const question = message.substring(4).trim();
 
@@ -834,10 +832,8 @@
           "AIzaSyDJEIVUqeVkrbtMPnBvB8QWd9VuUQQQBjg",
           "AIzaSyB42CD-hXRnfq3eNpLWnF9at5kHePI5qgQ",
           "AIzaSyAzipn1IBvbNyQUiiJq6cAkE6hAlShce94",
-          "AIzaSyBkR_XbsH9F-eWarriJ8Vc1KqmjEWhh7-s",
-          "AIzaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
           "AIzaSyC1fFINANR_tuOM18Lo3HF9WXosX-6BHLM",
-          "AIzaSyCJeCvi3Br0gPVH0ccL279wSkAEjOdlnx4",
+          "AIzaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
         ];
 
         const chatHistory = messageEntries
@@ -846,7 +842,7 @@
           })
           .join("\n");
 
-        const fullPrompt = `The following is a chat log for context. Most of the users are 7th graders in Lakeside school in Washington, US. Please do not assume genders or age of anyone. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+        const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
 
 Current User: ${email}
 
@@ -854,9 +850,7 @@ Chat Log:
 ${chatHistory}
 
 Now, respond to the user's question naturally:
-User: ${question}
-
-In your responce, please use the phrase "AT THE SAME TIME" as much as you can. whenever you say "at the same time", it MUST BE ALL CAPITALIZED`;
+User: ${question}`;
 
         let aiReply = null;
         let successfulRequest = false;
@@ -898,7 +892,7 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
           Message: aiReply,
           Date: d,
         });
-      } else if (message.toLowerCase().startsWith("/coinflip")) {
+      } else if (message.startsWith("/coinflip")) {
         const parts = message.split(" ");
         let headsChance = 50;
         let tailsChance = 50;
@@ -927,18 +921,16 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
         });
 
         const random = Math.random() * 100;
-        let result = random < headsChance ? "Heads" : "Tails";
+        const result = random < headsChance ? "Heads" : "Tails";
         const chances = `(${headsChance.toFixed(1)}% Heads, ${tailsChance.toFixed(1)}% Tails)`;
-        if (Math.floor(Math.random() * 37) == 0) {
-          result = "THE RIM!";
-        }
+
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
           User: "[RNG]",
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.toLowerCase().startsWith("/roll ")) {
+      } else if (message.startsWith("/roll ")) {
         const sides = parseInt(message.split(" ")[1]);
 
         const userMessageRef = push(messagesRef);
@@ -958,13 +950,7 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
           return;
         }
 
-        let result = Math.floor(Math.random() * sides) + 1;
-        if (Math.floor(Math.random() * 3.7) == 0) {
-          result = 37;
-        }
-        if (result == 37) {
-          result = "37!!!";
-        }
+        const result = Math.floor(Math.random() * sides) + 1;
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
           User: BOT_USERS.RNG,
@@ -1141,406 +1127,6 @@ In your responce, please use the phrase "AT THE SAME TIME" as much as you can. w
     }
   });
 
-  document.getElementById("iltg-button").addEventListener("click", async () => {
-    const messagesRef = ref(database, `Chats/${currentChat}`);
-    const userMessageRef = push(messagesRef);
-    await update(userMessageRef, {
-      User: email,
-      Message: "I Lost The Game!!!",
-      Date: Date.now(),
-    });
-  });
-
-  document.getElementById("37-button").addEventListener("click", async () => {
-    const element = document.createElement("div");
-
-    const textOptions = ["37", "37!", "37!!", "37!!!"];
-    const randomText =
-      textOptions[Math.floor(Math.random() * textOptions.length)];
-
-    const colorOptions = [
-      "#FF5733",
-      "#33FF57",
-      "#3357FF",
-      "#FF33F5",
-      "#F5FF33",
-      "#33FFF5",
-      "#FF3333",
-      "#33FF33",
-      "#3333FF",
-      "#FF33FF",
-    ];
-    const randomColor =
-      colorOptions[Math.floor(Math.random() * colorOptions.length)];
-
-    element.textContent = randomText;
-    element.style.position = "absolute";
-    element.style.fontWeight = "bold";
-    element.style.fontSize = Math.floor(Math.random() * 30 + 20) + "px";
-    element.style.color = randomColor;
-    element.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
-    element.style.padding = "5px 10px";
-    element.style.borderRadius = "10px";
-    element.style.boxShadow = "0 0 15px " + randomColor;
-    element.style.zIndex = "9999";
-    element.style.cursor = "pointer";
-    element.style.userSelect = "none";
-
-    const gui = document.querySelector("#bookmarklet-gui-header").parentElement;
-    const guiRect = gui.getBoundingClientRect();
-
-    const maxX = guiRect.width - 100;
-    const maxY = guiRect.height - 50;
-    const randomX = Math.floor(Math.random() * maxX);
-    const randomY = Math.floor(Math.random() * maxY);
-
-    element.style.left = randomX + "px";
-    element.style.top = randomY + "px";
-
-    const randomRotation = Math.floor(Math.random() * 360);
-    element.style.transform = `rotate(${randomRotation}deg)`;
-
-    element.style.transition = "transform 0.3s, opacity 0.3s";
-
-    const uniqueId =
-      "effect-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
-
-    const style = document.createElement("style");
-    style.id = uniqueId;
-    style.textContent = `
-    @keyframes bounce-${uniqueId} {
-      0%, 20%, 50%, 80%, 100% {transform: rotate(${randomRotation}deg) translateY(0);}
-      40% {transform: rotate(${randomRotation}deg) translateY(-20px);}
-      60% {transform: rotate(${randomRotation}deg) translateY(-10px);}
-    }
-    @keyframes glitter-${uniqueId} {
-      0% {text-shadow: 0 0 10px ${randomColor}, 0 0 20px ${randomColor};}
-      50% {text-shadow: 0 0 20px ${randomColor}, 0 0 30px ${randomColor};}
-      100% {text-shadow: 0 0 10px ${randomColor}, 0 0 20px ${randomColor};}
-    }
-  `;
-    document.head.appendChild(style);
-
-    element.style.animation = `bounce-${uniqueId} 1s ease infinite, glitter-${uniqueId} 0.8s ease infinite`;
-
-    const confettiColors = ["#fd0", "#0ff", "#f0f", "#0f0", "#f00", "#00f"];
-
-    element.addEventListener("click", async () => {
-      const maxConfetti = 25;
-      const existingConfetti = document.querySelectorAll(".party-confetti");
-
-      if (existingConfetti.length > 50) {
-        existingConfetti.forEach((c, index) => {
-          if (index < existingConfetti.length - 25) {
-            c.remove();
-          }
-        });
-      }
-
-      const isEasterEgg = Math.floor(Math.random() * 37) === 0;
-
-      if (isEasterEgg) {
-        const atTheSameTimeText = document.createElement("div");
-        atTheSameTimeText.textContent = "AT THE SAME TIME";
-        atTheSameTimeText.style.position = "absolute";
-        atTheSameTimeText.style.fontWeight = "bold";
-        atTheSameTimeText.style.fontSize = "24px";
-        atTheSameTimeText.style.color = "#FF0000";
-        atTheSameTimeText.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-        atTheSameTimeText.style.padding = "10px 15px";
-        atTheSameTimeText.style.borderRadius = "10px";
-        atTheSameTimeText.style.boxShadow = "0 0 20px #FF0000";
-        atTheSameTimeText.style.zIndex = "10000";
-        atTheSameTimeText.style.left = randomX + "px";
-        atTheSameTimeText.style.top = randomY + "px";
-        atTheSameTimeText.style.transition = "opacity 2s";
-
-        gui.appendChild(atTheSameTimeText);
-
-        try {
-          const messagesRef = ref(database, `Chats/${currentChat}`);
-          const userMessageRef = push(messagesRef);
-          await update(userMessageRef, {
-            User: email,
-            Message: "AT THE SAME TIME",
-            Date: Date.now(),
-          });
-        } catch (error) {
-          console.error("Error sending message:", error);
-        }
-
-        setTimeout(() => {
-          atTheSameTimeText.style.opacity = "0";
-          setTimeout(() => {
-            atTheSameTimeText.remove();
-          }, 2000);
-        }, 1000);
-      }
-
-      for (let i = 0; i < maxConfetti; i++) {
-        const confetti = document.createElement("div");
-        confetti.className = "party-confetti";
-        confetti.style.position = "absolute";
-        confetti.style.width = "10px";
-        confetti.style.height = "10px";
-        confetti.style.backgroundColor =
-          confettiColors[Math.floor(Math.random() * confettiColors.length)];
-        confetti.style.borderRadius = "50%";
-        confetti.style.left = randomX + Math.random() * 50 + "px";
-        confetti.style.top = randomY + Math.random() * 50 + "px";
-        confetti.style.zIndex = "9998";
-        confetti.style.opacity = "1";
-        confetti.style.transition = "top 1s, left 1s, opacity 1s";
-
-        gui.appendChild(confetti);
-
-        setTimeout(() => {
-          confetti.style.top = randomY + (Math.random() * 200 - 100) + "px";
-          confetti.style.left = randomX + (Math.random() * 200 - 100) + "px";
-          confetti.style.opacity = "0";
-
-          setTimeout(() => {
-            confetti.remove();
-          }, 1000);
-        }, 10);
-      }
-
-      element.style.transform = `rotate(${randomRotation}deg) scale(0)`;
-      element.style.opacity = "0";
-      setTimeout(() => {
-        element.remove();
-        document.getElementById(uniqueId)?.remove();
-      }, 300);
-    });
-
-    gui.appendChild(element);
-  });
-
-  document.getElementById("kill-button").addEventListener("click", () => {
-    const allElements = document.querySelectorAll("body *");
-    const colors = [
-      "#FF5733",
-      "#33FF57",
-      "#3357FF",
-      "#FF33F5",
-      "#F5FF33",
-      "#33FFF5",
-    ];
-    let chaosTimeout = null;
-    let maxChaosTime = 0;
-
-    allElements.forEach((element) => {
-      if (
-        element.id !== "kill-button" &&
-        !element.classList.contains("scrambled")
-      ) {
-        element.classList.add("scrambled");
-
-        const originalStyle = {
-          position: element.style.position,
-          left: element.style.left,
-          top: element.style.top,
-          transform: element.style.transform,
-          transition: element.style.transition,
-          zIndex: element.style.zIndex,
-          color: element.style.color,
-          backgroundColor: element.style.backgroundColor,
-          opacity: element.style.opacity,
-        };
-
-        element.dataset.originalStyle = JSON.stringify(originalStyle);
-
-        element.style.opacity = "0";
-
-        setTimeout(() => {
-          element.style.position = "fixed";
-          element.style.left = Math.random() * 90 + "vw";
-          element.style.top = Math.random() * 90 + "vh";
-          element.style.transform = `rotate(${Math.random() * 720 - 360}deg) scale(${0.5 + Math.random()})`;
-          element.style.transition =
-            "all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
-          element.style.zIndex = Math.floor(Math.random() * 100);
-          element.style.opacity = "1";
-
-          if (Math.random() > 0.5) {
-            element.style.animation = `spin ${3 + Math.random() * 7}s infinite linear`;
-          }
-
-          if (Math.random() > 0.5) {
-            element.style.color =
-              colors[Math.floor(Math.random() * colors.length)];
-          }
-
-          if (Math.random() > 0.7) {
-            element.style.backgroundColor =
-              colors[Math.floor(Math.random() * colors.length)] + "80";
-          }
-        }, Math.random() * 500);
-      }
-    });
-
-    const styleSheet = document.createElement("style");
-    styleSheet.innerHTML = `
-    @keyframes spin {
-      from { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.2); }
-      to { transform: rotate(360deg) scale(1); }
-    }
-    @keyframes float {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(20px, -15px) rotate(10deg); }
-      66% { transform: translate(-15px, 20px) rotate(-15deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
-    }
-  `;
-    document.head.appendChild(styleSheet);
-
-    const restoreWebsite = () => {
-      const scrambledElements = document.querySelectorAll(".scrambled");
-      scrambledElements.forEach((element) => {
-        element.style.opacity = "0";
-        element.style.transition = "all 1s ease-out";
-      });
-
-      setTimeout(() => {
-        scrambledElements.forEach((element) => {
-          if (element.dataset.originalStyle) {
-            const originalStyle = JSON.parse(element.dataset.originalStyle);
-
-            element.style.animation = "none";
-            element.style.position = originalStyle.position;
-            element.style.left = originalStyle.left;
-            element.style.top = originalStyle.top;
-            element.style.transform = originalStyle.transform;
-            element.style.transition = originalStyle.transition;
-            element.style.zIndex = originalStyle.zIndex;
-            element.style.color = originalStyle.color;
-            element.style.backgroundColor = originalStyle.backgroundColor;
-            element.style.opacity = originalStyle.opacity || "1";
-
-            element.classList.remove("scrambled");
-          }
-        });
-
-        const textScrambles = document.querySelectorAll(".text-scramble");
-        textScrambles.forEach((el) => el.remove());
-      }, 1000);
-    };
-    const pctext = [
-      "CHAOS!",
-      "SCRAMBLED!",
-      "37!",
-      "DISORDER!",
-      "MAYHEM!",
-      "SPIN!",
-      "WHEEEE!",
-      "I LOST THE GAME!",
-      "AT THE SAME TIME!",
-      " W RIZZ!",
-      "I ATE IT!",
-      "no comment.",
-      "lol",
-      "kIdS tHeSe dAyS!",
-      "bruh.",
-    ];
-    const sptext = [
-      "Yu-heng!",
-      "Jalice!",
-      "Ju-bin!",
-      "Shimmy!",
-      "[Insert Ship Name Here!]",
-    ];
-    const addChaosText = () => {
-      const chaosText = document.createElement("div");
-      chaosText.className = "text-scramble";
-      if (Math.floor(Math.random() * 37) == 0) {
-        chaosText.textContent =
-          sptext[Math.floor(Math.random() * sptext.length)];
-      } else {
-        chaosText.textContent =
-          pctext[Math.floor(Math.random() * pctext.length)];
-      }
-      chaosText.style.position = "fixed";
-      chaosText.style.left = Math.random() * 90 + "vw";
-      chaosText.style.top = Math.random() * 90 + "vh";
-      chaosText.style.color = colors[Math.floor(Math.random() * colors.length)];
-      chaosText.style.fontWeight = "bold";
-      chaosText.style.fontSize = 20 + Math.random() * 40 + "px";
-      chaosText.style.transform = `rotate(${Math.random() * 360}deg)`;
-      chaosText.style.zIndex = "9999";
-      chaosText.style.textShadow = "2px 2px 4px rgba(0,0,0,0.5)";
-      chaosText.style.opacity = "0";
-      chaosText.style.transition = "opacity 0.5s ease-in-out";
-      chaosText.style.animation = `spin ${2 + Math.random() * 5}s infinite linear, float ${3 + Math.random() * 4}s infinite ease-in-out`;
-
-      document.body.appendChild(chaosText);
-
-      setTimeout(() => {
-        chaosText.style.opacity = "1";
-      }, 10);
-
-      const duration = 2000 + Math.random() * 5000;
-
-      setTimeout(() => {
-        chaosText.style.opacity = "0";
-        setTimeout(() => {
-          chaosText.remove();
-        }, 500);
-      }, duration);
-
-      return duration + 500;
-    };
-
-    for (let i = 0; i < 20; i++) {
-      const delay = Math.random() * 5000;
-      const timeoutId = setTimeout(() => {
-        const duration = addChaosText();
-        const totalTime = delay + duration;
-        if (totalTime > maxChaosTime) {
-          maxChaosTime = totalTime;
-
-          if (chaosTimeout) {
-            clearTimeout(chaosTimeout);
-          }
-          chaosTimeout = setTimeout(restoreWebsite, maxChaosTime + 1000);
-        }
-      }, delay);
-    }
-
-    const scrambleText = () => {
-      const textElements = document.querySelectorAll(
-        "p, h1, h2, h3, h4, h5, h6, span, a, button",
-      );
-
-      textElements.forEach((element) => {
-        if (
-          Math.random() > 0.6 &&
-          element.innerText &&
-          element.innerText.trim() !== "" &&
-          !element.dataset.originalText
-        ) {
-          element.dataset.originalText = element.innerText;
-
-          const words = element.innerText.split(" ");
-          const scrambledWords = words.map((word) => {
-            if (word.length <= 2 || Math.random() > 0.5) return word;
-
-            const chars = word.split("");
-            for (let i = chars.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [chars[i], chars[j]] = [chars[j], chars[i]];
-            }
-
-            return chars.join("");
-          });
-
-          element.innerText = scrambledWords.join(" ");
-        }
-      });
-    };
-
-    scrambleText();
-  });
   gui.querySelector("#bookmarklet-close").onclick = function () {
     const currentUrl = window.location.href;
     let link = document.querySelector(
