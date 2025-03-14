@@ -560,7 +560,7 @@
 
   gui.innerHTML = `
 <div id="bookmarklet-gui-header">
-   <span>Yap Window</span>   
+   <span>π Window (Yap Window 3/14 Edition)</span>   
    <div class="button-group">
       <button id="bookmarklet-minimize">−</button>
       <button id="bookmarklet-fullscreen">⛶</button>
@@ -658,6 +658,7 @@
     <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
     <button id="read-all" class="setting-button">Read All</button>
     <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
+    <button id="pi" class="setting-button">π</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
