@@ -1448,7 +1448,7 @@ function createPiePiece() {
         createDrip(x, y, pieElement);
     }
 
-    const willCreateStain = Math.random() > 0.9; 
+    const willCreateStain = Math.random() > 0.7; 
 
     let startTime = null;
     const animate = (timestamp) => {
@@ -1534,7 +1534,7 @@ function createDrip(x, y, parent) {
     const dripDistance = 150 + Math.random() * 400;
     const finalY = y + parent.offsetHeight + dripDistance;
 
-    const willStain = Math.random() > 0.8;
+    const willStain = Math.random() > 0.5;
 
     let startTime = null;
     const animate = (timestamp) => {
