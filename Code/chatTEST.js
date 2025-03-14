@@ -1193,6 +1193,7 @@ const pieOverlay = document.getElementById('pie-overlay');
 const piChars = new Set();
 const MAX_PI_CHARS = 50;
 const guiContainer = document.getElementById('bookmarklet-gui');
+let isPieExplosionActive = false;
 
 piButton.addEventListener('click', createPi);
 
@@ -1358,7 +1359,19 @@ function createMiniPis(x, y, color) {
     }
 }
 
+let isPieExplosionActive = false;
+
 function createPieTransition(pi) {
+
+    if (isPieExplosionActive) {
+
+        pi.remove();
+        piChars.delete(pi);
+        return;
+    }
+
+    isPieExplosionActive = true;
+
     const rect = pi.getBoundingClientRect();
     const pieEmoji = document.createElement('div');
     pieEmoji.textContent = '🥧';
@@ -1368,17 +1381,17 @@ function createPieTransition(pi) {
     pieEmoji.style.fontSize = '40px';
     pieEmoji.style.zIndex = '10000000';
     pieEmoji.style.transition = 'all 1s cubic-bezier(0.17, 0.67, 0.83, 0.67)';
-    
+
     document.body.appendChild(pieEmoji);
     pi.remove();
-    
+
     setTimeout(() => {
         pieEmoji.style.fontSize = '300px';
         pieEmoji.style.left = `${window.innerWidth / 2 - 150}px`;
         pieEmoji.style.top = `${window.innerHeight / 2 - 150}px`;
         pieEmoji.style.filter = 'blur(2px)';
     }, 50);
-    
+
     setTimeout(() => {
         pieEmoji.remove();
         createPieExplosion();
@@ -1387,12 +1400,16 @@ function createPieTransition(pi) {
 
 function createPieExplosion() {
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 250; i++) {
         createPiePiece();
     }
 
     setTimeout(() => {
-        pieOverlay.innerHTML = '';
+
+        const nonPermanentElements = pieOverlay.querySelectorAll(':not(.permanent-stain)');
+        nonPermanentElements.forEach(element => element.remove());
+
+        isPieExplosionActive = false;
     }, 20000);
 }
 
@@ -1427,11 +1444,13 @@ function createPiePiece() {
 
     const fallDuration = 8 + Math.random() * 12;
     const finalY = window.innerHeight + size + 100;
-    const wobbleAmount = 100 + Math.random() * 200; 
+    const wobbleAmount = 100 + Math.random() * 200;
 
-    if (Math.random() > 0.3) { 
+    if (Math.random() > 0.3) {
         createDrip(x, y, pieElement);
     }
+
+    const willCreateStain = Math.random() > 0.7; 
 
     let startTime = null;
     const animate = (timestamp) => {
@@ -1450,11 +1469,49 @@ function createPiePiece() {
 
             requestAnimationFrame(animate);
         } else {
+
+            if (willCreateStain) {
+                createPermanentStain(
+                    parseFloat(pieElement.style.left), 
+                    parseFloat(pieElement.style.top),
+                    size * 0.8, 
+                    isPieFilling
+                );
+            }
             pieElement.remove();
         }
     };
 
     requestAnimationFrame(animate);
+}
+
+function createPermanentStain(x, y, size, isFilling) {
+    const stain = document.createElement('div');
+    stain.className = 'permanent-stain';
+
+    stain.style.position = 'absolute';
+    stain.style.left = `${x}px`;
+    stain.style.top = `${y}px`;
+    stain.style.zIndex = '8000000'; 
+
+    const borderRadius = `${30 + Math.random()*40}% ${30 + Math.random()*40}% ${30 + Math.random()*40}% ${30 + Math.random()*40}%`;
+    stain.style.borderRadius = borderRadius;
+
+    const stainSize = size * (0.7 + Math.random() * 0.6);
+    stain.style.width = `${stainSize}px`;
+    stain.style.height = `${stainSize * (0.7 + Math.random() * 0.6)}px`;
+
+    if (isFilling) {
+        const colorVariation = Math.random() * 30;
+        stain.style.backgroundColor = `rgba(${166 + colorVariation}, ${47 + colorVariation}, ${3 + colorVariation}, 0.7)`;
+    } else {
+        stain.style.backgroundColor = `rgba(212, 167, 106, 0.7)`;
+    }
+
+    stain.style.filter = 'blur(2px)';
+    stain.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+    pieOverlay.appendChild(stain);
 }
 
 function createDrip(x, y, parent) {
@@ -1464,7 +1521,7 @@ function createDrip(x, y, parent) {
     drip.style.top = `${y + parent.offsetHeight/2}px`;
     drip.style.zIndex = '9000000';
 
-    const size = 12 + Math.random() * 25; 
+    const size = 12 + Math.random() * 25;
     drip.style.width = `${size}px`;
     drip.style.height = `${size * 2}px`;
 
@@ -1476,8 +1533,10 @@ function createDrip(x, y, parent) {
     pieOverlay.appendChild(drip);
 
     const dripDuration = 4 + Math.random() * 6;
-    const dripDistance = 150 + Math.random() * 400; 
+    const dripDistance = 150 + Math.random() * 400;
     const finalY = y + parent.offsetHeight + dripDistance;
+
+    const willStain = Math.random() > 0.5;
 
     let startTime = null;
     const animate = (timestamp) => {
@@ -1489,7 +1548,7 @@ function createDrip(x, y, parent) {
             const newY = y + parent.offsetHeight/2 + dripDistance * easing;
             drip.style.top = `${newY}px`;
 
-            const stretch = 1 + progress * 4; 
+            const stretch = 1 + progress * 4;
             drip.style.height = `${size * stretch}px`;
             drip.style.width = `${size * (1 - progress * 0.3)}px`;
 
@@ -1499,17 +1558,49 @@ function createDrip(x, y, parent) {
 
             requestAnimationFrame(animate);
         } else {
+
+            if (willStain) {
+                createPermanentDripStain(
+                    parseFloat(drip.style.left),
+                    parseFloat(drip.style.top),
+                    parseFloat(drip.style.width),
+                    colorVariation
+                );
+            }
             drip.remove();
         }
     };
 
     requestAnimationFrame(animate);
 
-    if (Math.random() > 0.5) { 
+    if (Math.random() > 0.5) {
         setTimeout(() => {
             createDrip(x + (Math.random() * 10 - 5), y + parent.offsetHeight * 0.7, parent);
         }, Math.random() * 1000);
     }
+}
+
+function createPermanentDripStain(x, y, width, colorVariation) {
+    const stain = document.createElement('div');
+    stain.className = 'permanent-stain';
+
+    stain.style.position = 'absolute';
+    stain.style.left = `${x - width}px`;
+    stain.style.top = `${y - width*2}px`;
+    stain.style.zIndex = '8000000'; 
+
+    const splatSize = width * (2 + Math.random() * 3);
+    stain.style.width = `${splatSize}px`;
+    stain.style.height = `${splatSize * (0.6 + Math.random() * 0.4)}px`;
+
+    const borderRadius = `${10 + Math.random()*50}% ${10 + Math.random()*50}% ${10 + Math.random()*50}% ${10 + Math.random()*50}%`;
+    stain.style.borderRadius = borderRadius;
+
+    stain.style.backgroundColor = `rgba(${166 + colorVariation}, ${47 + colorVariation}, ${3 + colorVariation}, 0.6)`;
+    stain.style.filter = 'blur(2px)';
+    stain.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+    pieOverlay.appendChild(stain);
 }
   
   gui.querySelector("#bookmarklet-close").onclick = function () {
