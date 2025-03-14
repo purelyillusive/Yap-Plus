@@ -1359,8 +1359,6 @@ function createMiniPis(x, y, color) {
     }
 }
 
-let isPieExplosionActive = false;
-
 function createPieTransition(pi) {
 
     if (isPieExplosionActive) {
