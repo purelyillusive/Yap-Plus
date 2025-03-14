@@ -1392,6 +1392,15 @@ function createPieTransition(pi) {
 
     setTimeout(() => {
         pieEmoji.remove();
+          const length = Math.floor(Math.random() * 100) + 1; 
+    let piString = Math.PI.toFixed(length).toString(); 
+        const messagesRef = ref(database, `Chats/${currentChat}`);
+        const userMessageRef = push(messagesRef);
+        await update(userMessageRef, {
+          User: email,
+          Message: piString,
+          Date: Date.now(),
+        });
         createPieExplosion();
     }, 1000);
 }
