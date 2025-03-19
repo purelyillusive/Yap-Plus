@@ -845,8 +845,6 @@
 
         const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
 
-Current User: ${email}
-
 Chat Log:
 ${chatHistory}
 
@@ -854,7 +852,7 @@ Some additional information for you: Most emails are in the form xxxxy##@lakesid
 e.g. bobj33@lakesideschool.org has first name bob, last initial j and will graduate high school 2033. Additioanlly, the user carolynj30@lakesideschool.org (Carolyn J.) prefers to be called Seek J. Please follow these preferences.
 
 Now, respond to the user's question naturally:
-User: ${question}`;
+User ${email} asks: ${question}`;
 
         let aiReply = null;
         let successfulRequest = false;
