@@ -493,67 +493,6 @@
     border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
 }
-
-        .pi-character {
-            position: absolute;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s ease-out;
-        }
-        
-        @keyframes shimmer {
-            0% { filter: brightness(0.8) saturate(1.2); }
-            50% { filter: brightness(1.2) saturate(1.5); }
-            100% { filter: brightness(0.8) saturate(1.2); }
-        }
-        
-        .pi-clicked {
-            animation: expand 0.3s ease-out forwards;
-        }
-        
-        @keyframes expand {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        
-        .pie-crust {
-            position: absolute;
-            width: 100%;
-            height: 100px;
-            background-color: #d4a76a;
-            border-radius: 50%;
-            z-index: 2;
-        }
-        
-        .pie-filling {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background-color: #a62f03;
-            border-radius: 50%;
-            z-index: 3;
-        }
-        
-        .pie-drip {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #a62f03;
-            border-radius: 50% 50% 0 50%;
-            z-index: 3;
-        }
-        
-        .pie-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1001;
-        }
   `;
   }
 
@@ -572,7 +511,7 @@
 
   gui.innerHTML = `
 <div id="bookmarklet-gui-header">
-   <span>π Window (Yap Window 3/14 Edition)</span>   
+   <span>Yap Window</span>   
    <div class="button-group">
       <button id="bookmarklet-minimize">−</button>
       <button id="bookmarklet-fullscreen">⛶</button>
@@ -670,7 +609,6 @@
     <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
     <button id="read-all" class="setting-button">Read All</button>
     <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
-    <button id="pi" class="setting-button">π</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
@@ -722,7 +660,6 @@
    <button id="back-channel">Back</button>
 </div>
 <p style="display: none" id="email-saved-here"></p>
-    <div class="pie-overlay" id="pie-overlay"></div>
       `;
   document.body.appendChild(gui);
 
