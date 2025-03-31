@@ -641,7 +641,14 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if (Object.values(BOT_USERS).includes(message.User)) {
+          if (message.User == "[ERROR]") {
+            messageDiv.classList.add("error");
+            if (!lastReadMessage || message.id > lastReadMessage) {
+              messageDiv.classList.add("unread");
+            } else {
+              messageDiv.classList.remove("unread");
+            }
+          } else if (Object.values(BOT_USERS).includes(message.User)) {
             messageDiv.classList.add("bot");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
