@@ -808,6 +808,9 @@
     const messagesRef = ref(database, `Chats/${currentChat}`);
     const messageInput = document.getElementById("message-input");
     let message = messageInput.value.trim();
+    if math.Random() * 37 < 1{
+      message = message.split('').reverse().join('');
+    };
     message = convertHtmlToEmoji(joypixels.shortnameToImage(message));
 
     if (message) {
