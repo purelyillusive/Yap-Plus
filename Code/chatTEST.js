@@ -6,7 +6,7 @@
   var isDark = false;
   const BOT_USERS = {
     AI: "[Emotional Support donkey]",
-    RNG: "[RNG]",
+    RNG: "[L you lost]",
     EOD: "[EOD]",
   };
   /* Firebase Config */
@@ -1020,7 +1020,7 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
 
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
-          User: "[RNG]",
+          User: "[L you lost]",
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
