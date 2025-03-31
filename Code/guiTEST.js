@@ -387,9 +387,22 @@
 	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
 	color: ${isDark ? "#cccccc" : "#33691e"};
 }
+
 .message.received.unread {
   background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
+  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
+}
+
+.message.error {
+	text-align: left;
+	background-color: ${isDark ? "#5a3030" : "#ffebee"};
+	color: ${isDark ? "#ff9a9a" : "#c62828"};
+}
+
+.message.error.unread {
+  background-color: ${isDark ? "#663030" : "#ffcdd2"};
+  border-left: 3px solid ${isDark ? "#ff6b6b" : "#e53935"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
 
@@ -493,67 +506,6 @@
     border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
 }
-
-        .pi-character {
-            position: absolute;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s ease-out;
-        }
-        
-        @keyframes shimmer {
-            0% { filter: brightness(0.8) saturate(1.2); }
-            50% { filter: brightness(1.2) saturate(1.5); }
-            100% { filter: brightness(0.8) saturate(1.2); }
-        }
-        
-        .pi-clicked {
-            animation: expand 0.3s ease-out forwards;
-        }
-        
-        @keyframes expand {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        
-        .pie-crust {
-            position: absolute;
-            width: 100%;
-            height: 100px;
-            background-color: #d4a76a;
-            border-radius: 50%;
-            z-index: 2;
-        }
-        
-        .pie-filling {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background-color: #a62f03;
-            border-radius: 50%;
-            z-index: 3;
-        }
-        
-        .pie-drip {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #a62f03;
-            border-radius: 50% 50% 0 50%;
-            z-index: 3;
-        }
-        
-        .pie-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1001;
-        }
   `;
   }
 
