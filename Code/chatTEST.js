@@ -1113,12 +1113,6 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
             Message: sha256(message),
             Date: Date.now(),
           });
-        } else if (rand < 6) {
-          await update(newMessageRef, {
-            User: email,
-            Message: message,
-            Date: 2120036820789,
-          });
         } else {
           await update(newMessageRef, {
             User: email,
