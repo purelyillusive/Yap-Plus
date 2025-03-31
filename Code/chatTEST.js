@@ -5,7 +5,7 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = {
-    AI: "[AI]",
+    AI: "[Emotional Support donkey]",
     RNG: "[RNG]",
     EOD: "[EOD]",
   };
@@ -856,7 +856,7 @@
           })
           .join("\n");
 
-        const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+        const fullPrompt = `The following is a chat log for context. Messages from "[Emotional Support donkey]" are past responses you have given, but you do not have memory of them.
 
 Chat Log:
 ${chatHistory}
@@ -931,7 +931,7 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
 
         const aiMessageRef = push(messagesRef);
         await update(aiMessageRef, {
-          User: "[AI]",
+          User: "[Emotional Support donkey]",
           Message: aiReply,
           Date: d,
         });
