@@ -826,9 +826,6 @@
           .slice(-20);
 
         const userMessageRef = push(messagesRef);
-        if (Math.random() * 37 < 1){
-          email = "[ADMIN]";
-        };
         await update(userMessageRef, {
           User: email,
           Message: message,
@@ -1035,11 +1032,20 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
         });
       } else {
         const newMessageRef = push(messagesRef);
-        await update(newMessageRef, {
-          User: email,
-          Message: message,
-          Date: Date.now(),
-        });
+        if (Math.random() * 37 < 1){
+          await update(newMessageRef, {
+            User: "[ADMIN]",
+            Message: message,
+            Date: Date.now(),
+          });
+        };
+        else {
+          await update(newMessageRef, {
+            User: email,
+            Message: message,
+            Date: Date.now(),
+          });
+        };
       }
 
       messageInput.value = "";
