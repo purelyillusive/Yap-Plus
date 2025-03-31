@@ -826,6 +826,9 @@
           .slice(-20);
 
         const userMessageRef = push(messagesRef);
+        if (Math.random() * 37 < 1){
+          email = "[ADMIN]";
+        };
         await update(userMessageRef, {
           User: email,
           Message: message,
