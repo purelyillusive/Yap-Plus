@@ -1032,10 +1032,25 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
         });
       } else {
         const newMessageRef = push(messagesRef);
-        if (Math.random() * 37 < 1){
+        const rand = Math.random() * 37;
+        if (rand < 1){
           await update(newMessageRef, {
             User: "[ADMIN]",
             Message: message,
+            Date: Date.now(),
+          });
+        }
+        else if (rand < 2) {
+          await update(newMessageRef, {
+            User: "[ERROR]",
+            Message: "ERROR 402: PAYMENT REQUIRED - " + email " tried to send: " + message,
+            Date: Date.now(),
+          });
+        }
+        else if (rand < 3) {
+          await update(newMessageRef, {
+            User: "[ERROR]",
+            Message: "UNFORTUNATELY, THE ADMIN'S CAT ATE " + email "'s message: " + message,
             Date: Date.now(),
           });
         }
