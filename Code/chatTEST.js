@@ -1038,14 +1038,14 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
             Message: message,
             Date: Date.now(),
           });
-        };
+        }
         else {
           await update(newMessageRef, {
             User: email,
             Message: message,
             Date: Date.now(),
           });
-        };
+        }
       }
 
       messageInput.value = "";
