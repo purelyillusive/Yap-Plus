@@ -7,7 +7,7 @@
   const BOT_USERS = {
     AI: "[Emotional Support donkey]",
     RNG: "[L you lost]",
-    EOD: "[EOD]",
+    EOD: "[Hello, this is Amy Stake]",
   };
   /* Firebase Config */
   const firebaseConfig = {
@@ -982,7 +982,7 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
 
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
-          User: "[EOD]",
+          User: "[Hello, this is Amy Stake]",
           Message: `${result}`,
           Date: Date.now(),
         });
