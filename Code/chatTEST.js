@@ -1117,7 +1117,7 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           await update(newMessageRef, {
             User: email,
             Message: message,
-            Date: "37 days ago 03:07 AM",
+            Date: 2120036820789,
           });
         } else {
           await update(newMessageRef, {
