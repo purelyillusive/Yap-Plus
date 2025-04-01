@@ -534,7 +534,7 @@
 <div id="login-screen" class="screen hidden">
    <h2>Log In</h2>
    <div id="google-login-section" style="border:1px solid black">
-      <h3>Sign In with Emaik</h3>
+      <h3>Sign In with Email</h3>
       <button id="google-login-button">Login with Email</button>
    </div>
    <div id="email-login-section" style="border:1px solid black">
