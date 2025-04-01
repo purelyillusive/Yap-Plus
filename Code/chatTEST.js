@@ -639,7 +639,7 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if (message.User == "[ERROR]" or message.User == "[ADMIN]") {
+          if (message.User == "[ERROR]" || message.User == "[ADMIN]") {
             messageDiv.classList.add("error");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
