@@ -738,6 +738,386 @@
     }
   };
 
+(function() {
+
+  const buttonOriginals = new Map();
+
+  const walkingButtonsContainer = document.createElement('div');
+  walkingButtonsContainer.id = 'walking-buttons-container';
+  walkingButtonsContainer.style.position = 'fixed';
+  walkingButtonsContainer.style.top = '0';
+  walkingButtonsContainer.style.left = '0';
+  walkingButtonsContainer.style.width = '100%';
+  walkingButtonsContainer.style.height = '100%';
+  walkingButtonsContainer.style.pointerEvents = 'none';
+  walkingButtonsContainer.style.zIndex = '2000000';
+  document.body.appendChild(walkingButtonsContainer);
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .walking-button {
+      position: absolute;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 2000000;
+    }
+
+    .walking-button-legs {
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .walking-button-leg {
+      width: 3px;
+      height: 12px;
+      background-color: #000;
+      transform-origin: top center;
+      border-radius: 0 0 3px 3px;
+    }
+
+    .walking-button.happy .walking-button-leg:nth-child(1) {
+      animation: legWalkLeft 1.2s infinite;
+    }
+
+    .walking-button.happy .walking-button-leg:nth-child(2) {
+      animation: legWalkRight 1.2s infinite;
+    }
+
+    @keyframes legWalkLeft {
+      0% { transform: rotate(-20deg); }
+      25% { transform: rotate(0deg); }
+      50% { transform: rotate(20deg); }
+      75% { transform: rotate(0deg); }
+      100% { transform: rotate(-20deg); }
+    }
+
+    @keyframes legWalkRight {
+      0% { transform: rotate(20deg); }
+      25% { transform: rotate(0deg); }
+      50% { transform: rotate(-20deg); }
+      75% { transform: rotate(0deg); }
+      100% { transform: rotate(20deg); }
+    }
+
+    .walking-button.scared .walking-button-leg:nth-child(1) {
+      animation: legRunLeft 0.6s infinite;
+    }
+
+    .walking-button.scared .walking-button-leg:nth-child(2) {
+      animation: legRunRight 0.6s infinite;
+    }
+
+    @keyframes legRunLeft {
+      0% { transform: rotate(-35deg); }
+      50% { transform: rotate(15deg); }
+      100% { transform: rotate(-35deg); }
+    }
+
+    @keyframes legRunRight {
+      0% { transform: rotate(35deg); }
+      50% { transform: rotate(-15deg); }
+      100% { transform: rotate(35deg); }
+    }
+
+    .walking-button.returning .walking-button-leg:nth-child(1) {
+      animation: legReturnLeft 0.9s infinite;
+    }
+
+    .walking-button.returning .walking-button-leg:nth-child(2) {
+      animation: legReturnRight 0.9s infinite;
+    }
+
+    @keyframes legReturnLeft {
+      0% { transform: rotate(-15deg); }
+      50% { transform: rotate(10deg); }
+      100% { transform: rotate(-15deg); }
+    }
+
+    @keyframes legReturnRight {
+      0% { transform: rotate(15deg); }
+      50% { transform: rotate(-10deg); }
+      100% { transform: rotate(15deg); }
+    }
+
+    .walking-button-eyes {
+      position: absolute;
+      top: 3px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 30%;
+    }
+
+    .walking-button-eye {
+      width: 4px;
+      height: 4px;
+      background-color: #000;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .walking-button.scared .walking-button-eyes {
+      top: 4px;
+    }
+
+    .walking-button.scared .walking-button-eye {
+      width: 6px;
+      height: 6px;
+    }
+
+    .walking-button.happy .walking-button-eye {
+      animation: blinkEye 3s infinite;
+    }
+
+    @keyframes blinkEye {
+      0%, 96%, 98% { transform: scaleY(1); }
+      97% { transform: scaleY(0.1); }
+    }
+
+    .walking-button.bounce {
+      animation: buttonBounce 0.6s infinite alternate;
+    }
+
+    @keyframes buttonBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-2px); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  let mouseX = 0;
+  let mouseY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function makeButtonWalk(button, e) {
+
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    if (buttonOriginals.has(button) || !isElementVisible(button)) return;
+
+    const rect = button.getBoundingClientRect();
+    buttonOriginals.set(button, {
+      element: button,
+      rect,
+      html: button.outerHTML,
+      parent: button.parentElement,
+      nextSibling: button.nextSibling
+    });
+
+    const walkingButton = document.createElement('div');
+    walkingButton.className = 'walking-button happy bounce';
+    walkingButton.style.width = `${rect.width}px`;
+    walkingButton.style.height = `${rect.height}px`;
+    walkingButton.style.top = `${rect.top}px`;
+    walkingButton.style.left = `${rect.left}px`;
+    walkingButton.style.backgroundColor = getComputedStyle(button).backgroundColor;
+    walkingButton.style.color = getComputedStyle(button).color;
+    walkingButton.style.borderRadius = getComputedStyle(button).borderRadius;
+    walkingButton.style.padding = getComputedStyle(button).padding;
+    walkingButton.style.display = 'flex';
+    walkingButton.style.alignItems = 'center';
+    walkingButton.style.justifyContent = 'center';
+    walkingButton.style.fontFamily = getComputedStyle(button).fontFamily;
+    walkingButton.style.fontSize = getComputedStyle(button).fontSize;
+    walkingButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    walkingButton.style.border = getComputedStyle(button).border;
+
+    walkingButton.textContent = button.textContent;
+
+    const legs = document.createElement('div');
+    legs.className = 'walking-button-legs';
+
+    for (let i = 0; i < 2; i++) {
+      const leg = document.createElement('div');
+      leg.className = 'walking-button-leg';
+      legs.appendChild(leg);
+    }
+    walkingButton.appendChild(legs);
+
+    const eyes = document.createElement('div');
+    eyes.className = 'walking-button-eyes';
+
+    for (let i = 0; i < 2; i++) {
+      const eye = document.createElement('div');
+      eye.className = 'walking-button-eye';
+      eyes.appendChild(eye);
+    }
+    walkingButton.appendChild(eyes);
+
+    walkingButtonsContainer.appendChild(walkingButton);
+
+    button.style.visibility = 'hidden';
+
+    walkingButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      if (!isReturnJourneyStarted) {
+        returnToOrigin();
+      }
+    });
+
+    let velocityX = (Math.random() - 0.5) * 3; 
+    let velocityY = (Math.random() - 0.5) * 3;
+    let isReturnJourneyStarted = false;
+    let lastDirectionChangeTime = Date.now();
+
+    const walkInterval = setInterval(() => {
+
+      if (!document.body.contains(button)) {
+        clearInterval(walkInterval);
+        if (walkingButtonsContainer.contains(walkingButton)) {
+          walkingButtonsContainer.removeChild(walkingButton);
+        }
+        buttonOriginals.delete(button);
+        return;
+      }
+
+      if (!isElementVisible(buttonOriginals.get(button).parent)) {
+        clearInterval(walkInterval);
+        if (walkingButtonsContainer.contains(walkingButton)) {
+          walkingButtonsContainer.removeChild(walkingButton);
+        }
+        button.style.visibility = 'visible';
+        buttonOriginals.delete(button);
+        return;
+      }
+
+      const currentTop = parseFloat(walkingButton.style.top);
+      const currentLeft = parseFloat(walkingButton.style.left);
+
+      if (isReturnJourneyStarted) {
+
+        const currentRect = button.getBoundingClientRect();
+        const dx = currentRect.left - currentLeft;
+        const dy = currentRect.top - currentTop;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 5) {
+          clearInterval(walkInterval);
+          walkingButtonsContainer.removeChild(walkingButton);
+          button.style.visibility = 'visible';
+          buttonOriginals.delete(button);
+          return;
+        }
+
+        velocityX = dx * 0.08;  
+        velocityY = dy * 0.08;
+
+        walkingButton.className = 'walking-button returning';
+      } else {
+
+        const now = Date.now();
+        if (now - lastDirectionChangeTime > Math.random() * 2500 + 1500) {
+          velocityX = (Math.random() - 0.5) * 3;  
+          velocityY = (Math.random() - 0.5) * 3;
+          lastDirectionChangeTime = now;
+        }
+
+        const dx = mouseX - (currentLeft + walkingButton.offsetWidth / 2);
+        const dy = mouseY - (currentTop + walkingButton.offsetHeight / 2);
+        const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
+
+        if (distanceToMouse < 150) {
+
+          walkingButton.className = 'walking-button scared';
+
+          velocityX = -dx * 0.15;
+          velocityY = -dy * 0.15;
+        } else {
+          walkingButton.className = 'walking-button happy bounce';
+        }
+      }
+
+      let newTop = currentTop + velocityY;
+      let newLeft = currentLeft + velocityX;
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      if (newLeft < 0) {
+        newLeft = 0;
+        velocityX *= -1;
+      } else if (newLeft + walkingButton.offsetWidth > viewportWidth) {
+        newLeft = viewportWidth - walkingButton.offsetWidth;
+        velocityX *= -1;
+      }
+
+      if (newTop < 0) {
+        newTop = 0;
+        velocityY *= -1;
+      } else if (newTop + walkingButton.offsetHeight > viewportHeight) {
+        newTop = viewportHeight - walkingButton.offsetHeight;
+        velocityY *= -1;
+      }
+
+      walkingButton.style.top = `${newTop}px`;
+      walkingButton.style.left = `${newLeft}px`;
+
+      walkingButton.style.transform = `rotate(${Math.atan2(velocityY, velocityX) * 3}deg)`;
+
+    }, 50);
+
+    setTimeout(() => {
+      isReturnJourneyStarted = true;
+    }, 15000);
+
+    function returnToOrigin() {
+      isReturnJourneyStarted = true;
+    }
+  }
+
+  function isElementVisible(element) {
+    if (!element) return false;
+
+    const style = window.getComputedStyle(element);
+    return style.display !== 'none' && 
+           style.visibility !== 'hidden' && 
+           style.opacity !== '0' && 
+           element.offsetWidth > 0 && 
+           element.offsetHeight > 0;
+  }
+
+  function attachToButtons() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+      if (!button._hasWalkingListener) {
+        button._hasWalkingListener = true;
+        button.addEventListener('click', function(e) {
+
+          if (Math.random() * 3.7 < 1) {
+            makeButtonWalk(this, e);
+          }
+        });
+      }
+    });
+  }
+
+  attachToButtons();
+
+  const observer = new MutationObserver(mutations => {
+    attachToButtons();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+})();
+	
   document
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
