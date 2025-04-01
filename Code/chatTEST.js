@@ -827,8 +827,8 @@
     gameContainer.style.transform = "translate(-50%, -50%)";
     gameContainer.style.width = "90%";
     gameContainer.style.maxWidth = "800px";
-gameContainer.style.height = "80vh";
-gameContainer.style.overflow = "hidden";
+    gameContainer.style.height = "80vh";
+    gameContainer.style.overflow = "hidden";
     gameContainer.style.backgroundColor = "#000";
     gameContainer.style.zIndex = "1999999";
     gameContainer.style.display = "flex";
@@ -866,8 +866,9 @@ gameContainer.style.overflow = "hidden";
     const helpButton = document.createElement("button");
     helpButton.textContent = "?";
     helpButton.style.position = "absolute";
-    helpButton.style.top = "20px";
+    helpButton.style.bottom = "20px";
     helpButton.style.right = "20px";
+    helpButton.style.top = "auto";
     helpButton.style.width = "30px";
     helpButton.style.height = "30px";
     helpButton.style.borderRadius = "50%";
@@ -880,8 +881,8 @@ gameContainer.style.overflow = "hidden";
     gameContainer.appendChild(helpButton);
 
     const canvas = document.createElement("canvas");
-canvas.width = 400;  
-canvas.height = 400;
+    canvas.width = 400;
+    canvas.height = 400;
     canvas.style.border = "2px solid white";
     gameContainer.appendChild(canvas);
 
@@ -1587,49 +1588,58 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           });
 
           try {
-const scoresRef = ref(database, "SnakeScores");
-      const scoresSnapshot = await get(scoresRef);
-      const scores = scoresSnapshot.val() || {};
+            const scoresRef = ref(database, "SnakeScores");
+            const scoresSnapshot = await get(scoresRef);
+            const scores = scoresSnapshot.val() || {};
 
-      const sortedScores = Object.entries(scores)
-        .map(([userEmail, score]) => ({ email: userEmail, score: score }))
-        .sort((a, b) => b.score - a.score);
+            const sortedScores = Object.entries(scores)
+              .map(([userEmail, score]) => ({ email: userEmail, score: score }))
+              .sort((a, b) => b.score - a.score);
 
-      let currentUserRank = sortedScores.findIndex(entry => entry.email === temp_email);
-      let currentUserScore = currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
-      currentUserRank = currentUserRank !== -1 ? currentUserRank + 1 : "-";
+            let currentUserRank = sortedScores.findIndex(
+              (entry) => entry.email === temp_email,
+            );
+            let currentUserScore =
+              currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
+            currentUserRank =
+              currentUserRank !== -1 ? currentUserRank + 1 : "-";
 
-      const pushMessage = async (text) => {
-        const msgRef = push(messagesRef);
-        await update(msgRef, {
-          User: "[Snake Game]",
-          Message: text,
-          Date: Date.now(),
-        });
-      };
+            const pushMessage = async (text) => {
+              const msgRef = push(messagesRef);
+              await update(msgRef, {
+                User: "[Snake Game]",
+                Message: text,
+                Date: Date.now(),
+              });
+            };
 
-      await pushMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
+            await pushMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
 
-      if (sortedScores.length === 0) {
-        await pushMessage("No scores yet! Be the first to play!");
-      } else {
+            if (sortedScores.length === 0) {
+              await pushMessage("No scores yet! Be the first to play!");
+            } else {
+              const topPlayers = sortedScores.slice(0, 10);
+              for (let i = 0; i < topPlayers.length; i++) {
+                let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
+                await pushMessage(playerText);
+              }
 
-        const topPlayers = sortedScores.slice(0, 10);
-        for (let i = 0; i < topPlayers.length; i++) {
-          let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
-          await pushMessage(playerText);
-        }
-
-        if (currentUserRank > 10) {
-          await pushMessage("...");
-          await pushMessage(`${currentUserRank}. ${email}: ${currentUserScore}`);
-        }
-      }
-      await pushMessage("");
-      await pushMessage("🏆 WEEKLY PRIZE 🏆");
-      await pushMessage("The player in the #1 slot at the end of the week will:");
-      await pushMessage("- Get to customize their message color for a month");
-      await pushMessage("- Add 1 feature of their choice to the chat");
+              if (currentUserRank > 10) {
+                await pushMessage("...");
+                await pushMessage(
+                  `${currentUserRank}. ${email}: ${currentUserScore}`,
+                );
+              }
+            }
+            await pushMessage("");
+            await pushMessage("🏆 WEEKLY PRIZE 🏆");
+            await pushMessage(
+              "The player in the #1 slot at the end of the week will:",
+            );
+            await pushMessage(
+              "- Get to customize their message color for a month",
+            );
+            await pushMessage("- Add 1 feature of their choice to the chat");
           } catch (error) {
             console.error("Error retrieving leaderboard:", error);
             const errorMessageRef = push(messagesRef);
