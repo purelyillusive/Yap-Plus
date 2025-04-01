@@ -506,6 +506,142 @@
     border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
 }
+
+    .walking-button {
+      position: absolute;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 2000000;
+    }
+
+    .walking-button-legs {
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .walking-button-leg {
+      width: 3px;
+      height: 12px;
+      background-color: #000;
+      transform-origin: top center;
+      border-radius: 0 0 3px 3px;
+    }
+
+    .walking-button.happy .walking-button-leg:nth-child(1) {
+      animation: legWalkLeft 1.2s infinite;
+    }
+
+    .walking-button.happy .walking-button-leg:nth-child(2) {
+      animation: legWalkRight 1.2s infinite;
+    }
+
+    @keyframes legWalkLeft {
+      0% { transform: rotate(-20deg); }
+      25% { transform: rotate(0deg); }
+      50% { transform: rotate(20deg); }
+      75% { transform: rotate(0deg); }
+      100% { transform: rotate(-20deg); }
+    }
+
+    @keyframes legWalkRight {
+      0% { transform: rotate(20deg); }
+      25% { transform: rotate(0deg); }
+      50% { transform: rotate(-20deg); }
+      75% { transform: rotate(0deg); }
+      100% { transform: rotate(20deg); }
+    }
+
+    .walking-button.scared .walking-button-leg:nth-child(1) {
+      animation: legRunLeft 0.6s infinite;
+    }
+
+    .walking-button.scared .walking-button-leg:nth-child(2) {
+      animation: legRunRight 0.6s infinite;
+    }
+
+    @keyframes legRunLeft {
+      0% { transform: rotate(-35deg); }
+      50% { transform: rotate(15deg); }
+      100% { transform: rotate(-35deg); }
+    }
+
+    @keyframes legRunRight {
+      0% { transform: rotate(35deg); }
+      50% { transform: rotate(-15deg); }
+      100% { transform: rotate(35deg); }
+    }
+
+    .walking-button.returning .walking-button-leg:nth-child(1) {
+      animation: legReturnLeft 0.9s infinite;
+    }
+
+    .walking-button.returning .walking-button-leg:nth-child(2) {
+      animation: legReturnRight 0.9s infinite;
+    }
+
+    @keyframes legReturnLeft {
+      0% { transform: rotate(-15deg); }
+      50% { transform: rotate(10deg); }
+      100% { transform: rotate(-15deg); }
+    }
+
+    @keyframes legReturnRight {
+      0% { transform: rotate(15deg); }
+      50% { transform: rotate(-10deg); }
+      100% { transform: rotate(15deg); }
+    }
+
+    .walking-button-eyes {
+      position: absolute;
+      top: 3px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 30%;
+    }
+
+    .walking-button-eye {
+      width: 4px;
+      height: 4px;
+      background-color: #000;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .walking-button.scared .walking-button-eyes {
+      top: 4px;
+    }
+
+    .walking-button.scared .walking-button-eye {
+      width: 6px;
+      height: 6px;
+    }
+
+    .walking-button.happy .walking-button-eye {
+      animation: blinkEye 3s infinite;
+    }
+
+    @keyframes blinkEye {
+      0%, 96%, 98% { transform: scaleY(1); }
+      97% { transform: scaleY(0.1); }
+    }
+
+    .walking-button.bounce {
+      animation: buttonBounce 0.6s infinite alternate;
+    }
+
+    @keyframes buttonBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-2px); }
+    }
+
   `;
   }
 
@@ -753,145 +889,6 @@
   walkingButtonsContainer.style.zIndex = '2000000';
   document.body.appendChild(walkingButtonsContainer);
 
-  const style = document.createElement('style');
-  style.textContent = `
-    .walking-button {
-      position: absolute;
-      transition: transform 0.2s ease;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 2000000;
-    }
-
-    .walking-button-legs {
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .walking-button-leg {
-      width: 3px;
-      height: 12px;
-      background-color: #000;
-      transform-origin: top center;
-      border-radius: 0 0 3px 3px;
-    }
-
-    .walking-button.happy .walking-button-leg:nth-child(1) {
-      animation: legWalkLeft 1.2s infinite;
-    }
-
-    .walking-button.happy .walking-button-leg:nth-child(2) {
-      animation: legWalkRight 1.2s infinite;
-    }
-
-    @keyframes legWalkLeft {
-      0% { transform: rotate(-20deg); }
-      25% { transform: rotate(0deg); }
-      50% { transform: rotate(20deg); }
-      75% { transform: rotate(0deg); }
-      100% { transform: rotate(-20deg); }
-    }
-
-    @keyframes legWalkRight {
-      0% { transform: rotate(20deg); }
-      25% { transform: rotate(0deg); }
-      50% { transform: rotate(-20deg); }
-      75% { transform: rotate(0deg); }
-      100% { transform: rotate(20deg); }
-    }
-
-    .walking-button.scared .walking-button-leg:nth-child(1) {
-      animation: legRunLeft 0.6s infinite;
-    }
-
-    .walking-button.scared .walking-button-leg:nth-child(2) {
-      animation: legRunRight 0.6s infinite;
-    }
-
-    @keyframes legRunLeft {
-      0% { transform: rotate(-35deg); }
-      50% { transform: rotate(15deg); }
-      100% { transform: rotate(-35deg); }
-    }
-
-    @keyframes legRunRight {
-      0% { transform: rotate(35deg); }
-      50% { transform: rotate(-15deg); }
-      100% { transform: rotate(35deg); }
-    }
-
-    .walking-button.returning .walking-button-leg:nth-child(1) {
-      animation: legReturnLeft 0.9s infinite;
-    }
-
-    .walking-button.returning .walking-button-leg:nth-child(2) {
-      animation: legReturnRight 0.9s infinite;
-    }
-
-    @keyframes legReturnLeft {
-      0% { transform: rotate(-15deg); }
-      50% { transform: rotate(10deg); }
-      100% { transform: rotate(-15deg); }
-    }
-
-    @keyframes legReturnRight {
-      0% { transform: rotate(15deg); }
-      50% { transform: rotate(-10deg); }
-      100% { transform: rotate(15deg); }
-    }
-
-    .walking-button-eyes {
-      position: absolute;
-      top: 3px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      padding: 0 30%;
-    }
-
-    .walking-button-eye {
-      width: 4px;
-      height: 4px;
-      background-color: #000;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-
-    .walking-button.scared .walking-button-eyes {
-      top: 4px;
-    }
-
-    .walking-button.scared .walking-button-eye {
-      width: 6px;
-      height: 6px;
-    }
-
-    .walking-button.happy .walking-button-eye {
-      animation: blinkEye 3s infinite;
-    }
-
-    @keyframes blinkEye {
-      0%, 96%, 98% { transform: scaleY(1); }
-      97% { transform: scaleY(0.1); }
-    }
-
-    .walking-button.bounce {
-      animation: buttonBounce 0.6s infinite alternate;
-    }
-
-    @keyframes buttonBounce {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-2px); }
-    }
-  `;
-  document.head.appendChild(style);
-
   let mouseX = 0;
   let mouseY = 0;
 
@@ -974,6 +971,10 @@
     let velocityY = (Math.random() - 0.5) * 3;
     let isReturnJourneyStarted = false;
     let lastDirectionChangeTime = Date.now();
+    let maxRunSpeed = 8; 
+    let baseSpeed = 3; 
+    let currentSpeed = baseSpeed;
+    let acceleration = 0; 
 
     const walkInterval = setInterval(() => {
 
@@ -1022,8 +1023,13 @@
 
         const now = Date.now();
         if (now - lastDirectionChangeTime > Math.random() * 2500 + 1500) {
-          velocityX = (Math.random() - 0.5) * 3;  
-          velocityY = (Math.random() - 0.5) * 3;
+          const randomDirectionX = (Math.random() - 0.5);
+          const randomDirectionY = (Math.random() - 0.5);
+
+          const magnitude = Math.sqrt(randomDirectionX * randomDirectionX + randomDirectionY * randomDirectionY);
+
+          velocityX = (randomDirectionX / magnitude) * currentSpeed;
+          velocityY = (randomDirectionY / magnitude) * currentSpeed;
           lastDirectionChangeTime = now;
         }
 
@@ -1031,13 +1037,33 @@
         const dy = mouseY - (currentTop + walkingButton.offsetHeight / 2);
         const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
 
-        if (distanceToMouse < 150) {
+        const awarenessRadius = 200;
+        const scaredRadius = 150;
 
-          walkingButton.className = 'walking-button scared';
+        if (distanceToMouse < awarenessRadius) {
 
-          velocityX = -dx * 0.15;
-          velocityY = -dy * 0.15;
+          const scaredFactor = Math.max(0, 1 - (distanceToMouse / awarenessRadius));
+
+          const targetSpeed = baseSpeed + (maxRunSpeed - baseSpeed) * scaredFactor;
+
+          currentSpeed = currentSpeed + (targetSpeed - currentSpeed) * 0.2;
+
+          const escapeDirectionX = -dx;
+          const escapeDirectionY = -dy;
+
+          const escapeMagnitude = Math.sqrt(escapeDirectionX * escapeDirectionX + escapeDirectionY * escapeDirectionY);
+
+          velocityX = (escapeDirectionX / escapeMagnitude) * currentSpeed * scaredFactor + velocityX * (1 - scaredFactor);
+          velocityY = (escapeDirectionY / escapeMagnitude) * currentSpeed * scaredFactor + velocityY * (1 - scaredFactor);
+
+          if (distanceToMouse < scaredRadius) {
+            walkingButton.className = 'walking-button scared';
+          } else {
+            walkingButton.className = 'walking-button happy bounce';
+          }
         } else {
+
+          currentSpeed = currentSpeed + (baseSpeed - currentSpeed) * 0.05;
           walkingButton.className = 'walking-button happy bounce';
         }
       }
@@ -1050,26 +1076,28 @@
 
       if (newLeft < 0) {
         newLeft = 0;
-        velocityX *= -1;
+        velocityX *= -0.8; 
       } else if (newLeft + walkingButton.offsetWidth > viewportWidth) {
         newLeft = viewportWidth - walkingButton.offsetWidth;
-        velocityX *= -1;
+        velocityX *= -0.8;
       }
 
       if (newTop < 0) {
         newTop = 0;
-        velocityY *= -1;
+        velocityY *= -0.8;
       } else if (newTop + walkingButton.offsetHeight > viewportHeight) {
         newTop = viewportHeight - walkingButton.offsetHeight;
-        velocityY *= -1;
+        velocityY *= -0.8;
       }
 
       walkingButton.style.top = `${newTop}px`;
       walkingButton.style.left = `${newLeft}px`;
 
-      walkingButton.style.transform = `rotate(${Math.atan2(velocityY, velocityX) * 3}deg)`;
+      const movementAngle = Math.atan2(velocityY, velocityX);
+      const rotationAmount = Math.min(3, Math.max(-3, movementAngle * 3));
+      walkingButton.style.transform = `rotate(${rotationAmount}deg)`;
 
-    }, 50);
+    }, 30); 
 
     setTimeout(() => {
       isReturnJourneyStarted = true;
@@ -1098,7 +1126,7 @@
         button._hasWalkingListener = true;
         button.addEventListener('click', function(e) {
 
-          if (Math.random() * 3.7 < 1) {
+          if (Math.random() < 1/3.7) {
             makeButtonWalk(this, e);
           }
         });
