@@ -994,10 +994,7 @@
 
       try {
         const scoreRef = ref(database,`SnakeScores/${temp_email}`);
-        scoreRef.set({
-          score: score,
-          timestamp: Date.now(),
-        });
+        set(scoreRef,score);
       } catch (error) {
         console.error("Error saving score to Firebase:", error);
       }
