@@ -1598,7 +1598,7 @@ const scoresRef = ref(database, "SnakeScores");
       let currentUserScore = currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
       currentUserRank = currentUserRank !== -1 ? currentUserRank + 1 : "-";
 
-      const sendMessage = async (text) => {
+      const pushMessage = async (text) => {
         const msgRef = push(messagesRef);
         await update(msgRef, {
           User: "[Snake Game]",
@@ -1607,28 +1607,28 @@ const scoresRef = ref(database, "SnakeScores");
         });
       };
 
-      await sendMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
+      await pushMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
 
       if (sortedScores.length === 0) {
-        await sendMessage("No scores yet! Be the first to play!");
+        await pushMessage("No scores yet! Be the first to play!");
       } else {
 
         const topPlayers = sortedScores.slice(0, 10);
         for (let i = 0; i < topPlayers.length; i++) {
           let playerText = `${i + 1}. ${topPlayers[i].email}: ${topPlayers[i].score}`;
-          await sendMessage(playerText);
+          await pushMessage(playerText);
         }
 
         if (currentUserRank > 10) {
-          await sendMessage("...");
-          await sendMessage(`${currentUserRank}. ${temp_email}: ${currentUserScore}`);
+          await pushMessage("...");
+          await pushMessage(`${currentUserRank}. ${temp_email}: ${currentUserScore}`);
         }
       }
 
-      await sendMessage("🏆 WEEKLY PRIZE 🏆");
-      await sendMessage("The player in the #1 slot at the end of the week will:");
-      await sendMessage("- Get to customize their message color for a month");
-      await sendMessage("- Add 1 feature of their choice to the chat");
+      await pushMessage("🏆 WEEKLY PRIZE 🏆");
+      await pushMessage("The player in the #1 slot at the end of the week will:");
+      await pushMessage("- Get to customize their message color for a month");
+      await pushMessage("- Add 1 feature of their choice to the chat");
           } catch (error) {
             console.error("Error retrieving leaderboard:", error);
             const errorMessageRef = push(messagesRef);
