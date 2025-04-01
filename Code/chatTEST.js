@@ -1111,6 +1111,12 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
             Message: sha256(message),
             Date: Date.now(),
           });
+        } else if (rand < 6) {
+          await update(newMessageRef, {
+            User: email + " 37",
+            Message: message + "... this message was sent by the 37 gods.",
+            Date: Date.now(),
+          });
         } else {
           await update(newMessageRef, {
             User: email,
