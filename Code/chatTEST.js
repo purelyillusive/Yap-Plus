@@ -1113,8 +1113,8 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           });
         } else if (rand < 6) {
           await update(newMessageRef, {
-            User: email + " 37",
-            Message: message + "... this message was sent by the 37 gods.",
+            User: "37 " + email + " 37",
+            Message: message + "... (this message was sent by the 37 gods.)",
             Date: Date.now(),
           });
         } else {
