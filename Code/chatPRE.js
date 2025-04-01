@@ -4,12 +4,15 @@
   var readMessages = {};
   var readAll = true;
   var isDark = false;
-  const BOT_USERS = {
-    AI: "[AI]",
-    RNG: "[RNG]",
-    EOD: "[EOD]"
-  };
-  /* Firebase Config */
+  const BOT_USERS = [
+    "[Emotional Support donkey]",
+    "[L you lost]",
+    "[Hello, this is Amy Stake]",
+    "[EOD]",
+    "[AI]",
+    "[RNG]",
+  ];
+
   const firebaseConfig = {
     apiKey: "AIzaSyA48Uv_v5c7-OCnkQ8nBkjIW8MN4STDcJs",
     authDomain: "noise-75cba.firebaseapp.com",
@@ -19,10 +22,9 @@
     messagingSenderId: "1092146908435",
     appId: "1:1092146908435:web:f72b90362cc86c5f83dee6",
   };
-  /* Check if the GUI is already open */
+
   var database, auth, provider, email;
   try {
-    /* Dynamically load Firebase modules */
     var { initializeApp } = await import(
       "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
     );
@@ -51,8 +53,8 @@
       await import(
         "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
       );
-    /* Initialize Firebase app */
-    var app = initializeApp(firebaseConfig); /* Initialize Firebase services */
+
+    var app = initializeApp(firebaseConfig);
     database = getDatabase(app);
     auth = getAuth(app);
     var provider = new GoogleAuthProvider();
@@ -199,7 +201,10 @@
       smoothScroll();
     } catch (error) {
       console.error("Error during smooth scroll:", error);
-      firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
+      firstUnread.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
     }
 
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -638,7 +643,14 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if (Object.values(BOT_USERS).includes(message.User)) {
+          if (message.User == "[ERROR]" || message.User == "[ADMIN]") {
+            messageDiv.classList.add("error");
+            if (!lastReadMessage || message.id > lastReadMessage) {
+              messageDiv.classList.add("unread");
+            } else {
+              messageDiv.classList.remove("unread");
+            }
+          } else if (BOT_USERS.includes(message.User)) {
             messageDiv.classList.add("bot");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
@@ -803,11 +815,533 @@
     await updateUnreadCount(chatName);
   }
 
-  /* Function to send a message */
+  function createSnakeGame() {
+    const temp_email =
+      typeof email !== "undefined" ? email.replace(/\./g, "*") : "anonymous";
+
+    const gameContainer = document.createElement("div");
+    gameContainer.id = "snake-game-container";
+    gameContainer.style.position = "fixed";
+    gameContainer.style.top = "50%";
+    gameContainer.style.left = "50%";
+    gameContainer.style.transform = "translate(-50%, -50%)";
+    gameContainer.style.width = "90%";
+    gameContainer.style.maxWidth = "800px";
+    gameContainer.style.height = "auto";
+    gameContainer.style.backgroundColor = "#000";
+    gameContainer.style.zIndex = "1999999";
+    gameContainer.style.display = "flex";
+    gameContainer.style.flexDirection = "column";
+    gameContainer.style.justifyContent = "center";
+    gameContainer.style.alignItems = "center";
+    gameContainer.style.padding = "20px";
+    gameContainer.style.borderRadius = "10px";
+    gameContainer.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+
+    const messagesDiv = document.getElementById("messages") || document.body;
+    document.body.appendChild(gameContainer);
+
+    const scoreContainer = document.createElement("div");
+    scoreContainer.style.display = "flex";
+    scoreContainer.style.justifyContent = "space-between";
+    scoreContainer.style.width = "100%";
+    scoreContainer.style.marginBottom = "10px";
+    gameContainer.appendChild(scoreContainer);
+
+    const scoreDisplay = document.createElement("div");
+    scoreDisplay.id = "snake-score";
+    scoreDisplay.style.color = "white";
+    scoreDisplay.style.fontSize = "24px";
+    scoreDisplay.textContent = "Score: 0";
+    scoreContainer.appendChild(scoreDisplay);
+
+    const highScoreDisplay = document.createElement("div");
+    highScoreDisplay.id = "snake-high-score";
+    highScoreDisplay.style.color = "gold";
+    highScoreDisplay.style.fontSize = "24px";
+    highScoreDisplay.textContent = "High Score: 0";
+    scoreContainer.appendChild(highScoreDisplay);
+
+    const helpButton = document.createElement("button");
+    helpButton.textContent = "?";
+    helpButton.style.position = "absolute";
+    helpButton.style.top = "20px";
+    helpButton.style.right = "20px";
+    helpButton.style.width = "30px";
+    helpButton.style.height = "30px";
+    helpButton.style.borderRadius = "50%";
+    helpButton.style.backgroundColor = "#4CAF50";
+    helpButton.style.color = "white";
+    helpButton.style.border = "none";
+    helpButton.style.fontSize = "20px";
+    helpButton.style.cursor = "pointer";
+    helpButton.style.zIndex = "2000000";
+    gameContainer.appendChild(helpButton);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 640;
+    canvas.style.border = "2px solid white";
+    gameContainer.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    const gridSize = 10;
+    const gridWidth = Math.floor(canvas.width / gridSize);
+    const gridHeight = Math.floor(canvas.height / gridSize);
+
+    let snake = [
+      { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
+    ];
+    let direction = "right";
+    let nextDirection = "right";
+    let food = {};
+    let score = 0;
+    let highScore = 0;
+    let gameSpeed = 120;
+    let gameInterval;
+    let gameOver = false;
+
+    const createInstructionsOverlay = () => {
+      const overlay = document.createElement("div");
+      overlay.style.position = "absolute";
+      overlay.style.top = "0";
+      overlay.style.left = "0";
+      overlay.style.width = "100%";
+      overlay.style.height = "100%";
+      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+      overlay.style.display = "flex";
+      overlay.style.flexDirection = "column";
+      overlay.style.justifyContent = "center";
+      overlay.style.alignItems = "center";
+      overlay.style.zIndex = "2000001";
+      overlay.style.padding = "20px";
+      overlay.style.boxSizing = "border-box";
+
+      const title = document.createElement("h2");
+      title.textContent = "Snake Game Instructions";
+      title.style.color = "white";
+      title.style.marginBottom = "20px";
+      overlay.appendChild(title);
+
+      const instructions = document.createElement("div");
+      instructions.style.color = "white";
+      instructions.style.fontSize = "18px";
+      instructions.style.lineHeight = "1.6";
+      instructions.style.maxWidth = "600px";
+      instructions.style.textAlign = "left";
+      instructions.innerHTML = `
+      <p><strong>Objective:</strong> Eat as much food (red squares) as possible without colliding with walls or yourself.</p>
+      <p><strong>Controls:</strong></p>
+      <ul style="margin-left: 20px; padding-left: 20px;">
+        <li>Arrow Keys: ↑ ↓ ← →</li>
+        <li>WASD: W (up), A (left), S (down), D (right)</li>
+        <li>IJKL: I (up), J (left), K (down), L (right)</li>
+        <li>Touch Controls: Use the on-screen buttons</li>
+      </ul>
+      <p><strong>Scoring:</strong> Each food item eaten increases your score by 1 point.</p>
+      <p><strong>Speed:</strong> The game gets faster as your score increases.</p>
+      <p><strong>Game Over:</strong> Colliding with walls or your own tail ends the game.</p>
+    `;
+      overlay.appendChild(instructions);
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Close";
+      closeButton.style.marginTop = "20px";
+      closeButton.style.padding = "10px 20px";
+      closeButton.style.background = "#4CAF50";
+      closeButton.style.color = "white";
+      closeButton.style.border = "none";
+      closeButton.style.borderRadius = "5px";
+      closeButton.style.cursor = "pointer";
+      closeButton.addEventListener("click", () => {
+        overlay.remove();
+      });
+      overlay.appendChild(closeButton);
+
+      return overlay;
+    };
+
+    helpButton.addEventListener("click", () => {
+      const instructionsOverlay = createInstructionsOverlay();
+      gameContainer.appendChild(instructionsOverlay);
+    });
+
+    function tryLoadHighScore() {
+      try {
+        const storedHighScore = localStorage.getItem(
+          `snakeHighScore_${temp_email}`,
+        );
+        if (storedHighScore) {
+          highScore = parseInt(storedHighScore);
+          highScoreDisplay.textContent = `High Score: ${highScore}`;
+        }
+      } catch (e) {
+        console.warn("Could not access localStorage:", e);
+      }
+
+      try {
+        if (
+          typeof database !== "undefined" &&
+          typeof ref !== "undefined" &&
+          typeof get !== "undefined"
+        ) {
+          const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+          get(scoreRef)
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const firebaseScore = snapshot.val();
+                if (firebaseScore > highScore) {
+                  highScore = firebaseScore;
+                  highScoreDisplay.textContent = `High Score: ${highScore}`;
+                }
+              }
+            })
+            .catch((error) => {
+              console.error(
+                "Error retrieving high score from Firebase:",
+                error,
+              );
+            });
+        }
+      } catch (error) {
+        console.warn("Firebase operations not available:", error);
+      }
+    }
+
+    function generateFood() {
+      food = {
+        x: Math.floor(Math.random() * gridWidth),
+        y: Math.floor(Math.random() * gridHeight),
+      };
+
+      for (let cell of snake) {
+        if (cell.x === food.x && cell.y === food.y) {
+          return generateFood();
+        }
+      }
+    }
+
+    function drawCell(x, y, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+    }
+
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < snake.length; i++) {
+        const color = i === 0 ? "#00ff00" : "#00cc00";
+        drawCell(snake[i].x, snake[i].y, color);
+      }
+
+      drawCell(food.x, food.y, "red");
+
+      scoreDisplay.textContent = `Score: ${score}`;
+      highScoreDisplay.textContent = `High Score: ${highScore}`;
+    }
+
+    function checkCollision(x, y) {
+      if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
+        return true;
+      }
+
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === x && snake[i].y === y) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function moveSnake() {
+      direction = nextDirection;
+
+      const head = { x: snake[0].x, y: snake[0].y };
+
+      switch (direction) {
+        case "up":
+          head.y--;
+          break;
+        case "down":
+          head.y++;
+          break;
+        case "left":
+          head.x--;
+          break;
+        case "right":
+          head.x++;
+          break;
+      }
+
+      if (checkCollision(head.x, head.y)) {
+        endGame();
+        return;
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        generateFood();
+
+        if (gameSpeed > 50) {
+          gameSpeed -= 1;
+          clearInterval(gameInterval);
+          gameInterval = setInterval(moveSnake, gameSpeed);
+        }
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function handleKeyDown(e) {
+      e.preventDefault();
+
+      switch (e.key) {
+        case "ArrowUp":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "ArrowDown":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "ArrowLeft":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "ArrowRight":
+          if (direction !== "left") nextDirection = "right";
+          break;
+
+        case "w":
+        case "W":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "s":
+        case "S":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "a":
+        case "A":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "d":
+        case "D":
+          if (direction !== "left") nextDirection = "right";
+          break;
+
+        case "i":
+        case "I":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "k":
+        case "K":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "j":
+        case "J":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "l":
+        case "L":
+          if (direction !== "left") nextDirection = "right";
+          break;
+      }
+    }
+
+    function saveHighScore() {
+      if (score > highScore) {
+        highScore = score;
+
+        try {
+          localStorage.setItem(
+            `snakeHighScore_${temp_email}`,
+            highScore.toString(),
+          );
+        } catch (e) {
+          console.warn("Could not save to localStorage:", e);
+        }
+
+        try {
+          if (
+            typeof database !== "undefined" &&
+            typeof ref !== "undefined" &&
+            typeof set !== "undefined"
+          ) {
+            const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+            set(scoreRef, highScore).catch((error) => {
+              console.error("Error saving high score to Firebase:", error);
+            });
+          }
+        } catch (error) {
+          console.warn("Firebase operations not available:", error);
+        }
+      }
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      gameOver = true;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 40);
+
+      ctx.font = "24px Arial";
+      ctx.fillText(
+        `Final Score: ${score}`,
+        canvas.width / 2,
+        canvas.height / 2,
+      );
+
+      if (score > highScore) {
+        saveHighScore();
+        ctx.fillStyle = "gold";
+        ctx.fillText(
+          "New High Score!",
+          canvas.width / 2,
+          canvas.height / 2 + 40,
+        );
+      } else {
+        ctx.fillStyle = "white";
+        ctx.fillText(
+          `High Score: ${highScore}`,
+          canvas.width / 2,
+          canvas.height / 2 + 40,
+        );
+      }
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Close";
+      closeButton.style.marginTop = "20px";
+      closeButton.style.padding = "10px 20px";
+      closeButton.style.background = "#f44336";
+      closeButton.style.color = "white";
+      closeButton.style.border = "none";
+      closeButton.style.borderRadius = "5px";
+      closeButton.style.cursor = "pointer";
+      gameContainer.appendChild(closeButton);
+
+      closeButton.addEventListener("click", () => {
+        gameContainer.remove();
+        document.removeEventListener("keydown", handleKeyDown);
+      });
+    }
+
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "Restart";
+    restartButton.style.marginTop = "10px";
+    restartButton.style.padding = "8px 16px";
+    restartButton.style.background = "#4CAF50";
+    restartButton.style.color = "white";
+    restartButton.style.border = "none";
+    restartButton.style.borderRadius = "5px";
+    restartButton.style.cursor = "pointer";
+    gameContainer.appendChild(restartButton);
+
+    restartButton.addEventListener("click", () => {
+      if (gameOver) {
+        const closeButton = gameContainer.querySelector("button:last-child");
+        if (closeButton && closeButton !== restartButton) {
+          closeButton.remove();
+        }
+
+        snake = [
+          { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
+        ];
+        direction = "right";
+        nextDirection = "right";
+        score = 0;
+        gameSpeed = 120;
+        gameOver = false;
+
+        clearInterval(gameInterval);
+        initGame();
+      }
+    });
+
+    const touchControls = document.createElement("div");
+    touchControls.style.display = "grid";
+    touchControls.style.gridTemplateColumns = "1fr 1fr 1fr";
+    touchControls.style.gridTemplateRows = "1fr 1fr 1fr";
+    touchControls.style.gap = "5px";
+    touchControls.style.width = "150px";
+    touchControls.style.height = "150px";
+    touchControls.style.marginTop = "15px";
+    gameContainer.appendChild(touchControls);
+
+    const createTouchButton = (text, dir) => {
+      const btn = document.createElement("button");
+      btn.textContent = text;
+      btn.style.padding = "10px";
+      btn.style.backgroundColor = "#333";
+      btn.style.color = "white";
+      btn.style.border = "1px solid #555";
+      btn.style.borderRadius = "5px";
+      btn.style.cursor = "pointer";
+
+      btn.addEventListener("click", () => {
+        if (
+          (dir === "up" && direction !== "down") ||
+          (dir === "down" && direction !== "up") ||
+          (dir === "left" && direction !== "right") ||
+          (dir === "right" && direction !== "left")
+        ) {
+          nextDirection = dir;
+        }
+      });
+
+      return btn;
+    };
+
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("↑", "up"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("←", "left"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("→", "right"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("↓", "down"));
+    touchControls.appendChild(document.createElement("div"));
+
+    const controlsLegend = document.createElement("div");
+    controlsLegend.style.color = "white";
+    controlsLegend.style.fontSize = "14px";
+    controlsLegend.style.marginTop = "10px";
+    controlsLegend.style.textAlign = "center";
+    controlsLegend.innerHTML = "Controls: Arrow Keys, WASD, or IJKL";
+    gameContainer.appendChild(controlsLegend);
+
+    function initGame() {
+      tryLoadHighScore();
+      generateFood();
+      draw();
+      gameInterval = setInterval(moveSnake, gameSpeed);
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    initGame();
+
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+      clearInterval(gameInterval);
+      gameContainer.remove();
+    };
+  }
+
   async function sendMessage() {
     const messagesRef = ref(database, `Chats/${currentChat}`);
     const messageInput = document.getElementById("message-input");
     let message = messageInput.value.trim();
+    if (Math.random() * 37 < 1) {
+      message = message.split("").reverse().join("");
+    }
     message = convertHtmlToEmoji(joypixels.shortnameToImage(message));
 
     if (message) {
@@ -843,7 +1377,7 @@
           })
           .join("\n");
 
-        const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+        const fullPrompt = `The following is a chat log for context. Messages from "[Emotional Support donkey]" are past responses you have given, but you do not have memory of them.
 
 Chat Log:
 ${chatHistory}
@@ -866,6 +1400,9 @@ Now, respond to the user's question naturally:
 User: ${email} asks: ${question}
 
 Now, make sure that your response calls everyone by the right name and doesn't say name redacted anywhere or any of the other provided words above. Remember, Carolyn is Seek and Conquerer is Hengsheng.
+
+In your response, try to be as sarcastic as possible, except if your response was [Hard Coded By ADMINS]. For example, if a user asks you what 1+1 is, you could say potato. (Don't actually copy my example, be more creative).
+Also, feel free to randomly throw in a funny roast against someone in your response, but do not insult people's names or anything that they might be sensitive about. All rules above must be considered before throwing around insults and sarcasm.
 `;
 
         let aiReply = null;
@@ -878,9 +1415,20 @@ Now, make sure that your response calls everyone by the right name and doesn't s
                 API_KEY,
               {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                  "Content-Type": "application/json",
+                },
                 body: JSON.stringify({
-                  contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
+                  contents: [
+                    {
+                      role: "user",
+                      parts: [
+                        {
+                          text: fullPrompt,
+                        },
+                      ],
+                    },
+                  ],
                 }),
               },
             ).then((res) => res.json());
@@ -904,7 +1452,7 @@ Now, make sure that your response calls everyone by the right name and doesn't s
 
         const aiMessageRef = push(messagesRef);
         await update(aiMessageRef, {
-          User: "[AI]",
+          User: "[Emotional Support donkey]",
           Message: aiReply,
           Date: d,
         });
@@ -955,7 +1503,7 @@ Now, make sure that your response calls everyone by the right name and doesn't s
 
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
-          User: "[EOD]",
+          User: "[Hello, this is Amy Stake]",
           Message: `${result}`,
           Date: Date.now(),
         });
@@ -993,7 +1541,7 @@ Now, make sure that your response calls everyone by the right name and doesn't s
 
         const botMessageRef = push(messagesRef);
         await update(botMessageRef, {
-          User: "[RNG]",
+          User: "[L you lost]",
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
@@ -1024,13 +1572,150 @@ Now, make sure that your response calls everyone by the right name and doesn't s
           Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
           Date: Date.now(),
         });
-      } else {
-        const newMessageRef = push(messagesRef);
-        await update(newMessageRef, {
-          User: email,
-          Message: message,
+      } else if (message.toLowerCase().startsWith("/snake")) {
+        const temp_email =
+          typeof email !== "undefined"
+            ? email.replace(/\./g, "*")
+            : "anonymous";
+        if (message.toLowerCase().trim() === "/snake leaderboard") {
+          const userMessageRef = push(messagesRef);
+          await update(userMessageRef, {
+            User: email,
+            Message: message,
+            Date: Date.now(),
+          });
+
+          try {
+const scoresRef = ref(database, "SnakeScores");
+      const scoresSnapshot = await get(scoresRef);
+      const scores = scoresSnapshot.val() || {};
+
+      const sortedScores = Object.entries(scores)
+        .map(([userEmail, score]) => ({ email: userEmail, score: score }))
+        .sort((a, b) => b.score - a.score);
+
+      let currentUserRank = sortedScores.findIndex(entry => entry.email === temp_email);
+      let currentUserScore = currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
+      currentUserRank = currentUserRank !== -1 ? currentUserRank + 1 : "-";
+
+      const pushMessage = async (text) => {
+        const msgRef = push(messagesRef);
+        await update(msgRef, {
+          User: "[Snake Game]",
+          Message: text,
           Date: Date.now(),
         });
+      };
+
+      await pushMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
+
+      if (sortedScores.length === 0) {
+        await pushMessage("No scores yet! Be the first to play!");
+      } else {
+
+        const topPlayers = sortedScores.slice(0, 10);
+        for (let i = 0; i < topPlayers.length; i++) {
+          let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
+          await pushMessage(playerText);
+        }
+
+        if (currentUserRank > 10) {
+          await pushMessage("...");
+          await pushMessage(`${currentUserRank}. ${email}: ${currentUserScore}`);
+        }
+      }
+      await pushMessage("");
+      await pushMessage("🏆 WEEKLY PRIZE 🏆");
+      await pushMessage("The player in the #1 slot at the end of the week will:");
+      await pushMessage("- Get to customize their message color for a month");
+      await pushMessage("- Add 1 feature of their choice to the chat");
+          } catch (error) {
+            console.error("Error retrieving leaderboard:", error);
+            const errorMessageRef = push(messagesRef);
+            await update(errorMessageRef, {
+              User: "[Snake Game]",
+              Message: "Error retrieving leaderboard. Please try again later.",
+              Date: Date.now(),
+            });
+          }
+        } else {
+          createSnakeGame();
+        }
+      } else {
+        const newMessageRef = push(messagesRef);
+        const rand = Math.random() * 37;
+        if (rand < 1) {
+          await update(newMessageRef, {
+            User: "[ADMIN]",
+            Message: message,
+            Date: Date.now(),
+          });
+        } else if (rand < 2) {
+          await update(newMessageRef, {
+            User: "[ERROR]",
+            Message:
+              "ERROR 402: PAYMENT REQUIRED - " +
+              email +
+              " tried to send: " +
+              message,
+            Date: Date.now(),
+          });
+        } else if (rand < 3) {
+          await update(newMessageRef, {
+            User: "[ERROR]",
+            Message:
+              "UNFORTUNATELY, THE ADMIN'S CAT ATE " +
+              email +
+              "'s message: " +
+              message,
+            Date: Date.now(),
+          });
+        } else if (rand < 4) {
+          rand = Math.random() * 4;
+          if (rand < 1) {
+            await update(newMessageRef, {
+              User: email,
+              Message: asciiToBase(message, 3),
+              Date: Date.now(),
+            });
+          } else if (rand < 2) {
+            await update(newMessageRef, {
+              User: email,
+              Message: asciiToBase(message, 7),
+              Date: Date.now(),
+            });
+          } else if (rand < 3) {
+            await update(newMessageRef, {
+              User: email,
+              Message: asciiToBase(message, 37),
+              Date: Date.now(),
+            });
+          } else {
+            await update(newMessageRef, {
+              User: email,
+              Message: asciiToBase(message, 73),
+              Date: Date.now(),
+            });
+          }
+        } else if (rand < 5) {
+          await update(newMessageRef, {
+            User: email,
+            Message: sha256(message),
+            Date: Date.now(),
+          });
+        } else if (rand < 6) {
+          await update(newMessageRef, {
+            User: "37 " + email + " 37",
+            Message: message + "... (this message was sent by the 37 gods.)",
+            Date: Date.now(),
+          });
+        } else {
+          await update(newMessageRef, {
+            User: email,
+            Message: message,
+            Date: Date.now(),
+          });
+        }
       }
 
       messageInput.value = "";
@@ -1046,6 +1731,7 @@ Now, make sure that your response calls everyone by the right name and doesn't s
     }
     document.getElementById("bookmarklet-gui").scrollTop = 0;
   }
+
   function convertHtmlToEmoji(inputString) {
     return inputString.replace(
       /<img[^>]*alt="([^"]*)"[^>]*>/g,
@@ -1053,6 +1739,87 @@ Now, make sure that your response calls everyone by the right name and doesn't s
         return altText || match;
       },
     );
+  }
+
+  function sha256(message) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+
+    const utf8Encode = new TextEncoder().encode(message);
+    const words = [];
+    for (let i = 0; i < utf8Encode.length; i++) {
+      words[i >> 2] |= utf8Encode[i] << (24 - (i % 4) * 8);
+    }
+    words[utf8Encode.length >> 2] |= 0x80 << (24 - (utf8Encode.length % 4) * 8);
+    words[(((utf8Encode.length + 64) >> 9) << 4) + 15] = utf8Encode.length * 8;
+
+    const hash = new Uint32Array([
+      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c,
+      0x1f83d9ab, 0x5be0cd19,
+    ]);
+
+    const k = new Uint32Array([
+      0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
+      0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+      0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+      0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+      0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+      0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+      0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+      0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+      0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
+      0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+      0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+    ]);
+
+    for (let i = 0; i < words.length; i += 16) {
+      const w = new Uint32Array(64);
+      for (let j = 0; j < 16; j++) w[j] = words[i + j] | 0;
+      for (let j = 16; j < 64; j++) {
+        const s0 =
+          rightRotate(w[j - 15], 7) ^
+          rightRotate(w[j - 15], 18) ^
+          (w[j - 15] >>> 3);
+        const s1 =
+          rightRotate(w[j - 2], 17) ^
+          rightRotate(w[j - 2], 19) ^
+          (w[j - 2] >>> 10);
+        w[j] = (w[j - 16] + s0 + w[j - 7] + s1) | 0;
+      }
+
+      let [a, b, c, d, e, f, g, h] = hash;
+      for (let j = 0; j < 64; j++) {
+        const S1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
+        const ch = (e & f) ^ (~e & g);
+        const temp1 = (h + S1 + ch + k[j] + w[j]) | 0;
+        const S0 = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
+        const maj = (a & b) ^ (a & c) ^ (b & c);
+        const temp2 = (S0 + maj) | 0;
+
+        h = g;
+        g = f;
+        f = e;
+        e = (d + temp1) | 0;
+        d = c;
+        c = b;
+        b = a;
+        a = (temp1 + temp2) | 0;
+      }
+
+      hash[0] = (hash[0] + a) | 0;
+      hash[1] = (hash[1] + b) | 0;
+      hash[2] = (hash[2] + c) | 0;
+      hash[3] = (hash[3] + d) | 0;
+      hash[4] = (hash[4] + e) | 0;
+      hash[5] = (hash[5] + f) | 0;
+      hash[6] = (hash[6] + g) | 0;
+      hash[7] = (hash[7] + h) | 0;
+    }
+
+    return Array.from(hash)
+      .map((h) => h.toString(16).padStart(8, "0"))
+      .join("");
   }
 
   function formatDate(timestamp) {
@@ -1080,9 +1847,27 @@ Now, make sure that your response calls everyone by the right name and doesn't s
     }
   });
 
-  /* Attach send message functionality to the button */
   const sendButton = document.getElementById("send-button");
   sendButton.addEventListener("click", sendMessage);
+
+  function asciiToBase(str, base) {
+    if (![3, 7, 37, 73].includes(base)) {
+      throw new Error("Invalid base. Choose 3, 7, 37, or 73.");
+    }
+
+    let num = BigInt(0);
+    for (let i = 0; i < str.length; i++) {
+      num = num * BigInt(256) + BigInt(str.charCodeAt(i));
+    }
+
+    let result = "";
+    while (num > 0) {
+      result = (num % BigInt(base)).toString() + result;
+      num = num / BigInt(base);
+    }
+
+    return result || "0";
+  }
 
   const messageInput = document.getElementById("message-input");
   messageInput.addEventListener("input", (e) => {
@@ -1092,7 +1877,6 @@ Now, make sure that your response calls everyone by the right name and doesn't s
     e.target.value = e.target.value.substring(0, 1000);
   });
 
-  /* Add Enter key functionality */
   messageInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       sendMessage();
@@ -1503,7 +2287,6 @@ Now, make sure that your response calls everyone by the right name and doesn't s
     });
   }
 
-  /* Load existing messages */
   setupDarkModeDetection();
   checkForUpdates();
   fetchChatList();
