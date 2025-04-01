@@ -1615,16 +1615,16 @@ const scoresRef = ref(database, "SnakeScores");
 
         const topPlayers = sortedScores.slice(0, 10);
         for (let i = 0; i < topPlayers.length; i++) {
-          let playerText = `${i + 1}. ${topPlayers[i].email}: ${topPlayers[i].score}`;
+          let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
           await pushMessage(playerText);
         }
 
         if (currentUserRank > 10) {
           await pushMessage("...");
-          await pushMessage(`${currentUserRank}. ${temp_email}: ${currentUserScore}`);
+          await pushMessage(`${currentUserRank}. ${email}: ${currentUserScore}`);
         }
       }
-
+      await pushMessage("");
       await pushMessage("🏆 WEEKLY PRIZE 🏆");
       await pushMessage("The player in the #1 slot at the end of the week will:");
       await pushMessage("- Get to customize their message color for a month");
