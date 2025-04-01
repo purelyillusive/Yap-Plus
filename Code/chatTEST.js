@@ -993,7 +993,6 @@
       );
 
       try {
-        const database = firebase.database();
         const scoreRef = database.ref("snakescores/" + email);
         scoreRef.set({
           score: score,
