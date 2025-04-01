@@ -5,9 +5,9 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = {
-    "[Emotional Support donkey]": "[Emotional Support donkey]",
-    "[L you lost]": "[L you lost]",
-    "[Hello, this is Amy Stake]": "[Hello, this is Amy Stake]",
+    AI: "[Emotional Support donkey]",
+    RNG: "[L you lost]",
+    EOD: "[Hello, this is Amy Stake]",
   };
   /* Firebase Config */
   const firebaseConfig = {
