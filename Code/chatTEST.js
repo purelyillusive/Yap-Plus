@@ -4,11 +4,9 @@
   var readMessages = {};
   var readAll = true;
   var isDark = false;
-  const BOT_USERS = {
-    AI: "[Emotional Support donkey]",
-    RNG: "[L you lost]",
-    EOD: "[Hello, this is Amy Stake]",
-  };
+  const BOT_USERS = [
+    "[Emotional Support donkey]","[L you lost]","[Hello, this is Amy Stake]","[EOD]","[AI]","[RNG]"
+  ];
   /* Firebase Config */
   const firebaseConfig = {
     apiKey: "AIzaSyA48Uv_v5c7-OCnkQ8nBkjIW8MN4STDcJs",
@@ -641,14 +639,14 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if ((message.User == "[ERROR]")) {
+          if (message.User == "[ERROR]") {
             messageDiv.classList.add("error");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
             } else {
               messageDiv.classList.remove("unread");
             }
-          } else if (Object.values(BOT_USERS).includes(message.User)) {
+          } else if (BOT_USERS.includes(message.User)) {
             messageDiv.classList.add("bot");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
