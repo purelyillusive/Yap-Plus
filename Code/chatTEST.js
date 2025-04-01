@@ -827,7 +827,8 @@
     gameContainer.style.transform = "translate(-50%, -50%)";
     gameContainer.style.width = "90%";
     gameContainer.style.maxWidth = "800px";
-    gameContainer.style.height = "auto";
+gameContainer.style.height = "80vh";
+gameContainer.style.overflow = "hidden";
     gameContainer.style.backgroundColor = "#000";
     gameContainer.style.zIndex = "1999999";
     gameContainer.style.display = "flex";
@@ -879,8 +880,8 @@
     gameContainer.appendChild(helpButton);
 
     const canvas = document.createElement("canvas");
-    canvas.width = 640;
-    canvas.height = 640;
+canvas.width = 400;  
+canvas.height = 400;
     canvas.style.border = "2px solid white";
     gameContainer.appendChild(canvas);
 
