@@ -993,7 +993,7 @@
       );
 
       try {
-        const scoreRef = database.ref("snakescores/" + email);
+        const scoreRef = ref(database,`SnakeScores/${email}`);
         scoreRef.set({
           score: score,
           timestamp: Date.now(),
