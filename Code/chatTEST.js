@@ -5,7 +5,12 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = [
-    "[Emotional Support donkey]","[L you lost]","[Hello, this is Amy Stake]","[EOD]","[AI]","[RNG]"
+    "[Emotional Support donkey]",
+    "[L you lost]",
+    "[Hello, this is Amy Stake]",
+    "[EOD]",
+    "[AI]",
+    "[RNG]",
   ];
   /* Firebase Config */
   const firebaseConfig = {
@@ -811,6 +816,213 @@
     await updateUnreadCount(chatName);
   }
 
+  function createSnakeGame() {
+    const temp_email = emailElement
+      ? emailElement.textContent.replace(/\./g, "*")
+      : "anonymous";
+
+    const gameContainer = document.createElement("div");
+    gameContainer.id = "snake-game-container";
+    gameContainer.style.position = "absolute";
+    gameContainer.style.top = "0";
+    gameContainer.style.left = "0";
+    gameContainer.style.width = "100%";
+    gameContainer.style.height = "100%";
+    gameContainer.style.backgroundColor = "#000";
+    gameContainer.style.zIndex = "1999999";
+    gameContainer.style.display = "flex";
+    gameContainer.style.flexDirection = "column";
+    gameContainer.style.justifyContent = "center";
+    gameContainer.style.alignItems = "center";
+
+    const messagesDiv = document.getElementById("messages");
+    if (!messagesDiv) return;
+    messagesDiv.style.position = "relative";
+    messagesDiv.appendChild(gameContainer);
+
+    const scoreDisplay = document.createElement("div");
+    scoreDisplay.id = "snake-score";
+    scoreDisplay.style.color = "white";
+    scoreDisplay.style.fontSize = "24px";
+    scoreDisplay.style.marginBottom = "10px";
+    scoreDisplay.textContent = "Score: 0";
+    gameContainer.appendChild(scoreDisplay);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.min(500, messagesDiv.clientWidth - 20);
+    canvas.height = Math.min(500, messagesDiv.clientHeight - 100);
+    canvas.style.border = "2px solid white";
+    gameContainer.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    const gridSize = 20;
+    const gridWidth = Math.floor(canvas.width / gridSize);
+    const gridHeight = Math.floor(canvas.height / gridSize);
+
+    let snake = [
+      { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
+    ];
+    let direction = "right";
+    let nextDirection = "right";
+    let food = {};
+    let score = 0;
+    let gameSpeed = 150;
+    let gameInterval;
+    let gameOver = false;
+
+    function generateFood() {
+      food = {
+        x: Math.floor(Math.random() * gridWidth),
+        y: Math.floor(Math.random() * gridHeight),
+      };
+
+      for (let cell of snake) {
+        if (cell.x === food.x && cell.y === food.y) {
+          return generateFood();
+        }
+      }
+    }
+
+    function drawCell(x, y, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+    }
+
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < snake.length; i++) {
+        const color = i === 0 ? "#00ff00" : "#00cc00";
+        drawCell(snake[i].x, snake[i].y, color);
+      }
+
+      drawCell(food.x, food.y, "red");
+
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
+
+    function checkCollision(x, y) {
+      if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
+        return true;
+      }
+
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === x && snake[i].y === y) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function moveSnake() {
+      direction = nextDirection;
+
+      const head = { x: snake[0].x, y: snake[0].y };
+
+      switch (direction) {
+        case "up":
+          head.y--;
+          break;
+        case "down":
+          head.y++;
+          break;
+        case "left":
+          head.x--;
+          break;
+        case "right":
+          head.x++;
+          break;
+      }
+
+      if (checkCollision(head.x, head.y)) {
+        endGame();
+        return;
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        generateFood();
+
+        if (gameSpeed > 60) {
+          gameSpeed -= 2;
+          clearInterval(gameInterval);
+          gameInterval = setInterval(moveSnake, gameSpeed);
+        }
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function handleKeyDown(e) {
+      switch (e.key) {
+        case "ArrowUp":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "ArrowDown":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "ArrowLeft":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "ArrowRight":
+          if (direction !== "left") nextDirection = "right";
+          break;
+      }
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      gameOver = true;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
+      ctx.font = "20px Arial";
+      ctx.fillText(
+        `Final Score: ${score}`,
+        canvas.width / 2,
+        canvas.height / 2 + 40,
+      );
+
+      try {
+        const database = firebase.database();
+        const scoreRef = database.ref("snakescores/" + email);
+        scoreRef.set({
+          score: score,
+          timestamp: Date.now(),
+        });
+      } catch (error) {
+        console.error("Error saving score to Firebase:", error);
+      }
+
+      setTimeout(() => {
+        gameContainer.remove();
+      }, 3000);
+    }
+
+    function initGame() {
+      generateFood();
+
+      draw();
+
+      gameInterval = setInterval(moveSnake, gameSpeed);
+
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    initGame();
+  }
+
   /* Function to send a message */
   async function sendMessage() {
     const messagesRef = ref(database, `Chats/${currentChat}`);
@@ -1049,6 +1261,8 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
           Date: Date.now(),
         });
+      } else if (message.toLowerCase().startsWith("/snake")) {
+        createSnakeGame();
       } else {
         const newMessageRef = push(messagesRef);
         const rand = Math.random() * 37;
