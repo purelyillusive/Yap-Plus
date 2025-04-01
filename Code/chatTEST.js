@@ -1586,55 +1586,49 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           });
 
           try {
-            const scoresRef = ref(database, "SnakeScores");
-            const scoresSnapshot = await get(scoresRef);
-            const scores = scoresSnapshot.val() || {};
+const scoresRef = ref(database, "SnakeScores");
+      const scoresSnapshot = await get(scoresRef);
+      const scores = scoresSnapshot.val() || {};
 
-            const sortedScores = Object.entries(scores)
-              .map(([userEmail, score]) => ({ email: userEmail, score: score }))
-              .sort((a, b) => b.score - a.score);
+      const sortedScores = Object.entries(scores)
+        .map(([userEmail, score]) => ({ email: userEmail, score: score }))
+        .sort((a, b) => b.score - a.score);
 
-            let currentUserRank = sortedScores.findIndex(
-              (entry) => entry.email === temp_email,
-            );
-            let currentUserScore =
-              currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
-            currentUserRank =
-              currentUserRank !== -1 ? currentUserRank + 1 : "-";
+      let currentUserRank = sortedScores.findIndex(entry => entry.email === temp_email);
+      let currentUserScore = currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
+      currentUserRank = currentUserRank !== -1 ? currentUserRank + 1 : "-";
 
-            let leaderboardMsg = "🐍 **SNAKE GAME LEADERBOARD** 🐍\n\n";
+      const sendMessage = async (text) => {
+        const msgRef = push(messagesRef);
+        await update(msgRef, {
+          User: "[Snake Game]",
+          Message: text,
+          Date: Date.now(),
+        });
+      };
 
-            if (sortedScores.length === 0) {
-              leaderboardMsg += "No scores yet! Be the first to play!\n\n";
-            } else {
-              const topPlayers = sortedScores.slice(0, 10);
-              topPlayers.forEach((entry, index) => {
-                const displayEmail =
-                  entry.email === temp_email
-                    ? `**${entry.email}**`
-                    : entry.email;
+      await sendMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
 
-                leaderboardMsg += `${index + 1}. ${displayEmail}: ${entry.score}\n`;
-              });
+      if (sortedScores.length === 0) {
+        await sendMessage("No scores yet! Be the first to play!");
+      } else {
 
-              if (currentUserRank > 10) {
-                leaderboardMsg += `\n...\n\n${currentUserRank}. **${temp_email}**: ${currentUserScore}\n`;
-              }
-            }
+        const topPlayers = sortedScores.slice(0, 10);
+        for (let i = 0; i < topPlayers.length; i++) {
+          let playerText = `${i + 1}. ${topPlayers[i].email}: ${topPlayers[i].score}`;
+          await sendMessage(playerText);
+        }
 
-            leaderboardMsg += "\n🏆 **PRIZE** 🏆\n";
-            leaderboardMsg +=
-              "The player in the #1 slot at the end of the week will:\n";
-            leaderboardMsg +=
-              "- Get to customize their message color for a month\n";
-            leaderboardMsg += "- Add 1 feature of their choice to Yap Window\n";
+        if (currentUserRank > 10) {
+          await sendMessage("...");
+          await sendMessage(`${currentUserRank}. ${temp_email}: ${currentUserScore}`);
+        }
+      }
 
-            const botMessageRef = push(messagesRef);
-            await update(botMessageRef, {
-              User: "[Snake Game]",
-              Message: leaderboardMsg,
-              Date: Date.now(),
-            });
+      await sendMessage("🏆 WEEKLY PRIZE 🏆");
+      await sendMessage("The player in the #1 slot at the end of the week will:");
+      await sendMessage("- Get to customize their message color for a month");
+      await sendMessage("- Add 1 feature of their choice to the chat");
           } catch (error) {
             console.error("Error retrieving leaderboard:", error);
             const errorMessageRef = push(messagesRef);
