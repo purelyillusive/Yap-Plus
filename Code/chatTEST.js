@@ -1573,6 +1573,10 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           Date: Date.now(),
         });
       } else if (message.toLowerCase().startsWith("/snake")) {
+        const temp_email =
+          typeof email !== "undefined"
+            ? email.replace(/\./g, "*")
+            : "anonymous";
         if (message.toLowerCase().trim() === "/snake leaderboard") {
           const userMessageRef = push(messagesRef);
           await update(userMessageRef, {
@@ -1618,12 +1622,12 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
               }
             }
 
-            leaderboardMsg += "\n🏆 **WEEKLY PRIZE** 🏆\n";
+            leaderboardMsg += "\n🏆 **PRIZE** 🏆\n";
             leaderboardMsg +=
               "The player in the #1 slot at the end of the week will:\n";
             leaderboardMsg +=
               "- Get to customize their message color for a month\n";
-            leaderboardMsg += "- Add 1 feature of their choice to the chat\n";
+            leaderboardMsg += "- Add 1 feature of their choice to Yap Window\n";
 
             const botMessageRef = push(messagesRef);
             await update(botMessageRef, {
