@@ -12,7 +12,7 @@
     "[AI]",
     "[RNG]",
   ];
-  /* Firebase Config */
+
   const firebaseConfig = {
     apiKey: "AIzaSyA48Uv_v5c7-OCnkQ8nBkjIW8MN4STDcJs",
     authDomain: "noise-75cba.firebaseapp.com",
@@ -22,10 +22,9 @@
     messagingSenderId: "1092146908435",
     appId: "1:1092146908435:web:f72b90362cc86c5f83dee6",
   };
-  /* Check if the GUI is already open */
+
   var database, auth, provider, email;
   try {
-    /* Dynamically load Firebase modules */
     var { initializeApp } = await import(
       "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
     );
@@ -54,8 +53,8 @@
       await import(
         "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
       );
-    /* Initialize Firebase app */
-    var app = initializeApp(firebaseConfig); /* Initialize Firebase services */
+
+    var app = initializeApp(firebaseConfig);
     database = getDatabase(app);
     auth = getAuth(app);
     var provider = new GoogleAuthProvider();
@@ -816,333 +815,526 @@
     await updateUnreadCount(chatName);
   }
 
-function createSnakeGame() {
+  function createSnakeGame() {
+    const temp_email =
+      typeof email !== "undefined" ? email.replace(/\./g, "*") : "anonymous";
 
-  const temp_email = typeof email !== 'undefined' ? email.replace(/\./g, "*") : "anonymous";
+    const gameContainer = document.createElement("div");
+    gameContainer.id = "snake-game-container";
+    gameContainer.style.position = "fixed";
+    gameContainer.style.top = "50%";
+    gameContainer.style.left = "50%";
+    gameContainer.style.transform = "translate(-50%, -50%)";
+    gameContainer.style.width = "90%";
+    gameContainer.style.maxWidth = "800px";
+    gameContainer.style.height = "auto";
+    gameContainer.style.backgroundColor = "#000";
+    gameContainer.style.zIndex = "1999999";
+    gameContainer.style.display = "flex";
+    gameContainer.style.flexDirection = "column";
+    gameContainer.style.justifyContent = "center";
+    gameContainer.style.alignItems = "center";
+    gameContainer.style.padding = "20px";
+    gameContainer.style.borderRadius = "10px";
+    gameContainer.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
 
-  const gameContainer = document.createElement("div");
-  gameContainer.id = "snake-game-container";
-  gameContainer.style.position = "fixed"; 
-  gameContainer.style.top = "50%";
-  gameContainer.style.left = "50%";
-  gameContainer.style.transform = "translate(-50%, -50%)";
-  gameContainer.style.width = "80%";
-  gameContainer.style.maxWidth = "500px";
-  gameContainer.style.height = "auto";
-  gameContainer.style.backgroundColor = "#000";
-  gameContainer.style.zIndex = "1999999";
-  gameContainer.style.display = "flex";
-  gameContainer.style.flexDirection = "column";
-  gameContainer.style.justifyContent = "center";
-  gameContainer.style.alignItems = "center";
-  gameContainer.style.padding = "20px";
-  gameContainer.style.borderRadius = "10px";
-  gameContainer.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+    const messagesDiv = document.getElementById("messages") || document.body;
+    document.body.appendChild(gameContainer);
 
-  const messagesDiv = document.getElementById("messages") || document.body;
-  document.body.appendChild(gameContainer); 
+    const scoreContainer = document.createElement("div");
+    scoreContainer.style.display = "flex";
+    scoreContainer.style.justifyContent = "space-between";
+    scoreContainer.style.width = "100%";
+    scoreContainer.style.marginBottom = "10px";
+    gameContainer.appendChild(scoreContainer);
 
-  const scoreDisplay = document.createElement("div");
-  scoreDisplay.id = "snake-score";
-  scoreDisplay.style.color = "white";
-  scoreDisplay.style.fontSize = "24px";
-  scoreDisplay.style.marginBottom = "10px";
-  scoreDisplay.textContent = "Score: 0";
-  gameContainer.appendChild(scoreDisplay);
+    const scoreDisplay = document.createElement("div");
+    scoreDisplay.id = "snake-score";
+    scoreDisplay.style.color = "white";
+    scoreDisplay.style.fontSize = "24px";
+    scoreDisplay.textContent = "Score: 0";
+    scoreContainer.appendChild(scoreDisplay);
 
-  const canvas = document.createElement("canvas");
-  canvas.width = 400; 
-  canvas.height = 400; 
-  canvas.style.border = "2px solid white";
-  gameContainer.appendChild(canvas);
+    const highScoreDisplay = document.createElement("div");
+    highScoreDisplay.id = "snake-high-score";
+    highScoreDisplay.style.color = "gold";
+    highScoreDisplay.style.fontSize = "24px";
+    highScoreDisplay.textContent = "High Score: 0";
+    scoreContainer.appendChild(highScoreDisplay);
 
-  const ctx = canvas.getContext("2d");
-  const gridSize = 20;
-  const gridWidth = Math.floor(canvas.width / gridSize);
-  const gridHeight = Math.floor(canvas.height / gridSize);
+    const helpButton = document.createElement("button");
+    helpButton.textContent = "?";
+    helpButton.style.position = "absolute";
+    helpButton.style.top = "20px";
+    helpButton.style.right = "20px";
+    helpButton.style.width = "30px";
+    helpButton.style.height = "30px";
+    helpButton.style.borderRadius = "50%";
+    helpButton.style.backgroundColor = "#4CAF50";
+    helpButton.style.color = "white";
+    helpButton.style.border = "none";
+    helpButton.style.fontSize = "20px";
+    helpButton.style.cursor = "pointer";
+    helpButton.style.zIndex = "2000000";
+    gameContainer.appendChild(helpButton);
 
-  let snake = [
-    { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
-  ];
-  let direction = "right";
-  let nextDirection = "right";
-  let food = {};
-  let score = 0;
-  let gameSpeed = 150;
-  let gameInterval;
-  let gameOver = false;
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 640;
+    canvas.style.border = "2px solid white";
+    gameContainer.appendChild(canvas);
 
-  function generateFood() {
-    food = {
-      x: Math.floor(Math.random() * gridWidth),
-      y: Math.floor(Math.random() * gridHeight),
+    const ctx = canvas.getContext("2d");
+    const gridSize = 10;
+    const gridWidth = Math.floor(canvas.width / gridSize);
+    const gridHeight = Math.floor(canvas.height / gridSize);
+
+    let snake = [
+      { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
+    ];
+    let direction = "right";
+    let nextDirection = "right";
+    let food = {};
+    let score = 0;
+    let highScore = 0;
+    let gameSpeed = 120;
+    let gameInterval;
+    let gameOver = false;
+
+    const createInstructionsOverlay = () => {
+      const overlay = document.createElement("div");
+      overlay.style.position = "absolute";
+      overlay.style.top = "0";
+      overlay.style.left = "0";
+      overlay.style.width = "100%";
+      overlay.style.height = "100%";
+      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+      overlay.style.display = "flex";
+      overlay.style.flexDirection = "column";
+      overlay.style.justifyContent = "center";
+      overlay.style.alignItems = "center";
+      overlay.style.zIndex = "2000001";
+      overlay.style.padding = "20px";
+      overlay.style.boxSizing = "border-box";
+
+      const title = document.createElement("h2");
+      title.textContent = "Snake Game Instructions";
+      title.style.color = "white";
+      title.style.marginBottom = "20px";
+      overlay.appendChild(title);
+
+      const instructions = document.createElement("div");
+      instructions.style.color = "white";
+      instructions.style.fontSize = "18px";
+      instructions.style.lineHeight = "1.6";
+      instructions.style.maxWidth = "600px";
+      instructions.style.textAlign = "left";
+      instructions.innerHTML = `
+      <p><strong>Objective:</strong> Eat as much food (red squares) as possible without colliding with walls or yourself.</p>
+      <p><strong>Controls:</strong></p>
+      <ul style="margin-left: 20px; padding-left: 20px;">
+        <li>Arrow Keys: ↑ ↓ ← →</li>
+        <li>WASD: W (up), A (left), S (down), D (right)</li>
+        <li>IJKL: I (up), J (left), K (down), L (right)</li>
+        <li>Touch Controls: Use the on-screen buttons</li>
+      </ul>
+      <p><strong>Scoring:</strong> Each food item eaten increases your score by 1 point.</p>
+      <p><strong>Speed:</strong> The game gets faster as your score increases.</p>
+      <p><strong>Game Over:</strong> Colliding with walls or your own tail ends the game.</p>
+    `;
+      overlay.appendChild(instructions);
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Close";
+      closeButton.style.marginTop = "20px";
+      closeButton.style.padding = "10px 20px";
+      closeButton.style.background = "#4CAF50";
+      closeButton.style.color = "white";
+      closeButton.style.border = "none";
+      closeButton.style.borderRadius = "5px";
+      closeButton.style.cursor = "pointer";
+      closeButton.addEventListener("click", () => {
+        overlay.remove();
+      });
+      overlay.appendChild(closeButton);
+
+      return overlay;
     };
 
-    for (let cell of snake) {
-      if (cell.x === food.x && cell.y === food.y) {
-        return generateFood();
+    helpButton.addEventListener("click", () => {
+      const instructionsOverlay = createInstructionsOverlay();
+      gameContainer.appendChild(instructionsOverlay);
+    });
+
+    function tryLoadHighScore() {
+      try {
+        const storedHighScore = localStorage.getItem(
+          `snakeHighScore_${temp_email}`,
+        );
+        if (storedHighScore) {
+          highScore = parseInt(storedHighScore);
+          highScoreDisplay.textContent = `High Score: ${highScore}`;
+        }
+      } catch (e) {
+        console.warn("Could not access localStorage:", e);
+      }
+
+      try {
+        if (
+          typeof database !== "undefined" &&
+          typeof ref !== "undefined" &&
+          typeof get !== "undefined"
+        ) {
+          const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+          get(scoreRef)
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const firebaseScore = snapshot.val();
+                if (firebaseScore > highScore) {
+                  highScore = firebaseScore;
+                  highScoreDisplay.textContent = `High Score: ${highScore}`;
+                }
+              }
+            })
+            .catch((error) => {
+              console.error(
+                "Error retrieving high score from Firebase:",
+                error,
+              );
+            });
+        }
+      } catch (error) {
+        console.warn("Firebase operations not available:", error);
       }
     }
-  }
 
-  function drawCell(x, y, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
-  }
+    function generateFood() {
+      food = {
+        x: Math.floor(Math.random() * gridWidth),
+        y: Math.floor(Math.random() * gridHeight),
+      };
 
-  function draw() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < snake.length; i++) {
-      const color = i === 0 ? "#00ff00" : "#00cc00";
-      drawCell(snake[i].x, snake[i].y, color);
+      for (let cell of snake) {
+        if (cell.x === food.x && cell.y === food.y) {
+          return generateFood();
+        }
+      }
     }
 
-    drawCell(food.x, food.y, "red");
-
-    scoreDisplay.textContent = `Score: ${score}`;
-  }
-
-  function checkCollision(x, y) {
-
-    if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
-      return true;
+    function drawCell(x, y, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
     }
 
-    for (let i = 1; i < snake.length; i++) {
-      if (snake[i].x === x && snake[i].y === y) {
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < snake.length; i++) {
+        const color = i === 0 ? "#00ff00" : "#00cc00";
+        drawCell(snake[i].x, snake[i].y, color);
+      }
+
+      drawCell(food.x, food.y, "red");
+
+      scoreDisplay.textContent = `Score: ${score}`;
+      highScoreDisplay.textContent = `High Score: ${highScore}`;
+    }
+
+    function checkCollision(x, y) {
+      if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
         return true;
       }
-    }
 
-    return false;
-  }
-
-  function moveSnake() {
-    direction = nextDirection;
-
-    const head = { x: snake[0].x, y: snake[0].y };
-
-    switch (direction) {
-      case "up":
-        head.y--;
-        break;
-      case "down":
-        head.y++;
-        break;
-      case "left":
-        head.x--;
-        break;
-      case "right":
-        head.x++;
-        break;
-    }
-
-    if (checkCollision(head.x, head.y)) {
-      endGame();
-      return;
-    }
-
-    snake.unshift(head);
-
-    if (head.x === food.x && head.y === food.y) {
-      score++;
-      generateFood();
-
-      if (gameSpeed > 60) {
-        gameSpeed -= 2;
-        clearInterval(gameInterval);
-        gameInterval = setInterval(moveSnake, gameSpeed);
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === x && snake[i].y === y) {
+          return true;
+        }
       }
-    } else {
-      snake.pop();
+
+      return false;
     }
 
-    draw();
-  }
+    function moveSnake() {
+      direction = nextDirection;
 
-  function handleKeyDown(e) {
-    e.preventDefault(); 
+      const head = { x: snake[0].x, y: snake[0].y };
 
-    switch (e.key) {
-      case "ArrowUp":
-        if (direction !== "down") nextDirection = "up";
-        break;
-      case "ArrowDown":
-        if (direction !== "up") nextDirection = "down";
-        break;
-      case "ArrowLeft":
-        if (direction !== "right") nextDirection = "left";
-        break;
-      case "ArrowRight":
-        if (direction !== "left") nextDirection = "right";
-        break;
+      switch (direction) {
+        case "up":
+          head.y--;
+          break;
+        case "down":
+          head.y++;
+          break;
+        case "left":
+          head.x--;
+          break;
+        case "right":
+          head.x++;
+          break;
+      }
+
+      if (checkCollision(head.x, head.y)) {
+        endGame();
+        return;
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        generateFood();
+
+        if (gameSpeed > 50) {
+          gameSpeed -= 1;
+          clearInterval(gameInterval);
+          gameInterval = setInterval(moveSnake, gameSpeed);
+        }
+      } else {
+        snake.pop();
+      }
+
+      draw();
     }
-  }
 
-  function endGame() {
-    clearInterval(gameInterval);
-    gameOver = true;
+    function handleKeyDown(e) {
+      e.preventDefault();
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+      switch (e.key) {
+        case "ArrowUp":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "ArrowDown":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "ArrowLeft":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "ArrowRight":
+          if (direction !== "left") nextDirection = "right";
+          break;
 
-    ctx.font = "30px Arial";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
-    ctx.font = "20px Arial";
-    ctx.fillText(
-      `Final Score: ${score}`,
-      canvas.width / 2,
-      canvas.height / 2 + 40
-    );
+        case "w":
+        case "W":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "s":
+        case "S":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "a":
+        case "A":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "d":
+        case "D":
+          if (direction !== "left") nextDirection = "right";
+          break;
 
-    try {
-      if (typeof database !== 'undefined' && typeof ref !== 'undefined' && typeof get !== 'undefined' && typeof set !== 'undefined') {
-        const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+        case "i":
+        case "I":
+          if (direction !== "down") nextDirection = "up";
+          break;
+        case "k":
+        case "K":
+          if (direction !== "up") nextDirection = "down";
+          break;
+        case "j":
+        case "J":
+          if (direction !== "right") nextDirection = "left";
+          break;
+        case "l":
+        case "L":
+          if (direction !== "left") nextDirection = "right";
+          break;
+      }
+    }
 
-        get(scoreRef).then((snapshot) => {
-          const currentHighScore = snapshot.exists() ? snapshot.val() : 0;
+    function saveHighScore() {
+      if (score > highScore) {
+        highScore = score;
 
-          if (score > currentHighScore) {
-            set(scoreRef, score);
-            ctx.fillText(
-              "New High Score!",
-              canvas.width / 2,
-              canvas.height / 2 + 70
-            );
-          } else {
-            ctx.fillText(
-              `High Score: ${currentHighScore}`,
-              canvas.width / 2,
-              canvas.height / 2 + 70
-            );
+        try {
+          localStorage.setItem(
+            `snakeHighScore_${temp_email}`,
+            highScore.toString(),
+          );
+        } catch (e) {
+          console.warn("Could not save to localStorage:", e);
+        }
+
+        try {
+          if (
+            typeof database !== "undefined" &&
+            typeof ref !== "undefined" &&
+            typeof set !== "undefined"
+          ) {
+            const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+            set(scoreRef, highScore).catch((error) => {
+              console.error("Error saving high score to Firebase:", error);
+            });
           }
-        }).catch(error => {
-          console.error("Error retrieving high score:", error);
-        });
+        } catch (error) {
+          console.warn("Firebase operations not available:", error);
+        }
       }
-    } catch (error) {
-      console.error("Error with Firebase operation:", error);
     }
 
-    const closeButton = document.createElement("button");
-    closeButton.textContent = "Close";
-    closeButton.style.marginTop = "20px";
-    closeButton.style.padding = "10px 20px";
-    closeButton.style.background = "#f44336";
-    closeButton.style.color = "white";
-    closeButton.style.border = "none";
-    closeButton.style.borderRadius = "5px";
-    closeButton.style.cursor = "pointer";
-    gameContainer.appendChild(closeButton);
-
-    closeButton.addEventListener("click", () => {
-      gameContainer.remove();
-      document.removeEventListener("keydown", handleKeyDown);
-    });
-  }
-
-  const restartButton = document.createElement("button");
-  restartButton.textContent = "Restart";
-  restartButton.style.marginTop = "10px";
-  restartButton.style.padding = "8px 16px";
-  restartButton.style.background = "#4CAF50";
-  restartButton.style.color = "white";
-  restartButton.style.border = "none";
-  restartButton.style.borderRadius = "5px";
-  restartButton.style.cursor = "pointer";
-  gameContainer.appendChild(restartButton);
-
-  restartButton.addEventListener("click", () => {
-    if (gameOver) {
-
-      const closeButton = gameContainer.querySelector("button:last-child");
-      if (closeButton && closeButton !== restartButton) {
-        closeButton.remove();
-      }
-
-      snake = [{ x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) }];
-      direction = "right";
-      nextDirection = "right";
-      score = 0;
-      gameSpeed = 150;
-      gameOver = false;
-
+    function endGame() {
       clearInterval(gameInterval);
-      initGame();
+      gameOver = true;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 40);
+
+      ctx.font = "24px Arial";
+      ctx.fillText(
+        `Final Score: ${score}`,
+        canvas.width / 2,
+        canvas.height / 2,
+      );
+
+      if (score > highScore) {
+        saveHighScore();
+        ctx.fillStyle = "gold";
+        ctx.fillText(
+          "New High Score!",
+          canvas.width / 2,
+          canvas.height / 2 + 40,
+        );
+      } else {
+        ctx.fillStyle = "white";
+        ctx.fillText(
+          `High Score: ${highScore}`,
+          canvas.width / 2,
+          canvas.height / 2 + 40,
+        );
+      }
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Close";
+      closeButton.style.marginTop = "20px";
+      closeButton.style.padding = "10px 20px";
+      closeButton.style.background = "#f44336";
+      closeButton.style.color = "white";
+      closeButton.style.border = "none";
+      closeButton.style.borderRadius = "5px";
+      closeButton.style.cursor = "pointer";
+      gameContainer.appendChild(closeButton);
+
+      closeButton.addEventListener("click", () => {
+        gameContainer.remove();
+        document.removeEventListener("keydown", handleKeyDown);
+      });
     }
-  });
 
-  function initGame() {
-    generateFood();
-    draw();
-    gameInterval = setInterval(moveSnake, gameSpeed);
-  }
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "Restart";
+    restartButton.style.marginTop = "10px";
+    restartButton.style.padding = "8px 16px";
+    restartButton.style.background = "#4CAF50";
+    restartButton.style.color = "white";
+    restartButton.style.border = "none";
+    restartButton.style.borderRadius = "5px";
+    restartButton.style.cursor = "pointer";
+    gameContainer.appendChild(restartButton);
 
-  const touchControls = document.createElement("div");
-  touchControls.style.display = "grid";
-  touchControls.style.gridTemplateColumns = "1fr 1fr 1fr";
-  touchControls.style.gridTemplateRows = "1fr 1fr 1fr";
-  touchControls.style.gap = "5px";
-  touchControls.style.width = "150px";
-  touchControls.style.height = "150px";
-  touchControls.style.marginTop = "15px";
-  gameContainer.appendChild(touchControls);
+    restartButton.addEventListener("click", () => {
+      if (gameOver) {
+        const closeButton = gameContainer.querySelector("button:last-child");
+        if (closeButton && closeButton !== restartButton) {
+          closeButton.remove();
+        }
 
-  const createTouchButton = (text, dir) => {
-    const btn = document.createElement("button");
-    btn.textContent = text;
-    btn.style.padding = "10px";
-    btn.style.backgroundColor = "#333";
-    btn.style.color = "white";
-    btn.style.border = "1px solid #555";
-    btn.style.borderRadius = "5px";
-    btn.style.cursor = "pointer";
+        snake = [
+          { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
+        ];
+        direction = "right";
+        nextDirection = "right";
+        score = 0;
+        gameSpeed = 120;
+        gameOver = false;
 
-    btn.addEventListener("click", () => {
-      if ((dir === "up" && direction !== "down") ||
+        clearInterval(gameInterval);
+        initGame();
+      }
+    });
+
+    const touchControls = document.createElement("div");
+    touchControls.style.display = "grid";
+    touchControls.style.gridTemplateColumns = "1fr 1fr 1fr";
+    touchControls.style.gridTemplateRows = "1fr 1fr 1fr";
+    touchControls.style.gap = "5px";
+    touchControls.style.width = "150px";
+    touchControls.style.height = "150px";
+    touchControls.style.marginTop = "15px";
+    gameContainer.appendChild(touchControls);
+
+    const createTouchButton = (text, dir) => {
+      const btn = document.createElement("button");
+      btn.textContent = text;
+      btn.style.padding = "10px";
+      btn.style.backgroundColor = "#333";
+      btn.style.color = "white";
+      btn.style.border = "1px solid #555";
+      btn.style.borderRadius = "5px";
+      btn.style.cursor = "pointer";
+
+      btn.addEventListener("click", () => {
+        if (
+          (dir === "up" && direction !== "down") ||
           (dir === "down" && direction !== "up") ||
           (dir === "left" && direction !== "right") ||
-          (dir === "right" && direction !== "left")) {
-        nextDirection = dir;
-      }
-    });
+          (dir === "right" && direction !== "left")
+        ) {
+          nextDirection = dir;
+        }
+      });
 
-    return btn;
-  };
+      return btn;
+    };
 
-  touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("↑", "up"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("←", "left"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("→", "right"));
+    touchControls.appendChild(document.createElement("div"));
+    touchControls.appendChild(createTouchButton("↓", "down"));
+    touchControls.appendChild(document.createElement("div"));
 
-  touchControls.appendChild(createTouchButton("↑", "up"));
+    const controlsLegend = document.createElement("div");
+    controlsLegend.style.color = "white";
+    controlsLegend.style.fontSize = "14px";
+    controlsLegend.style.marginTop = "10px";
+    controlsLegend.style.textAlign = "center";
+    controlsLegend.innerHTML = "Controls: Arrow Keys, WASD, or IJKL";
+    gameContainer.appendChild(controlsLegend);
 
-  touchControls.appendChild(document.createElement("div"));
+    function initGame() {
+      tryLoadHighScore();
+      generateFood();
+      draw();
+      gameInterval = setInterval(moveSnake, gameSpeed);
+    }
 
-  touchControls.appendChild(createTouchButton("←", "left"));
+    document.addEventListener("keydown", handleKeyDown);
+    initGame();
 
-  touchControls.appendChild(document.createElement("div"));
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+      clearInterval(gameInterval);
+      gameContainer.remove();
+    };
+  }
 
-  touchControls.appendChild(createTouchButton("→", "right"));
-
-  touchControls.appendChild(document.createElement("div"));
-
-  touchControls.appendChild(createTouchButton("↓", "down"));
-
-  touchControls.appendChild(document.createElement("div"));
-
-  document.addEventListener("keydown", handleKeyDown);
-  initGame();
-
-  return function cleanup() {
-    document.removeEventListener("keydown", handleKeyDown);
-    clearInterval(gameInterval);
-    gameContainer.remove();
-  };
-}
-
-  /* Function to send a message */
   async function sendMessage() {
     const messagesRef = ref(database, `Chats/${currentChat}`);
     const messageInput = document.getElementById("message-input");
@@ -1381,7 +1573,76 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           Date: Date.now(),
         });
       } else if (message.toLowerCase().startsWith("/snake")) {
-        createSnakeGame();
+        if (message.toLowerCase().trim() === "/snake leaderboard") {
+          const userMessageRef = push(messagesRef);
+          await update(userMessageRef, {
+            User: email,
+            Message: message,
+            Date: Date.now(),
+          });
+
+          try {
+            const scoresRef = ref(database, "SnakeScores");
+            const scoresSnapshot = await get(scoresRef);
+            const scores = scoresSnapshot.val() || {};
+
+            const sortedScores = Object.entries(scores)
+              .map(([userEmail, score]) => ({ email: userEmail, score: score }))
+              .sort((a, b) => b.score - a.score);
+
+            let currentUserRank = sortedScores.findIndex(
+              (entry) => entry.email === temp_email,
+            );
+            let currentUserScore =
+              currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
+            currentUserRank =
+              currentUserRank !== -1 ? currentUserRank + 1 : "-";
+
+            let leaderboardMsg = "🐍 **SNAKE GAME LEADERBOARD** 🐍\n\n";
+
+            if (sortedScores.length === 0) {
+              leaderboardMsg += "No scores yet! Be the first to play!\n\n";
+            } else {
+              const topPlayers = sortedScores.slice(0, 10);
+              topPlayers.forEach((entry, index) => {
+                const displayEmail =
+                  entry.email === temp_email
+                    ? `**${entry.email}**`
+                    : entry.email;
+
+                leaderboardMsg += `${index + 1}. ${displayEmail}: ${entry.score}\n`;
+              });
+
+              if (currentUserRank > 10) {
+                leaderboardMsg += `\n...\n\n${currentUserRank}. **${temp_email}**: ${currentUserScore}\n`;
+              }
+            }
+
+            leaderboardMsg += "\n🏆 **WEEKLY PRIZE** 🏆\n";
+            leaderboardMsg +=
+              "The player in the #1 slot at the end of the week will:\n";
+            leaderboardMsg +=
+              "- Get to customize their message color for a month\n";
+            leaderboardMsg += "- Add 1 feature of their choice to the chat\n";
+
+            const botMessageRef = push(messagesRef);
+            await update(botMessageRef, {
+              User: "[Snake Game]",
+              Message: leaderboardMsg,
+              Date: Date.now(),
+            });
+          } catch (error) {
+            console.error("Error retrieving leaderboard:", error);
+            const errorMessageRef = push(messagesRef);
+            await update(errorMessageRef, {
+              User: "[Snake Game]",
+              Message: "Error retrieving leaderboard. Please try again later.",
+              Date: Date.now(),
+            });
+          }
+        } else {
+          createSnakeGame();
+        }
       } else {
         const newMessageRef = push(messagesRef);
         const rand = Math.random() * 37;
@@ -1618,7 +1879,6 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
     e.target.value = e.target.value.substring(0, 1000);
   });
 
-  /* Add Enter key functionality */
   messageInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       sendMessage();
@@ -2029,7 +2289,6 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
     });
   }
 
-  /* Load existing messages */
   setupDarkModeDetection();
   checkForUpdates();
   fetchChatList();
