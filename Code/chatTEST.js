@@ -817,9 +817,7 @@
   }
 
   function createSnakeGame() {
-    const temp_email = emailElement
-      ? emailElement.textContent.replace(/\./g, "*")
-      : "anonymous";
+    const temp_email = email.replace(/\./g, "*")
 
     const gameContainer = document.createElement("div");
     gameContainer.id = "snake-game-container";
