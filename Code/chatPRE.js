@@ -827,7 +827,7 @@
     gameContainer.style.transform = "translate(-50%, -50%)";
     gameContainer.style.width = "90%";
     gameContainer.style.maxWidth = "800px";
-    gameContainer.style.height = "80vh";
+    gameContainer.style.height = "90vh";
     gameContainer.style.overflow = "hidden";
     gameContainer.style.backgroundColor = "#000";
     gameContainer.style.zIndex = "1999999";
@@ -881,8 +881,8 @@
     gameContainer.appendChild(helpButton);
 
     const canvas = document.createElement("canvas");
-    canvas.width = 400;
-    canvas.height = 400;
+    canvas.width = 360;
+    canvas.height = 360;
     canvas.style.border = "2px solid white";
     gameContainer.appendChild(canvas);
 
@@ -1547,7 +1547,7 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
         });
-      } else if (message.toLowerCase().startsWith("/roll ")) {
+      } else if (message.toLowerCase().startsWith("/roll")) {
         const sides = parseInt(message.split(" ")[1]);
 
         const userMessageRef = push(messagesRef);
@@ -1650,7 +1650,33 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
             });
           }
         } else {
-          createSnakeGame();
+          const now = new Date();
+
+          const pacificNow = new Date(
+            now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+          );
+          const day = pacificNow.getDay();
+          const hour = pacificNow.getHours();
+          const minute = pacificNow.getMinutes();
+
+          const schoolStart = 8 * 60 + 15;
+          const schoolEnd = 15 * 60 + 20;
+          const currentTime = hour * 60 + minute;
+
+          if (
+            day >= 1 &&
+            day <= 5 &&
+            currentTime >= schoolStart &&
+            currentTime <= schoolEnd
+          ) {
+            await update(errorMessageRef, {
+              User: "[Snake Game]",
+              Message: "No Gaming During School",
+              Date: Date.now(),
+            });
+          } else {
+            createSnakeGame();
+          }
         }
       } else {
         const newMessageRef = push(messagesRef);
