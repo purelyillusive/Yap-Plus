@@ -1657,14 +1657,15 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
     const hour = pacificNow.getHours();
     const minute = pacificNow.getMinutes();
 
-    const schoolStart = 8 * 60 + 15; 
-    const schoolEnd = 15 * 60 + 20;  
+    const schoolStart = 495; 
+    const schoolEnd = 920;  
     const currentTime = hour * 60 + minute;
 
     if (day >= 1 && day <= 5 && currentTime >= schoolStart && currentTime <= schoolEnd) {
+            const errorMessageRef = push(messagesRef);
             await update(errorMessageRef, {
               User: "[Snake Game]",
-              Message: "No Gaming During School",
+              Message: "No Gaming During School!",
               Date: Date.now(),
             });
     } else {
