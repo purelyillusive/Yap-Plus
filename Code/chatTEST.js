@@ -1634,7 +1634,7 @@ Also, feel free to randomly throw in a funny roast against someone in your respo
             await pushMessage("");
             await pushMessage("🏆 WEEKLY PRIZE 🏆");
             await pushMessage(
-              "The player in the #1 slot at the end of the week will:",
+              "The player in the #1 slot on 4/7/25 at 8:00 pm will:",
             );
             await pushMessage(
               "- Get to customize their message color for a month",
