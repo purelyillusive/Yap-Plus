@@ -7,7 +7,7 @@
   const BOT_USERS = {
     AI: "[AI]",
     RNG: "[RNG]",
-    EOD: "[EOD]"
+    EOD: "[EOD]",
   };
   /* Firebase Config */
   const firebaseConfig = {
@@ -1602,6 +1602,15 @@ Now, make sure that your response calls everyone by the right name and doesn't s
                 );
               }
             }
+            await pushMessage("");
+            await pushMessage("🏆 WEEKLY PRIZE 🏆");
+            await pushMessage(
+              "The player in the #1 slot on 4/7/25 at 8:00 pm will:",
+            );
+            await pushMessage(
+              "- Get to customize their message color for a month",
+            );
+            await pushMessage("- Add 1 feature of their choice to the chat");
           } catch (error) {
             console.error("Error retrieving leaderboard:", error);
             const errorMessageRef = push(messagesRef);
@@ -1612,6 +1621,36 @@ Now, make sure that your response calls everyone by the right name and doesn't s
             });
           }
         } else {
+          const now = new Date();
+
+          const pacificNow = new Date(
+            now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+          );
+          const day = pacificNow.getDay();
+          const hour = pacificNow.getHours();
+          const minute = pacificNow.getMinutes();
+
+          const schoolStart = 495;
+          const schoolEnd = 920;
+          const currentTime = hour * 60 + minute;
+
+          if (
+            day >= 1 &&
+            day <= 5 &&
+            currentTime >= schoolStart &&
+            currentTime <= schoolEnd
+          ) {
+            const errorMessageRef = push(messagesRef);
+            await update(errorMessageRef, {
+              User: "[Snake Game]",
+              Message: "No Gaming During School!",
+              Date: Date.now(),
+            });
+          } else {
+            createSnakeGame();
+          }
+        }
+      } else {
         const newMessageRef = push(messagesRef);
         await update(newMessageRef, {
           User: email,
