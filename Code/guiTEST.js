@@ -392,6 +392,17 @@
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
+.message.Eliana {
+	text-align: left;
+	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
+	color: ${isDark ? "#cccccc" : "#33691e"};
+}
+.message.Eliana.unread {
+  background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
+  border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
+  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
+}
+
 
 .send-info {
 	font-size: 8px;
