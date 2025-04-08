@@ -12,7 +12,7 @@
     updateColor();
   }
   document.addEventListener("keydown", (e) => {
-    if (e.ctrlKey && e.altKey && e.key === "e") {
+    if (e.ctrlKey && e.altKey && e.key === "d") {
       e.preventDefault();
       toggleDarkMode();
     }
@@ -387,22 +387,9 @@
 	background-color: ${isDark ? "#3a3a3a" : "#f1f8e9"};
 	color: ${isDark ? "#cccccc" : "#33691e"};
 }
-
 .message.received.unread {
   background-color: ${isDark ? "#4a3a3a" : "#e8f5e9"};
   border-left: 3px solid ${isDark ? "#ff6b6b" : "#4caf50"};
-  box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
-}
-
-.message.error {
-	text-align: left;
-	background-color: ${isDark ? "#5a3030" : "#ffebee"};
-	color: ${isDark ? "#ff9a9a" : "#c62828"};
-}
-
-.message.error.unread {
-  background-color: ${isDark ? "#663030" : "#ffcdd2"};
-  border-left: 3px solid ${isDark ? "#ff6b6b" : "#e53935"};
   box-shadow: 0 1px 3px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"};
 }
 
@@ -506,142 +493,6 @@
     border: 1px solid ${isDark ? "#555" : "#ccc"};
     border-radius: 4px;
 }
-
-    .walking-button {
-      position: absolute;
-      transition: transform 0.2s ease;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 2000000;
-    }
-
-    .walking-button-legs {
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .walking-button-leg {
-      width: 3px;
-      height: 12px;
-      background-color: #000;
-      transform-origin: top center;
-      border-radius: 0 0 3px 3px;
-    }
-
-    .walking-button.happy .walking-button-leg:nth-child(1) {
-      animation: legWalkLeft 1.2s infinite;
-    }
-
-    .walking-button.happy .walking-button-leg:nth-child(2) {
-      animation: legWalkRight 1.2s infinite;
-    }
-
-    @keyframes legWalkLeft {
-      0% { transform: rotate(-20deg); }
-      25% { transform: rotate(0deg); }
-      50% { transform: rotate(20deg); }
-      75% { transform: rotate(0deg); }
-      100% { transform: rotate(-20deg); }
-    }
-
-    @keyframes legWalkRight {
-      0% { transform: rotate(20deg); }
-      25% { transform: rotate(0deg); }
-      50% { transform: rotate(-20deg); }
-      75% { transform: rotate(0deg); }
-      100% { transform: rotate(20deg); }
-    }
-
-    .walking-button.scared .walking-button-leg:nth-child(1) {
-      animation: legRunLeft 0.6s infinite;
-    }
-
-    .walking-button.scared .walking-button-leg:nth-child(2) {
-      animation: legRunRight 0.6s infinite;
-    }
-
-    @keyframes legRunLeft {
-      0% { transform: rotate(-35deg); }
-      50% { transform: rotate(15deg); }
-      100% { transform: rotate(-35deg); }
-    }
-
-    @keyframes legRunRight {
-      0% { transform: rotate(35deg); }
-      50% { transform: rotate(-15deg); }
-      100% { transform: rotate(35deg); }
-    }
-
-    .walking-button.returning .walking-button-leg:nth-child(1) {
-      animation: legReturnLeft 0.9s infinite;
-    }
-
-    .walking-button.returning .walking-button-leg:nth-child(2) {
-      animation: legReturnRight 0.9s infinite;
-    }
-
-    @keyframes legReturnLeft {
-      0% { transform: rotate(-15deg); }
-      50% { transform: rotate(10deg); }
-      100% { transform: rotate(-15deg); }
-    }
-
-    @keyframes legReturnRight {
-      0% { transform: rotate(15deg); }
-      50% { transform: rotate(-10deg); }
-      100% { transform: rotate(15deg); }
-    }
-
-    .walking-button-eyes {
-      position: absolute;
-      top: 3px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      padding: 0 30%;
-    }
-
-    .walking-button-eye {
-      width: 4px;
-      height: 4px;
-      background-color: #000;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-
-    .walking-button.scared .walking-button-eyes {
-      top: 4px;
-    }
-
-    .walking-button.scared .walking-button-eye {
-      width: 6px;
-      height: 6px;
-    }
-
-    .walking-button.happy .walking-button-eye {
-      animation: blinkEye 3s infinite;
-    }
-
-    @keyframes blinkEye {
-      0%, 96%, 98% { transform: scaleY(1); }
-      97% { transform: scaleY(0.1); }
-    }
-
-    .walking-button.bounce {
-      animation: buttonBounce 0.6s infinite alternate;
-    }
-
-    @keyframes buttonBounce {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-2px); }
-    }
-
   `;
   }
 
@@ -651,8 +502,8 @@
   const gui = document.createElement("div");
   gui.id = "bookmarklet-gui";
   let originalState = {
-    width: "10%",
-    height: "10%",
+    width: "50%",
+    height: "60%",
     top: "10%",
     left: "50%",
     transform: "translateX(-50%)",
@@ -660,111 +511,111 @@
 
   gui.innerHTML = `
 <div id="bookmarklet-gui-header">
-   <span>Window of Yap (NOT APRIL FOOLS EDITION)</span>   
+   <span>Yap Window</span>   
    <div class="button-group">
       <button id="bookmarklet-minimize">−</button>
-      <button id="bookmarklet-fullscreen">×</button>
-      <button id="bookmarklet-close">⛶</button>
+      <button id="bookmarklet-fullscreen">⛶</button>
+      <button id="bookmarklet-close">×</button>
    </div>
 </div>
 <div id="login-screen" class="screen hidden">
    <h2>Log In</h2>
    <div id="google-login-section" style="border:1px solid black">
-      <h3>Sign In with Email</h3>
-      <button id="google-login-button">Login with Email</button>
+      <h3>Sign In with Google</h3>
+      <button id="google-login-button">Login with Google</button>
    </div>
    <div id="email-login-section" style="border:1px solid black">
-      <h3>Login with Google</h3>
-      <label for="login-password">Password</label>
-      <input id="login-password" type="password" placeholder="Enter your password" required="">
+      <h3>Login with Email</h3>
       <label for="login-email">Email</label>
       <input id="login-email" type="email" placeholder="Enter your email" required="">
+      <label for="login-password">Password</label>
+      <input id="login-password" type="password" placeholder="Enter your password" required="">
       <button id="submit-login-email">Log In</button>
-      <label id="login-email-error" style="color: #f2545b">MY CAT IS BARFING ALL OVER YOUR COMPUTER</label>
+      <label id="login-email-error" style="color: #f2545b"></label>
    </div>
    <div>
-      <button id="back-login-button">Next</button>
+      <button id="back-login-button">Back</button>
    </div>
    <hr style="margin: 20px 0">
 </div>
 <div id="create-account-screen" class="screen hidden">
    <h2>Create Account</h2>
    <div id="google-create-section" style="border:1px solid black">
-      <h3>Create Account with Email</h3>
-      <button id="google-create-button">Sign Up with Email</button>
+      <h3>Create Account with Google</h3>
+      <button id="google-create-button">Sign Up with Google</button>
    </div>
    <div id="email-create-section" style="border:1px solid black">
       <h3>Create Account with Email</h3>
-      <label for="create-email">Password</label>
-      <input id="create-password" type="password" placeholder="Enter your password" required="">
       <label for="create-email">Email</label>
       <input id="create-email" type="email" placeholder="Enter your email" required="">
+      <label for="create-email">Password</label>
+      <input id="create-password" type="password" placeholder="Enter your password" required="">
       <button id="submit-create-email">Create Account</button>
-      <label id="create-email-error" style="color: #f2545b">WHOOPS MY CAT ATE THE CODE!</label>
+      <label id="create-email-error" style="color: #f2545b"></label>
    </div>
    <div>
-      <button id="back-create-button">Next</button>
+      <button id="back-create-button">Back</button>
    </div>
    <hr style="margin: 20px 0">
 </div>
 <div id="verification-screen" class="screen hidden">
     <h2>Email Verification</h2>
     <p>Please check your email for a verification link.</p>
-    <p>Once you verify your email, you will never be taken to the next page</p>
-    <button id="resend-verification">Spam Email</button>
-    <p id="verification-error" class="error-text">OOF MY CAT ATE THE EMAIL</p>
+    <p>Once you verify your email, you will automatically be taken to the next page</p>
+    <button id="resend-verification">Resend Verification Email</button>
+    <p id="verification-error" class="error-text"></p>
 </div>
 <div id="customize-account-screen" class="screen hidden">
-   <h2>First Steps</h2>
-   <label for="create-username">Bio</label>
+   <h2>Final Steps</h2>
+   <label for="create-username">Username</label>
    <input id="create-username" type="text" placeholder="Pick a username" required="">
    <label for="create-picture">Profile Picture (optional)</label>
    <input id="create-picture" type="file" accept="image/*">
-   <label for="create-bio">Username (optional)</label>   
+   <label for="create-bio">Bio (optional)</label>   
    <textarea id="create-bio" rows="8" columns="50" height="100px">I'm a yapper</textarea>
-   <button id="submit-customize">Don't Save</button>
+   <button id="submit-customize">Save</button>
 </div>
 <div id="stay-login-screen" class="screen hidden">
    <h2>Would you like to stay logged in?</h2>
    <h3>Any future logins on this site will automatically sign you into your account</h3>
    <div id="stay-login-buttons" style="justify-content: space-between; align-items: center;">
-      <button id="stay-no" style="width: 20%">No</button>
       <button id="stay-yes" style="width: 20%">Yes</button>
-      <button id="stay-forget" style="width: 20%">Bother Me!</button>
+      <button id="stay-no" style="width: 20%">No</button>
+      <button id="stay-forget" style="width: 20%">Don't Bother Me</button>
    </div>
 </div>
 <div id="main-screen" class="screen">
-   <h2>Welcome to Window of Yap</h2>
-   <p>Press CTRL-ALT-E to switch between light and dark mode</p>
-   <button id="login-button">Create Account</button>
-   <button id="create-account-button">Log In</button>
+   <h2>Welcome to Yap Window</h2>
+   <p>Press CTRL-ALT-D to switch between light and dark mode</p>
+   <button id="login-button">Log In</button>
+   <button id="create-account-button">Create Account</button>
 <p style="width:80%; text-align: center;">
-  By using Window of Yap, you agree to the 
+  By using Yap Window, you agree to the 
   <a href="https://docs.google.com/document/d/1nsVWJ94ijnRRsyV_mCkdVdXvuOvg6c4bk9PBP-L2NaI" target="_blank">
-    Conditions and Terms
+    Terms and Conditions
   </a>.
 </p>
 </div>
 <div id="saved-account" class="screen hidden">
-   <h2>Your account was sold to hackers</h2>
-   <p id="saved-email">Username: _______</p>
-   <p id="saved-username">Email: _______</p>
-   <button id="saved-signout-button">Sign Out</button>
+   <h2>You have an account saved on this computer</h2>
+   <p id="saved-email">Email: _______</p>
+   <p id="saved-username">Username: _______</p>
    <button id="saved-login-button">Okay</button>
+   <button id="saved-signout-button">Sign Out</button>
 </div>
 <div id="chat-screen" class="chat hidden">
   <div id="settings-bar">
-    <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
-        <button id="read-all" class="setting-button">Read All</button>
     <button id="customize-profile" class="setting-button">Profile</button>
-    <button id="dark-mode" class="setting-button">${isDark ? "Dark Mode" : "Light Mode"}</button>
+    <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
+    <button id="read-all" class="setting-button">Read All</button>
+    <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
       <div id="top-left-sidebar">
-        <button id="create-new-server">Delete New Server</button>
+        <button id="create-new-server">Create New Server</button>
         <div id="server-list">
-          <div class="server" id="general-server">Not General</div>
+          <div class="server" id="general-server">General</div>
         </div>
       </div>
       <div id="bottom-left-sidebar">
@@ -777,25 +628,25 @@
       </div>
       <div id="message-send">
         <p id="typing-indicator"></p>
-        <input type="text" id="message-input" autocomplete="off" placeholder="DON'T yap away..."/>
-        <button id="send-button">RECALL</button>
+        <input type="text" id="message-input" autocomplete="off" placeholder="Yap away..."/>
+        <button id="send-button">Send</button>
       </div>
     </div>
   </div>
 </div>
 <div id="channel-screen" class="screen hidden">
     <h2>Create/Customize Channel</h2>
-    <label for="channel-name">Channel Type</label>
+    <label for="channel-name">Channel Name</label>
     <input id="channel-name" type="text" placeholder="Name your channel..." required>
     
-    <label for="channel-type">Channel Name</label>
+    <label for="channel-type">Channel Type</label>
     <select id="channel-type">
         <option value="Public">Public</option>
         <option value="Private">Private</option>
     </select>
     
     <div id="members-container" style="display: none;">
-        <label>Select NON Members</label>
+        <label>Select Members</label>
         <div id="selected-members" class="selected-members-container"></div>
         <div class="members-dropdown">
             <input type="text" id="member-search" placeholder="Type Emails Here...">
@@ -805,8 +656,8 @@
     
     <label for="channel-description">Description/Rules (optional)</label>   
     <textarea id="channel-description" rows="8" columns="50"></textarea>
-    <button id="submit-channel">Back</button>
-   <button id="back-channel">Save</button>
+    <button id="submit-channel">Save</button>
+   <button id="back-channel">Back</button>
 </div>
 <p style="display: none" id="email-saved-here"></p>
       `;
@@ -844,7 +695,7 @@
 
   /* Fullscreen functionality */
   gui.querySelector("#bookmarklet-fullscreen").onclick = function (e) {
-    const isFullscreen = gui.querySelector("#bookmarklet-close").innerHTML === "⿻";
+    const isFullscreen = e.target.innerHTML === "⿻";
     if (!isFullscreen) {
       originalState = {
         width: gui.style.width,
@@ -861,7 +712,7 @@
       gui.style.transform = "none";
       gui.style.resize = "none";
       header.onmousedown = null;
-      gui.querySelector("#bookmarklet-close").innerHTML = "⿻";
+      e.target.innerHTML = "⿻";
     } else {
       gui.style.width = originalState.width;
       gui.style.height = originalState.height;
@@ -870,282 +721,10 @@
       gui.style.transform = originalState.transform;
       gui.style.resize = "both";
       enableDragging();
-      gui.querySelector("#bookmarklet-close").innerHTML = "⛶";
+      e.target.innerHTML = "⛶";
     }
   };
 
-(function() {
-
-  const buttonOriginals = new Map();
-
-  const walkingButtonsContainer = document.createElement('div');
-  walkingButtonsContainer.id = 'walking-buttons-container';
-  walkingButtonsContainer.style.position = 'fixed';
-  walkingButtonsContainer.style.top = '0';
-  walkingButtonsContainer.style.left = '0';
-  walkingButtonsContainer.style.width = '100%';
-  walkingButtonsContainer.style.height = '100%';
-  walkingButtonsContainer.style.pointerEvents = 'none';
-  walkingButtonsContainer.style.zIndex = '2000000';
-  document.body.appendChild(walkingButtonsContainer);
-
-  let mouseX = 0;
-  let mouseY = 0;
-
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function makeButtonWalk(button, e) {
-
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    if (buttonOriginals.has(button) || !isElementVisible(button)) return;
-
-    const rect = button.getBoundingClientRect();
-    buttonOriginals.set(button, {
-      element: button,
-      rect,
-      html: button.outerHTML,
-      parent: button.parentElement,
-      nextSibling: button.nextSibling
-    });
-
-    const walkingButton = document.createElement('div');
-    walkingButton.className = 'walking-button happy bounce';
-    walkingButton.style.width = `${rect.width}px`;
-    walkingButton.style.height = `${rect.height}px`;
-    walkingButton.style.top = `${rect.top}px`;
-    walkingButton.style.left = `${rect.left}px`;
-    walkingButton.style.backgroundColor = getComputedStyle(button).backgroundColor;
-    walkingButton.style.color = getComputedStyle(button).color;
-    walkingButton.style.borderRadius = getComputedStyle(button).borderRadius;
-    walkingButton.style.padding = getComputedStyle(button).padding;
-    walkingButton.style.display = 'flex';
-    walkingButton.style.alignItems = 'center';
-    walkingButton.style.justifyContent = 'center';
-    walkingButton.style.fontFamily = getComputedStyle(button).fontFamily;
-    walkingButton.style.fontSize = getComputedStyle(button).fontSize;
-    walkingButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-    walkingButton.style.border = getComputedStyle(button).border;
-
-    walkingButton.textContent = button.textContent;
-
-    const legs = document.createElement('div');
-    legs.className = 'walking-button-legs';
-
-    for (let i = 0; i < 2; i++) {
-      const leg = document.createElement('div');
-      leg.className = 'walking-button-leg';
-      legs.appendChild(leg);
-    }
-    walkingButton.appendChild(legs);
-
-    const eyes = document.createElement('div');
-    eyes.className = 'walking-button-eyes';
-
-    for (let i = 0; i < 2; i++) {
-      const eye = document.createElement('div');
-      eye.className = 'walking-button-eye';
-      eyes.appendChild(eye);
-    }
-    walkingButton.appendChild(eyes);
-
-    walkingButtonsContainer.appendChild(walkingButton);
-
-    button.style.visibility = 'hidden';
-
-    walkingButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-
-      if (!isReturnJourneyStarted) {
-        returnToOrigin();
-      }
-    });
-
-    let velocityX = (Math.random() - 0.5) * 3; 
-    let velocityY = (Math.random() - 0.5) * 3;
-    let isReturnJourneyStarted = false;
-    let lastDirectionChangeTime = Date.now();
-    let maxRunSpeed = 8; 
-    let baseSpeed = 3; 
-    let currentSpeed = baseSpeed;
-    let acceleration = 0; 
-
-    const walkInterval = setInterval(() => {
-
-      if (!document.body.contains(button)) {
-        clearInterval(walkInterval);
-        if (walkingButtonsContainer.contains(walkingButton)) {
-          walkingButtonsContainer.removeChild(walkingButton);
-        }
-        buttonOriginals.delete(button);
-        return;
-      }
-
-      if (!isElementVisible(buttonOriginals.get(button).parent)) {
-        clearInterval(walkInterval);
-        if (walkingButtonsContainer.contains(walkingButton)) {
-          walkingButtonsContainer.removeChild(walkingButton);
-        }
-        button.style.visibility = 'visible';
-        buttonOriginals.delete(button);
-        return;
-      }
-
-      const currentTop = parseFloat(walkingButton.style.top);
-      const currentLeft = parseFloat(walkingButton.style.left);
-
-      if (isReturnJourneyStarted) {
-
-        const currentRect = button.getBoundingClientRect();
-        const dx = currentRect.left - currentLeft;
-        const dy = currentRect.top - currentTop;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 5) {
-          clearInterval(walkInterval);
-          walkingButtonsContainer.removeChild(walkingButton);
-          button.style.visibility = 'visible';
-          buttonOriginals.delete(button);
-          return;
-        }
-
-        velocityX = dx * 0.08;  
-        velocityY = dy * 0.08;
-
-        walkingButton.className = 'walking-button returning';
-      } else {
-
-        const now = Date.now();
-        if (now - lastDirectionChangeTime > Math.random() * 2500 + 1500) {
-          const randomDirectionX = (Math.random() - 0.5);
-          const randomDirectionY = (Math.random() - 0.5);
-
-          const magnitude = Math.sqrt(randomDirectionX * randomDirectionX + randomDirectionY * randomDirectionY);
-
-          velocityX = (randomDirectionX / magnitude) * currentSpeed;
-          velocityY = (randomDirectionY / magnitude) * currentSpeed;
-          lastDirectionChangeTime = now;
-        }
-
-        const dx = mouseX - (currentLeft + walkingButton.offsetWidth / 2);
-        const dy = mouseY - (currentTop + walkingButton.offsetHeight / 2);
-        const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
-
-        const awarenessRadius = 200;
-        const scaredRadius = 150;
-
-        if (distanceToMouse < awarenessRadius) {
-
-          const scaredFactor = Math.max(0, 1 - (distanceToMouse / awarenessRadius));
-
-          const targetSpeed = baseSpeed + (maxRunSpeed - baseSpeed) * scaredFactor;
-
-          currentSpeed = currentSpeed + (targetSpeed - currentSpeed) * 0.2;
-
-          const escapeDirectionX = -dx;
-          const escapeDirectionY = -dy;
-
-          const escapeMagnitude = Math.sqrt(escapeDirectionX * escapeDirectionX + escapeDirectionY * escapeDirectionY);
-
-          velocityX = (escapeDirectionX / escapeMagnitude) * currentSpeed * scaredFactor + velocityX * (1 - scaredFactor);
-          velocityY = (escapeDirectionY / escapeMagnitude) * currentSpeed * scaredFactor + velocityY * (1 - scaredFactor);
-
-          if (distanceToMouse < scaredRadius) {
-            walkingButton.className = 'walking-button scared';
-          } else {
-            walkingButton.className = 'walking-button happy bounce';
-          }
-        } else {
-
-          currentSpeed = currentSpeed + (baseSpeed - currentSpeed) * 0.05;
-          walkingButton.className = 'walking-button happy bounce';
-        }
-      }
-
-      let newTop = currentTop + velocityY;
-      let newLeft = currentLeft + velocityX;
-
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      if (newLeft < 0) {
-        newLeft = 0;
-        velocityX *= -0.8; 
-      } else if (newLeft + walkingButton.offsetWidth > viewportWidth) {
-        newLeft = viewportWidth - walkingButton.offsetWidth;
-        velocityX *= -0.8;
-      }
-
-      if (newTop < 0) {
-        newTop = 0;
-        velocityY *= -0.8;
-      } else if (newTop + walkingButton.offsetHeight > viewportHeight) {
-        newTop = viewportHeight - walkingButton.offsetHeight;
-        velocityY *= -0.8;
-      }
-
-      walkingButton.style.top = `${newTop}px`;
-      walkingButton.style.left = `${newLeft}px`;
-
-      const movementAngle = Math.atan2(velocityY, velocityX);
-      const rotationAmount = Math.min(3, Math.max(-3, movementAngle * 3));
-      walkingButton.style.transform = `rotate(${rotationAmount}deg)`;
-
-    }, 30); 
-
-    setTimeout(() => {
-      isReturnJourneyStarted = true;
-    }, 15000);
-
-    function returnToOrigin() {
-      isReturnJourneyStarted = true;
-    }
-  }
-
-  function isElementVisible(element) {
-    if (!element) return false;
-
-    const style = window.getComputedStyle(element);
-    return style.display !== 'none' && 
-           style.visibility !== 'hidden' && 
-           style.opacity !== '0' && 
-           element.offsetWidth > 0 && 
-           element.offsetHeight > 0;
-  }
-
-  function attachToButtons() {
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => {
-      if (!button._hasWalkingListener) {
-        button._hasWalkingListener = true;
-        button.addEventListener('click', function(e) {
-
-          if (Math.random() < 1/3.7) {
-            makeButtonWalk(this, e);
-          }
-        });
-      }
-    });
-  }
-
-  attachToButtons();
-
-  const observer = new MutationObserver(mutations => {
-    attachToButtons();
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-})();
-	
   document
     .getElementById("dark-mode")
     ?.addEventListener("click", toggleDarkMode);
