@@ -638,7 +638,14 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if (Object.values(BOT_USERS).includes(message.User)) {
+          if (message.User.includes("elianag30@lakesideschoo.org") && !email.includes("elianag30@lakesideschool.org")) {
+            messageDiv.classList.add("Eliana");
+            if (!lastReadMessage || message.id > lastReadMessage) {
+              messageDiv.classList.add("unread");
+            } else {
+              messageDiv.classList.remove("unread");
+            }
+          } else if (Object.values(BOT_USERS).includes(message.User)) {
             messageDiv.classList.add("bot");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
