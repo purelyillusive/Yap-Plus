@@ -105,9 +105,9 @@
         const stayloginScreen = document.getElementById("stay-login-screen");
         const savedAccountScreen = document.getElementById("saved-account");
 
-        onAuthStateChanged(auth, async (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          unsubscribe();
           if (user) {
-            // User is signed in automatically!
             const storedForget = localStorage.getItem("neverPersist");
             const email = user.email;
             const sanitizedEmail = email.replace(/\./g, "*");
