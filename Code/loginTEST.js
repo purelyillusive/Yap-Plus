@@ -52,27 +52,35 @@
       const gui = document.getElementById("bookmarklet-gui");
 
       async function openChatScreen() {
+        const firebaseStuff = {
+          database,
+          auth,
+          app,
+          getDatabase,
+          get,
+          ref,
+          set,
+        };
 
-  fetch(
-    "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatTEST.js?token=$(date +%s)"
-  )
-    .then((r) => r.text())
-    .then((chatCode) => {
-      firebaseStuff={ database, auth, app, getDatabase, get, ref, set}
-      const wrappedChatCode = `
-        (function(firebaseStuff) {
-          const { database, auth, app, getDatabase, get, ref, set} = firebaseStuff;
-          ${chatCode}
-        })();
-      `;
-
-      eval(wrappedChatCode);
-    })
-    .catch((error) => {
-      console.error("Error loading chat code:", error);
-      alert("Failed to load chat code. Check the console for details.");
-    });
+        fetch(
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatTEST.js?token=$(date +%s)"
+        )
+          .then((r) => r.text())
+          .then((chatCode) => {
+            const wrappedChatCode = `
+              (function(firebaseStuff) {
+                const { database, auth, app, getDatabase, get, ref, set } = firebaseStuff;
+                ${chatCode}
+              })(firebaseStuff);
+            `;
+            eval(wrappedChatCode);
+          })
+          .catch((error) => {
+            console.error("Error loading chat code:", error);
+            alert("Failed to load chat code. Check the console for details.");
+          });
       }
+
 
       const mainScreen = document.getElementById("main-screen");
       const loginScreen = document.getElementById("login-screen");
