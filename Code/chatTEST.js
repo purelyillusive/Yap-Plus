@@ -638,7 +638,10 @@
         if (!isSameUser || !isCloseInTime || !lastMessageDiv) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
-          if (message.User.includes("elianag30@lakesideschoo.org") && !email.includes("elianag30@lakesideschool.org")) {
+          if (
+            message.User.includes("elianag30@lakesideschoo.org") &&
+            !email.includes("elianag30@lakesideschool.org")
+          ) {
             messageDiv.classList.add("Eliana");
             if (!lastReadMessage || message.id > lastReadMessage) {
               messageDiv.classList.add("unread");
@@ -1374,7 +1377,7 @@
         const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
 
 Chat Log:
-${chatHistory};
+${chatHistory}`;
 
         let aiReply = null;
         let successfulRequest = false;
