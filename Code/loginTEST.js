@@ -61,14 +61,16 @@
           ref,
           set,
         };
-
+            console.log(firebaseStuff);
         fetch(
           "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatTEST.js?token=$(date +%s)"
         )
           .then((r) => r.text())
           .then((chatCode) => {
+            console.log(firebaseStuff);
             const wrappedChatCode = `
               (function(firebaseStuff) {
+                          console.log(firebaseStuff);
                 const { database, auth, app, getDatabase, get, ref, set } = firebaseStuff;
                 ${chatCode}
               })(firebaseStuff);
