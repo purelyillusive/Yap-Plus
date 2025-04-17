@@ -580,8 +580,6 @@
    <h2>Final Steps</h2>
    <label for="create-username">Username</label>
    <input id="create-username" type="text" placeholder="Pick a username" required="">
-   <label for="create-picture">Profile Picture (optional)</label>
-   <input id="create-picture" type="file" accept="image/*">
    <label for="create-bio">Bio (optional)</label>   
    <textarea id="create-bio" rows="8" columns="50" height="100px">I'm a yapper</textarea>
    <button id="submit-customize">Save</button>
