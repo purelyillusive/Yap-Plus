@@ -9,6 +9,19 @@
   };
   const email = auth.currentUser.email;
 
+  const sc = document.createElement("script");
+  sc.setAttribute(
+    "src",
+    "https://cdn.jsdelivr.net/npm/emoji-toolkit@8.0.0/lib/js/joypixels.min.js",
+  );
+  document.head.appendChild(sc);
+  const ss = document.createElement("stylesheet");
+  sc.setAttribute(
+    "href",
+    "https://cdn.jsdelivr.net/npm/emoji-toolkit@8.0.0/extras/css/joypixels.min.css",
+  );
+  document.head.appendChild(ss);
+
   const gui = document.getElementById("bookmarklet-gui");
   chatScreen = document.getElementById("chat-screen");
   chatScreen.classList.remove("hidden");
@@ -34,60 +47,6 @@
       }
     });
     updateFavicon();
-  }
-  async function setupDarkModeDetection() {
-    const waitForGui = () => {
-      return new Promise((resolve) => {
-        const checkGui = () => {
-          const gui = document.getElementById("bookmarklet-gui");
-          if (gui) {
-            resolve(gui);
-          } else {
-            setTimeout(checkGui, 100);
-          }
-        };
-        checkGui();
-      });
-    };
-
-    const gui = await waitForGui();
-    if (!gui) return;
-
-    function detectDarkMode() {
-      const style = window.getComputedStyle(gui);
-      return (
-        style.backgroundColor.includes("51, 51, 51") ||
-        style.backgroundColor.includes("#333")
-      );
-    }
-
-    function updateBadgeStyles() {
-      const badges = document.querySelectorAll(".unread-badge");
-      badges.forEach((badge) => {
-        badge.style.backgroundColor = isDark ? "#ff6b6b" : "#ff4444";
-        badge.style.color = "white";
-      });
-    }
-
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "style"
-        ) {
-          isDark = detectDarkMode();
-          updateBadgeStyles();
-        }
-      });
-    });
-
-    observer.observe(gui, {
-      attributes: true,
-      attributeFilter: ["style"],
-    });
-
-    isDark = detectDarkMode();
-    updateBadgeStyles();
   }
 
   async function scrollToFirstUnread(chatName) {
@@ -2067,7 +2026,6 @@ ${chatHistory}`;
   }
 
   /* Load existing messages */
-  setupDarkModeDetection();
   checkForUpdates();
   fetchChatList();
   setupUnreadCountUpdates();
