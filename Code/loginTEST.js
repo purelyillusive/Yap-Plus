@@ -16,9 +16,10 @@
     var { initializeApp } = await import(
       "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
     );
-    var { getDatabase, get, ref, set } = await import(
-      "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
-    );
+    var { getDatabase, get, ref, set, onValue, push, update, remove, child } =
+      await import(
+        "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
+      );
     var {
       getAuth,
       GoogleAuthProvider,
@@ -60,18 +61,20 @@
           get,
           ref,
           set,
+          onValue,
+          push,
+          update,
+          remove,
+          child,
         };
-            console.log(firebaseStuff);
         fetch(
-          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatTEST.js?token=$(date +%s)"
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/refs/heads/main/Code/chatTEST.js?token=$(date +%s)",
         )
           .then((r) => r.text())
           .then((chatCode) => {
-            console.log(firebaseStuff);
             const wrappedChatCode = `
               (function(firebaseStuff) {
-                          console.log(firebaseStuff);
-                const { database, auth, app, getDatabase, get, ref, set } = firebaseStuff;
+                const { database, auth, app, getDatabase, get, ref, set, onValue, push, update, remove, child  } = firebaseStuff;
                 ${chatCode}
               })(firebaseStuff);
             `;
@@ -82,7 +85,6 @@
             alert("Failed to load chat code. Check the console for details.");
           });
       }
-
 
       const mainScreen = document.getElementById("main-screen");
       const loginScreen = document.getElementById("login-screen");
