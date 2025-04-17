@@ -7,6 +7,7 @@
     RNG: "[RNG]",
     EOD: "[EOD]",
   };
+  console.log(auth);
   const email = auth.currentUser.email;
 
   const sc = document.createElement("script");
