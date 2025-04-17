@@ -1,6 +1,4 @@
 (async function () {
-  var email = document.getElementById("email-saved-here").textContent;
-  var username;
   var readMessages = {};
   var readAll = true;
   var isDark = false;
@@ -9,58 +7,7 @@
     RNG: "[RNG]",
     EOD: "[EOD]",
   };
-  /* Firebase Config */
-  const firebaseConfig = {
-    apiKey: "AIzaSyA48Uv_v5c7-OCnkQ8nBkjIW8MN4STDcJs",
-    authDomain: "noise-75cba.firebaseapp.com",
-    databaseURL: "https://noise-75cba-default-rtdb.firebaseio.com",
-    projectId: "noise-75cba",
-    storageBucket: "noise-75cba.appspot.com",
-    messagingSenderId: "1092146908435",
-    appId: "1:1092146908435:web:f72b90362cc86c5f83dee6",
-  };
-  /* Check if the GUI is already open */
-  var database, auth, provider, email;
-  try {
-    /* Dynamically load Firebase modules */
-    var { initializeApp } = await import(
-      "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
-    );
-    const sc = document.createElement("script");
-    sc.setAttribute(
-      "src",
-      "https://cdn.jsdelivr.net/npm/emoji-toolkit@8.0.0/lib/js/joypixels.min.js",
-    );
-    document.head.appendChild(sc);
-    const ss = document.createElement("stylesheet");
-    sc.setAttribute(
-      "href",
-      "https://cdn.jsdelivr.net/npm/emoji-toolkit@8.0.0/extras/css/joypixels.min.css",
-    );
-    document.head.appendChild(ss);
-    var {
-      getAuth,
-      GoogleAuthProvider,
-      createUserWithEmailAndPassword,
-      signInWithPopup,
-      signInWithEmailAndPassword,
-    } = await import(
-      "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
-    );
-    var { getDatabase, get, ref, set, onValue, push, update, remove, child } =
-      await import(
-        "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"
-      );
-    /* Initialize Firebase app */
-    var app = initializeApp(firebaseConfig); /* Initialize Firebase services */
-    database = getDatabase(app);
-    auth = getAuth(app);
-    var provider = new GoogleAuthProvider();
-  } catch (error) {
-    console.error("Error initializing Firebase:", error);
-    alert("Firebase initialization failed. Check the console for details.");
-    return;
-  }
+  const email = auth.currentUser.email;
 
   const gui = document.getElementById("bookmarklet-gui");
   chatScreen = document.getElementById("chat-screen");
