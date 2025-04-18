@@ -2209,4 +2209,5 @@ document
   loadMessages("General");
   const messagesDiv = document.getElementById("messages");
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  updateModifyButtonVisibility();
 })();
