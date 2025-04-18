@@ -1752,7 +1752,6 @@ ${chatHistory}`;
 
       document.getElementById("create-username").value = "";
       document.getElementById("create-bio").value = "";
-      document.getElementById("create-picture").value = "";
 
       const accountRef = ref(database, `Accounts/${email.replace(/\./g, "*")}`);
       const snapshot = await get(accountRef);
