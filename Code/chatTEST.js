@@ -1771,23 +1771,10 @@ ${chatHistory}`;
   document.getElementById("submit-customize").onclick = async function () {
     const username = document.getElementById("create-username").value.trim();
     const bio = document.getElementById("create-bio").value.trim();
-    const pictureInput = document.getElementById("create-picture");
-    const pictureFile = pictureInput.files[0];
     const chatScreen = document.getElementById("chat-screen");
     const customizeScreen = document.getElementById("customize-account-screen");
 
     try {
-      let imageUrl = "None";
-      if (pictureFile) {
-        const storage = getStorage();
-        const fileRef = storageRef(
-          storage,
-          `ProfilePictures/${email.replace(/\./g, "*")}`,
-        );
-        await uploadBytes(fileRef, pictureFile);
-        imageUrl = await getDownloadURL(fileRef);
-      }
-
       const accountsRef = ref(
         database,
         `Accounts/${email.replace(/\./g, "*")}`,
@@ -1799,7 +1786,6 @@ ${chatHistory}`;
         ...existingData,
         Username: username || "Anonymous",
         Bio: bio || "I'm a yapper",
-        Image: imageUrl !== "None" ? imageUrl : existingData.Image || "None",
       };
 
       await set(accountsRef, updatedAccountData);
