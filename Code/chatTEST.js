@@ -10,9 +10,9 @@
   const email = auth.currentUser.email;
 
   if (!auth.currentUser || !auth.currentUser.emailVerified) {
-  alert("Please verify your email before using chat.");
-  return;
-}
+    alert("Please verify your email before using chat.");
+    return;
+  }
 
   const sc = document.createElement("script");
   sc.setAttribute(
@@ -1810,147 +1810,225 @@ ${chatHistory}`;
       alert("Failed to update profile. Please try again.");
     }
   };
-  document
-    .getElementById("create-new-server")
-    .addEventListener("click", async function () {
-      chatScreen.style.display = "none";
-      document.getElementById("channel-screen").classList.remove("hidden");
-      const channelType = document.getElementById("channel-type");
-      const channelMembers = document.getElementById("channel-members");
-      const channelName = document.getElementById("channel-name");
-      const channelDescription = document.getElementById("channel-description");
-      const submitButton = document.getElementById("submit-channel");
-      const backButton = document.getElementById("back-channel");
-      const membersContainer = document.getElementById("members-container");
-      const selectedMembers = document.getElementById("selected-members");
-      const membersList = document.getElementById("members-list");
+  async function handleChannelForm(
+    isModifying = false,
+    existingChannelName = null,
+  ) {
+    chatScreen.style.display = "none";
+    document.getElementById("channel-screen").classList.remove("hidden");
+    const channelType = document.getElementById("channel-type");
+    const channelMembers = document.getElementById("channel-members");
+    const channelName = document.getElementById("channel-name");
+    const channelDescription = document.getElementById("channel-description");
+    const submitButton = document.getElementById("submit-channel");
+    const backButton = document.getElementById("back-channel");
+    const membersContainer = document.getElementById("members-container");
+    const selectedMembers = document.getElementById("selected-members");
+    const membersList = document.getElementById("members-list");
+    const deleteButton = document.getElementById("delete-button");
 
-      function resetForm() {
-        channelType.value = "Public";
-        membersContainer.style.display = "none";
+    let originalMembers = "";
+    let previousChannelType = "Public";
+
+    function resetForm() {
+      channelType.value = "Public";
+      membersContainer.style.display = "none";
+      membersList.innerHTML = "";
+      selectedMembers.innerHTML = "";
+      if (!submitButton.clicked) {
+        channelName.value = "";
+        channelDescription.value = "";
+      }
+      deleteButton.style.display = "none";
+      channelName.disabled = false;
+      previousChannelType = "Public";
+      originalMembers = "";
+    }
+
+    resetForm();
+
+    if (isModifying && existingChannelName) {
+      channelName.value = existingChannelName;
+      channelName.disabled = true;
+      deleteButton.style.display = "block";
+
+      const chatInfoRef = ref(database, `Chat Info/${existingChannelName}`);
+      const snapshot = await get(chatInfoRef);
+      if (snapshot.exists()) {
+        const channelData = snapshot.val();
+        channelDescription.value = channelData.Description;
+        channelType.value = channelData.Type;
+        previousChannelType = channelData.Type;
+        originalMembers = channelData.Members;
+
+        if (channelData.Type === "Private") {
+          membersContainer.style.display = "block";
+          await loadExistingMembers(channelData.Members);
+        } else {
+          membersContainer.style.display = "none";
+        }
+      }
+    }
+
+    let availableMembers = [];
+    document
+      .getElementById("channel-type")
+      .addEventListener("change", function () {
+        if (this.value === "Public") {
+          membersContainer.style.display = "none";
+        } else {
+          membersContainer.style.display = "block";
+          loadMemberOptions();
+
+          if (
+            previousChannelType === "Public" &&
+            originalMembers &&
+            originalMembers !== "None"
+          ) {
+            loadExistingMembers(originalMembers);
+          }
+        }
+        previousChannelType = this.value;
+      });
+
+    function loadMemberOptions() {
+      async function updateAvailableMembers() {
+        const accountsRef = ref(database, "Accounts");
+        const snapshot = await get(accountsRef);
+        const accounts = snapshot.val();
+
+        const selectedEmails = new Set(
+          Array.from(document.querySelectorAll(".selected-member"))
+            .map((el) => el.textContent.trim().replace(/×$/, ""))
+            .map((email) => email.replace(/\./g, "*")),
+        );
+
+        availableMembers = Object.keys(accounts)
+          .filter(
+            (accountEmail) =>
+              accountEmail !== email.replace(/\./g, "*") &&
+              !selectedEmails.has(accountEmail),
+          )
+          .map((accountEmail) => ({
+            id: accountEmail,
+            email: accountEmail.replace(/\*/g, "."),
+          }));
+
+        renderMembersList(availableMembers);
+      }
+
+      function renderMembersList(members) {
         membersList.innerHTML = "";
-        selectedMembers.innerHTML = "";
-        if (!submitButton.clicked) {
-          channelName.value = "";
-          channelDescription.value = "";
-        }
+        members.forEach((member) => {
+          const option = document.createElement("div");
+          option.className = "member-option";
+          option.textContent = member.email;
+          option.onclick = () => addMember(member);
+          membersList.appendChild(option);
+        });
       }
 
-      resetForm();
+      function addMember(member) {
+        const memberElement = document.createElement("div");
+        memberElement.className = "selected-member";
+        memberElement.innerHTML = `
+    ${member.email}
+    <span class="remove-member">×</span>
+`;
 
-      let availableMembers = [];
-      document
-        .getElementById("channel-type")
-        .addEventListener("change", function () {
-          const membersContainer = document.getElementById("members-container");
-          if (this.value === "Public") {
-            membersContainer.style.display = "none";
-          } else {
-            membersContainer.style.display = "block";
-            loadMemberOptions();
-          }
-        });
-
-      function loadMemberOptions() {
-        const membersContainer = document.getElementById("members-container");
-        const membersList = document.getElementById("members-list");
-        const memberSearch = document.getElementById("member-search");
-        const selectedMembers = document.getElementById("selected-members");
-        let availableMembers = [];
-
-        async function updateAvailableMembers() {
-          const accountsRef = ref(database, "Accounts");
-          const snapshot = await get(accountsRef);
-          const accounts = snapshot.val();
-
-          const selectedEmails = new Set(
-            Array.from(document.querySelectorAll(".selected-member"))
-              .map((el) => el.textContent.trim().replace(/×$/, ""))
-              .map((email) => email.replace(/\./g, "*")),
-          );
-
-          availableMembers = Object.keys(accounts)
-            .filter(
-              (accountEmail) =>
-                accountEmail !== email.replace(/\./g, "*") &&
-                !selectedEmails.has(accountEmail),
-            )
-            .map((accountEmail) => ({
-              id: accountEmail,
-              email: accountEmail.replace(/\*/g, "."),
-            }));
-
+        memberElement.querySelector(".remove-member").onclick = () => {
+          memberElement.remove();
+          availableMembers.push(member);
+          availableMembers.sort((a, b) => a.email.localeCompare(b.email));
           renderMembersList(availableMembers);
-        }
+        };
 
-        function renderMembersList(members) {
-          membersList.innerHTML = "";
-          members.forEach((member) => {
-            const option = document.createElement("div");
-            option.className = "member-option";
-            option.textContent = member.email;
-            option.onclick = () => addMember(member);
-            membersList.appendChild(option);
-          });
-        }
+        selectedMembers.appendChild(memberElement);
 
-        function addMember(member) {
-          const memberElement = document.createElement("div");
-          memberElement.className = "selected-member";
-          memberElement.innerHTML = `
-        ${member.email}
-        <span class="remove-member">×</span>
-    `;
+        availableMembers = availableMembers.filter(
+          (availableMember) => availableMember.id !== member.id,
+        );
+        renderMembersList(availableMembers);
 
-          memberElement.querySelector(".remove-member").onclick = () => {
-            memberElement.remove();
-            availableMembers.push(member);
-            availableMembers.sort((a, b) => a.email.localeCompare(b.email));
-            renderMembersList(availableMembers);
-          };
+        membersList.style.display = "none";
+        memberSearch.value = "";
+      }
 
-          selectedMembers.appendChild(memberElement);
+      updateAvailableMembers();
 
-          availableMembers = availableMembers.filter(
-            (availableMember) => availableMember.id !== member.id,
-          );
-          renderMembersList(availableMembers);
+      memberSearch.onfocus = () => {
+        membersList.style.display = "block";
+      };
 
+      document.addEventListener("click", (e) => {
+        if (!membersContainer.contains(e.target)) {
           membersList.style.display = "none";
-          memberSearch.value = "";
         }
+      });
 
-        updateAvailableMembers();
+      memberSearch.oninput = (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredMembers = availableMembers.filter((member) =>
+          member.email.toLowerCase().includes(searchTerm),
+        );
+        renderMembersList(filteredMembers);
+        membersList.style.display = "block";
+      };
+    }
 
-        memberSearch.onfocus = () => {
-          membersList.style.display = "block";
-        };
+    async function loadExistingMembers(membersList) {
+      if (!membersList || membersList === "None") return;
 
-        document.addEventListener("click", (e) => {
-          if (!membersContainer.contains(e.target)) {
-            membersList.style.display = "none";
+      const members = membersList.split(",");
+      const currentUserEmail = email.replace(/\./g, "*");
+
+      const otherMembers = members.filter(
+        (member) => member !== currentUserEmail,
+      );
+
+      selectedMembers.innerHTML = "";
+
+      for (const memberEmail of otherMembers) {
+        const memberElement = document.createElement("div");
+        memberElement.className = "selected-member";
+        memberElement.innerHTML = `
+        ${memberEmail.replace(/\*/g, ".")}
+        <span class="remove-member">×</span>
+      `;
+
+        memberElement.querySelector(".remove-member").onclick = () => {
+          memberElement.remove();
+
+          const formattedEmail = memberEmail.replace(/\*/g, ".");
+          availableMembers.push({
+            id: memberEmail,
+            email: formattedEmail,
+          });
+          availableMembers.sort((a, b) => a.email.localeCompare(b.email));
+          if (
+            document.getElementById("members-list").style.display !== "none"
+          ) {
+            renderMembersList(availableMembers);
           }
-        });
-
-        memberSearch.oninput = (e) => {
-          const searchTerm = e.target.value.toLowerCase();
-          const filteredMembers = availableMembers.filter((member) =>
-            member.email.toLowerCase().includes(searchTerm),
-          );
-          renderMembersList(filteredMembers);
-          membersList.style.display = "block";
         };
+
+        selectedMembers.appendChild(memberElement);
       }
 
-      submitButton.addEventListener("click", async function () {
-        const name = channelName.value.trim();
-        const type = channelType.value;
-        const description = channelDescription.value.trim();
+      loadMemberOptions();
+    }
 
-        if (!name) {
-          alert("Please enter a channel name");
-          return;
-        }
+    submitButton.addEventListener("click", async function () {
+      const name = channelName.value.trim();
+      const type = channelType.value;
+      const description = channelDescription.value.trim();
+
+      if (!name) {
+        alert("Please enter a channel name");
+        return;
+      }
+
+      if (!isModifying) {
         const chatInfoRef = ref(database, `Chat Info/${name}`);
         const snapshot = await get(chatInfoRef);
         if (snapshot.exists()) {
@@ -1959,59 +2037,118 @@ ${chatHistory}`;
           );
           return;
         }
+      }
 
-        let members = [];
-        members.push(email.replace(/\./g, "*"));
+      let members = [];
+      members.push(email.replace(/\./g, "*"));
 
-        if (type === "Private") {
-          const selectedMemberElements =
-            document.querySelectorAll(".selected-member");
-          if (selectedMemberElements.length === 0) {
-            alert("Please select at least one member for private channel");
-            return;
-          }
-          members = members.concat(
-            Array.from(selectedMemberElements).map((el) =>
-              el.textContent
-                .trim()
-                .replace(/×$/, "")
-                .replace(/\./g, "*")
-                .trim()
-                .replace(/\s+/g, ""),
-            ),
-          );
+      if (type === "Private") {
+        const selectedMemberElements =
+          document.querySelectorAll(".selected-member");
+        if (selectedMemberElements.length === 0) {
+          alert("Please select at least one member for private channel");
+          return;
         }
+        members = members.concat(
+          Array.from(selectedMemberElements).map((el) =>
+            el.textContent
+              .trim()
+              .replace(/×$/, "")
+              .replace(/\./g, "*")
+              .trim()
+              .replace(/\s+/g, ""),
+          ),
+        );
+      }
 
-        const channelData = {
-          Description: description || "No description provided",
-          Members: type === "Private" ? members.join(",") : "None",
-          Type: type,
-        };
+      const channelData = {
+        Description: description || "No description provided",
 
-        try {
-          const newChannelRef = ref(database, `Chat Info/${name}`);
-          await set(newChannelRef, channelData);
+        Members:
+          type === "Private"
+            ? members.join(",")
+            : isModifying && originalMembers && originalMembers !== "None"
+              ? originalMembers
+              : email.replace(/\./g, "*"),
+        Type: type,
+      };
 
-          channelName.value = "";
-          channelDescription.value = "";
-          channelType.value = "Public";
-          document.getElementById("channel-screen").classList.add("hidden");
-          chatScreen.style.display = "flex";
-        } catch (error) {
-          console.error("Error creating channel:", error);
-          alert("Error creating channel. Please try again.");
-        }
-      });
-      backButton.addEventListener("click", async function () {
-        resetForm();
+      try {
+        const newChannelRef = ref(database, `Chat Info/${name}`);
+        await set(newChannelRef, channelData);
+
+        channelName.value = "";
+        channelDescription.value = "";
+        channelType.value = "Public";
         document.getElementById("channel-screen").classList.add("hidden");
         chatScreen.style.display = "flex";
-      });
-
-      channelType.value = "Public";
-      channelMembers.disabled = true;
+        resetForm();
+      } catch (error) {
+        console.error("Error creating/modifying channel:", error);
+        alert("Error creating/modifying channel. Please try again.");
+      }
     });
 
+    backButton.addEventListener("click", async function () {
+      resetForm();
+      document.getElementById("channel-screen").classList.add("hidden");
+      chatScreen.style.display = "flex";
+    });
+
+    deleteButton.addEventListener("click", async function () {
+      const channelNameToDelete = channelName.value.trim();
+
+      if (!channelNameToDelete) {
+        alert("Channel name is missing");
+        return;
+      }
+
+      if (
+        confirm(
+          `Are you sure you want to delete channel "${channelNameToDelete}"?`,
+        )
+      ) {
+        try {
+          const channelRef = ref(database, `Chat Info/${channelNameToDelete}`);
+          await remove(channelRef);
+
+          const messagesRef = ref(database, `Messages/${channelNameToDelete}`);
+          await remove(messagesRef);
+
+          document.getElementById("channel-screen").classList.add("hidden");
+          chatScreen.style.display = "flex";
+          resetForm();
+
+          alert(`Channel "${channelNameToDelete}" has been deleted.`);
+        } catch (error) {
+          console.error("Error deleting channel:", error);
+          alert("Error deleting channel. Please try again.");
+        }
+      }
+    });
+
+    channelType.value = previousChannelType;
+    channelMembers.disabled = true;
+  }
+
+  document
+    .getElementById("create-new-server")
+    .addEventListener("click", function () {
+      handleChannelForm(false);
+    });
+
+  document
+    .getElementById("modify-channel")
+    .addEventListener("click", async function () {
+      const selectedChannel = document.querySelector(".channel.active");
+      if (!selectedChannel) {
+        alert("Please select a channel to modify");
+        return;
+      }
+
+      const channelName = selectedChannel.textContent.trim();
+      handleChannelForm(true, channelName);
+    });
   function setupUnreadCountUpdates() {
     const chatsRef = ref(database, "Chats");
 
