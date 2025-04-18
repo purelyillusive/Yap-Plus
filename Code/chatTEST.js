@@ -1491,19 +1491,28 @@ ${chatHistory}`;
             if (sortedScores.length === 0) {
               await pushMessage("No scores yet! Be the first to play!");
             } else {
-                const topPlayers = sortedScores.slice(0, 10);
+              const topPlayers = sortedScores.slice(0, 10);
               for (let i = 0; i < topPlayers.length; i++) {
-                if (topPlayers[i] && topPlayers[i].email) {
-                  let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
-                  await pushMessage(playerText);
-                }
+                let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
+                await pushMessage(playerText);
               }
 
-              if (currentUserRank && currentUserRank > 10 && email && currentUserScore !== undefined) {
+              if (currentUserRank > 10) {
                 await pushMessage("...");
-                await pushMessage(`${currentUserRank}. ${email}: ${currentUserScore}`);
+                await pushMessage(
+                  `${currentUserRank}. ${email}: ${currentUserScore}`,
+                );
               }
             }
+            await pushMessage("");
+            await pushMessage("🏆 WEEKLY PRIZE 🏆");
+            await pushMessage(
+              "The player in the #1 slot on 4/7/25 at 8:00 pm will:",
+            );
+            await pushMessage(
+              "- Get to customize their message color for a month",
+            );
+            await pushMessage("- Add 1 feature of their choice to the chat");
           } catch (error) {
             console.error("Error retrieving leaderboard:", error);
             const errorMessageRef = push(messagesRef);
@@ -1815,6 +1824,7 @@ async function handleChannelForm(isModifying = false, existingChannelName = null
   const selectedMembers = document.getElementById("selected-members");
   const membersList = document.getElementById("members-list");
   const deleteButton = document.getElementById("delete-channel");
+  const memberSearch = document.getElementById("member-search");
 
   let originalMembers = "";
   let previousChannelType = "Public";
