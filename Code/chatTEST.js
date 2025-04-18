@@ -1823,7 +1823,7 @@ async function handleChannelForm(isModifying = false, existingChannelName = null
   const membersContainer = document.getElementById("members-container");
   const selectedMembers = document.getElementById("selected-members");
   const membersList = document.getElementById("members-list");
-  const deleteButton = document.getElementById("delete-button");
+  const deleteButton = document.getElementById("delete-channel");
 
   let originalMembers = "";
   let previousChannelType = "Public";
