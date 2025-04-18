@@ -618,11 +618,12 @@
     <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
     <button id="read-all" class="setting-button">Read All</button>
     <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
+    <button id="modify-channel" class="setting-button">Modify Channel</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
       <div id="top-left-sidebar">
-        <button id="create-new-server">Create New Server</button>
+        <button id="create-new-server">Create New Channel</button>
         <div id="server-list">
           <div class="server" id="general-server">General</div>
         </div>
@@ -666,9 +667,9 @@
     <label for="channel-description">Description/Rules (optional)</label>   
     <textarea id="channel-description" rows="8" columns="50"></textarea>
     <button id="submit-channel">Save</button>
+    <button id="delete-channel" style="display: none">Delete</button>
    <button id="back-channel">Back</button>
 </div>
-<p style="display: none" id="email-saved-here"></p>
       `;
   document.body.appendChild(gui);
 
