@@ -323,6 +323,7 @@
           this.classList.add("selected");
           loadMessages(chatName);
           updateUnreadCount(chatName);
+          updateModifyButtonVisibility();
         };
 
         sidebar.appendChild(chatElement);
@@ -1810,345 +1811,376 @@ ${chatHistory}`;
       alert("Failed to update profile. Please try again.");
     }
   };
-  async function handleChannelForm(
-    isModifying = false,
-    existingChannelName = null,
-  ) {
-    chatScreen.style.display = "none";
-    document.getElementById("channel-screen").classList.remove("hidden");
-    const channelType = document.getElementById("channel-type");
-    const channelMembers = document.getElementById("channel-members");
-    const channelName = document.getElementById("channel-name");
-    const channelDescription = document.getElementById("channel-description");
-    const submitButton = document.getElementById("submit-channel");
-    const backButton = document.getElementById("back-channel");
-    const membersContainer = document.getElementById("members-container");
-    const selectedMembers = document.getElementById("selected-members");
-    const membersList = document.getElementById("members-list");
-    const deleteButton = document.getElementById("delete-button");
+async function handleChannelForm(isModifying = false, existingChannelName = null) {
+  chatScreen.style.display = "none";
+  document.getElementById("channel-screen").classList.remove("hidden");
+  const channelType = document.getElementById("channel-type");
+  const channelMembers = document.getElementById("channel-members");
+  const channelName = document.getElementById("channel-name");
+  const channelDescription = document.getElementById("channel-description");
+  const submitButton = document.getElementById("submit-channel");
+  const backButton = document.getElementById("back-channel");
+  const membersContainer = document.getElementById("members-container");
+  const selectedMembers = document.getElementById("selected-members");
+  const membersList = document.getElementById("members-list");
+  const deleteButton = document.getElementById("delete-button");
 
-    let originalMembers = "";
-    let previousChannelType = "Public";
+  let originalMembers = "";
+  let previousChannelType = "Public";
 
-    function resetForm() {
-      channelType.value = "Public";
-      membersContainer.style.display = "none";
-      membersList.innerHTML = "";
-      selectedMembers.innerHTML = "";
-      if (!submitButton.clicked) {
-        channelName.value = "";
-        channelDescription.value = "";
-      }
-      deleteButton.style.display = "none";
-      channelName.disabled = false;
-      previousChannelType = "Public";
-      originalMembers = "";
+  function resetForm() {
+    channelType.value = "Public";
+    membersContainer.style.display = "none";
+    membersList.innerHTML = "";
+    selectedMembers.innerHTML = "";
+    if (!submitButton.clicked) {
+      channelName.value = "";
+      channelDescription.value = "";
     }
+    deleteButton.style.display = "none";
+    channelName.disabled = false;
+    previousChannelType = "Public";
+    originalMembers = "";
+  }
 
-    resetForm();
+  resetForm();
 
-    if (isModifying && existingChannelName) {
+  if (isModifying && existingChannelName) {
+
+    const chatInfoRef = ref(database, `Chat Info/${existingChannelName}`);
+    const snapshot = await get(chatInfoRef);
+
+    if (snapshot.exists()) {
+      const channelData = snapshot.val();
+
+      const currentUserEmail = email.replace(/\./g, "*");
+      if (!channelData.Creator || channelData.Creator !== currentUserEmail) {
+
+        document.getElementById("channel-screen").classList.add("hidden");
+        chatScreen.style.display = "flex";
+        return; 
+      }
+
       channelName.value = existingChannelName;
-      channelName.disabled = true;
+      channelName.disabled = true; 
       deleteButton.style.display = "block";
 
-      const chatInfoRef = ref(database, `Chat Info/${existingChannelName}`);
-      const snapshot = await get(chatInfoRef);
-      if (snapshot.exists()) {
-        const channelData = snapshot.val();
-        channelDescription.value = channelData.Description;
-        channelType.value = channelData.Type;
-        previousChannelType = channelData.Type;
-        originalMembers = channelData.Members;
+      channelDescription.value = channelData.Description;
+      channelType.value = channelData.Type;
+      previousChannelType = channelData.Type;
+      originalMembers = channelData.Members;
 
-        if (channelData.Type === "Private") {
-          membersContainer.style.display = "block";
-          await loadExistingMembers(channelData.Members);
-        } else {
-          membersContainer.style.display = "none";
+      if (channelData.Type === "Private") {
+        membersContainer.style.display = "block";
+        await loadExistingMembers(channelData.Members);
+      } else {
+        membersContainer.style.display = "none";
+      }
+    } else {
+
+      document.getElementById("channel-screen").classList.add("hidden");
+      chatScreen.style.display = "flex";
+      return;
+    }
+  }
+
+  let availableMembers = [];
+  document
+    .getElementById("channel-type")
+    .addEventListener("change", function () {
+      if (this.value === "Public") {
+        membersContainer.style.display = "none";
+      } else {
+        membersContainer.style.display = "block";
+        loadMemberOptions();
+
+        if (previousChannelType === "Public" && originalMembers && originalMembers !== "None") {
+          loadExistingMembers(originalMembers);
         }
       }
+      previousChannelType = this.value;
+    });
+
+  function loadMemberOptions() {
+    async function updateAvailableMembers() {
+      const accountsRef = ref(database, "Accounts");
+      const snapshot = await get(accountsRef);
+      const accounts = snapshot.val();
+
+      const selectedEmails = new Set(
+        Array.from(document.querySelectorAll(".selected-member"))
+          .map((el) => el.textContent.trim().replace(/×$/, ""))
+          .map((email) => email.replace(/\./g, "*")),
+      );
+
+      availableMembers = Object.keys(accounts)
+        .filter(
+          (accountEmail) =>
+            accountEmail !== email.replace(/\./g, "*") &&
+            !selectedEmails.has(accountEmail),
+        )
+        .map((accountEmail) => ({
+          id: accountEmail,
+          email: accountEmail.replace(/\*/g, "."),
+        }));
+
+      renderMembersList(availableMembers);
     }
 
-    let availableMembers = [];
-    document
-      .getElementById("channel-type")
-      .addEventListener("change", function () {
-        if (this.value === "Public") {
-          membersContainer.style.display = "none";
-        } else {
-          membersContainer.style.display = "block";
-          loadMemberOptions();
-
-          if (
-            previousChannelType === "Public" &&
-            originalMembers &&
-            originalMembers !== "None"
-          ) {
-            loadExistingMembers(originalMembers);
-          }
-        }
-        previousChannelType = this.value;
+    function renderMembersList(members) {
+      membersList.innerHTML = "";
+      members.forEach((member) => {
+        const option = document.createElement("div");
+        option.className = "member-option";
+        option.textContent = member.email;
+        option.onclick = () => addMember(member);
+        membersList.appendChild(option);
       });
+    }
 
-    function loadMemberOptions() {
-      async function updateAvailableMembers() {
-        const accountsRef = ref(database, "Accounts");
-        const snapshot = await get(accountsRef);
-        const accounts = snapshot.val();
-
-        const selectedEmails = new Set(
-          Array.from(document.querySelectorAll(".selected-member"))
-            .map((el) => el.textContent.trim().replace(/×$/, ""))
-            .map((email) => email.replace(/\./g, "*")),
-        );
-
-        availableMembers = Object.keys(accounts)
-          .filter(
-            (accountEmail) =>
-              accountEmail !== email.replace(/\./g, "*") &&
-              !selectedEmails.has(accountEmail),
-          )
-          .map((accountEmail) => ({
-            id: accountEmail,
-            email: accountEmail.replace(/\*/g, "."),
-          }));
-
-        renderMembersList(availableMembers);
-      }
-
-      function renderMembersList(members) {
-        membersList.innerHTML = "";
-        members.forEach((member) => {
-          const option = document.createElement("div");
-          option.className = "member-option";
-          option.textContent = member.email;
-          option.onclick = () => addMember(member);
-          membersList.appendChild(option);
-        });
-      }
-
-      function addMember(member) {
-        const memberElement = document.createElement("div");
-        memberElement.className = "selected-member";
-        memberElement.innerHTML = `
+    function addMember(member) {
+      const memberElement = document.createElement("div");
+      memberElement.className = "selected-member";
+      memberElement.innerHTML = `
     ${member.email}
     <span class="remove-member">×</span>
 `;
 
-        memberElement.querySelector(".remove-member").onclick = () => {
-          memberElement.remove();
-          availableMembers.push(member);
-          availableMembers.sort((a, b) => a.email.localeCompare(b.email));
-          renderMembersList(availableMembers);
-        };
-
-        selectedMembers.appendChild(memberElement);
-
-        availableMembers = availableMembers.filter(
-          (availableMember) => availableMember.id !== member.id,
-        );
+      memberElement.querySelector(".remove-member").onclick = () => {
+        memberElement.remove();
+        availableMembers.push(member);
+        availableMembers.sort((a, b) => a.email.localeCompare(b.email));
         renderMembersList(availableMembers);
-
-        membersList.style.display = "none";
-        memberSearch.value = "";
-      }
-
-      updateAvailableMembers();
-
-      memberSearch.onfocus = () => {
-        membersList.style.display = "block";
       };
 
-      document.addEventListener("click", (e) => {
-        if (!membersContainer.contains(e.target)) {
-          membersList.style.display = "none";
-        }
-      });
+      selectedMembers.appendChild(memberElement);
 
-      memberSearch.oninput = (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredMembers = availableMembers.filter((member) =>
-          member.email.toLowerCase().includes(searchTerm),
-        );
-        renderMembersList(filteredMembers);
-        membersList.style.display = "block";
-      };
+      availableMembers = availableMembers.filter(
+        (availableMember) => availableMember.id !== member.id,
+      );
+      renderMembersList(availableMembers);
+
+      membersList.style.display = "none";
+      memberSearch.value = "";
     }
 
-    async function loadExistingMembers(membersList) {
-      if (!membersList || membersList === "None") return;
+    updateAvailableMembers();
 
-      const members = membersList.split(",");
-      const currentUserEmail = email.replace(/\./g, "*");
+    memberSearch.onfocus = () => {
+      membersList.style.display = "block";
+    };
 
-      const otherMembers = members.filter(
-        (member) => member !== currentUserEmail,
+    document.addEventListener("click", (e) => {
+      if (!membersContainer.contains(e.target)) {
+        membersList.style.display = "none";
+      }
+    });
+
+    memberSearch.oninput = (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const filteredMembers = availableMembers.filter((member) =>
+        member.email.toLowerCase().includes(searchTerm),
       );
+      renderMembersList(filteredMembers);
+      membersList.style.display = "block";
+    };
+  }
 
-      selectedMembers.innerHTML = "";
+  async function loadExistingMembers(membersList) {
+    if (!membersList || membersList === "None") return;
 
-      for (const memberEmail of otherMembers) {
-        const memberElement = document.createElement("div");
-        memberElement.className = "selected-member";
-        memberElement.innerHTML = `
+    const members = membersList.split(",");
+    const currentUserEmail = email.replace(/\./g, "*");
+
+    const otherMembers = members.filter(member => member !== currentUserEmail);
+
+    selectedMembers.innerHTML = "";
+
+    for (const memberEmail of otherMembers) {
+      const memberElement = document.createElement("div");
+      memberElement.className = "selected-member";
+      memberElement.innerHTML = `
         ${memberEmail.replace(/\*/g, ".")}
         <span class="remove-member">×</span>
       `;
 
-        memberElement.querySelector(".remove-member").onclick = () => {
-          memberElement.remove();
+      memberElement.querySelector(".remove-member").onclick = () => {
+        memberElement.remove();
 
-          const formattedEmail = memberEmail.replace(/\*/g, ".");
-          availableMembers.push({
-            id: memberEmail,
-            email: formattedEmail,
-          });
-          availableMembers.sort((a, b) => a.email.localeCompare(b.email));
-          if (
-            document.getElementById("members-list").style.display !== "none"
-          ) {
-            renderMembersList(availableMembers);
-          }
-        };
-
-        selectedMembers.appendChild(memberElement);
-      }
-
-      loadMemberOptions();
-    }
-
-    submitButton.addEventListener("click", async function () {
-      const name = channelName.value.trim();
-      const type = channelType.value;
-      const description = channelDescription.value.trim();
-
-      if (!name) {
-        alert("Please enter a channel name");
-        return;
-      }
-
-      if (!isModifying) {
-        const chatInfoRef = ref(database, `Chat Info/${name}`);
-        const snapshot = await get(chatInfoRef);
-        if (snapshot.exists()) {
-          alert(
-            "A channel with this name already exists. Please choose a different name.",
-          );
-          return;
+        const formattedEmail = memberEmail.replace(/\*/g, ".");
+        availableMembers.push({
+          id: memberEmail,
+          email: formattedEmail
+        });
+        availableMembers.sort((a, b) => a.email.localeCompare(b.email));
+        if (document.getElementById("members-list").style.display !== "none") {
+          renderMembersList(availableMembers);
         }
-      }
-
-      let members = [];
-      members.push(email.replace(/\./g, "*"));
-
-      if (type === "Private") {
-        const selectedMemberElements =
-          document.querySelectorAll(".selected-member");
-        if (selectedMemberElements.length === 0) {
-          alert("Please select at least one member for private channel");
-          return;
-        }
-        members = members.concat(
-          Array.from(selectedMemberElements).map((el) =>
-            el.textContent
-              .trim()
-              .replace(/×$/, "")
-              .replace(/\./g, "*")
-              .trim()
-              .replace(/\s+/g, ""),
-          ),
-        );
-      }
-
-      const channelData = {
-        Description: description || "No description provided",
-
-        Members:
-          type === "Private"
-            ? members.join(",")
-            : isModifying && originalMembers && originalMembers !== "None"
-              ? originalMembers
-              : email.replace(/\./g, "*"),
-        Type: type,
       };
 
-      try {
-        const newChannelRef = ref(database, `Chat Info/${name}`);
-        await set(newChannelRef, channelData);
+      selectedMembers.appendChild(memberElement);
+    }
 
-        channelName.value = "";
-        channelDescription.value = "";
-        channelType.value = "Public";
+    loadMemberOptions();
+  }
+
+  submitButton.addEventListener("click", async function () {
+    const name = channelName.value.trim();
+    const type = channelType.value;
+    const description = channelDescription.value.trim();
+
+    if (!name) {
+      alert("Please enter a channel name");
+      return;
+    }
+
+    if (!isModifying) {
+      const chatInfoRef = ref(database, `Chat Info/${name}`);
+      const snapshot = await get(chatInfoRef);
+      if (snapshot.exists()) {
+        alert(
+          "A channel with this name already exists. Please choose a different name.",
+        );
+        return;
+      }
+    }
+
+    let members = [];
+    members.push(email.replace(/\./g, "*"));
+
+    if (type === "Private") {
+      const selectedMemberElements =
+        document.querySelectorAll(".selected-member");
+      if (selectedMemberElements.length === 0) {
+        alert("Please select at least one member for private channel");
+        return;
+      }
+      members = members.concat(
+        Array.from(selectedMemberElements).map((el) =>
+          el.textContent
+            .trim()
+            .replace(/×$/, "")
+            .replace(/\./g, "*")
+            .trim()
+            .replace(/\s+/g, ""),
+        ),
+      );
+    }
+
+    const channelData = {
+      Description: description || "No description provided",
+
+      Members: type === "Private" 
+        ? members.join(",") 
+        : (isModifying && originalMembers && originalMembers !== "None" 
+            ? originalMembers 
+            : email.replace(/\./g, "*")),
+      Type: type,
+      Creator: email.replace(/\./g, "*") 
+    };
+
+    try {
+      const newChannelRef = ref(database, `Chat Info/${name}`);
+      await set(newChannelRef, channelData);
+
+      channelName.value = "";
+      channelDescription.value = "";
+      channelType.value = "Public";
+      document.getElementById("channel-screen").classList.add("hidden");
+      chatScreen.style.display = "flex";
+      resetForm();
+    } catch (error) {
+      console.error("Error creating/modifying channel:", error);
+      alert("Error creating/modifying channel. Please try again.");
+    }
+  });
+
+  backButton.addEventListener("click", async function () {
+    resetForm();
+    document.getElementById("channel-screen").classList.add("hidden");
+    chatScreen.style.display = "flex";
+  });
+
+  deleteButton.addEventListener("click", async function() {
+    const channelNameToDelete = channelName.value.trim();
+
+    if (!channelNameToDelete) {
+      alert("Channel name is missing");
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete channel "${channelNameToDelete}"?`)) {
+      try {
+
+        const channelRef = ref(database, `Chat Info/${channelNameToDelete}`);
+        await remove(channelRef);
+
+        const messagesRef = ref(database, `Messages/${channelNameToDelete}`);
+        await remove(messagesRef);
+
         document.getElementById("channel-screen").classList.add("hidden");
         chatScreen.style.display = "flex";
         resetForm();
+
+        alert(`Channel "${channelNameToDelete}" has been deleted.`);
       } catch (error) {
-        console.error("Error creating/modifying channel:", error);
-        alert("Error creating/modifying channel. Please try again.");
+        console.error("Error deleting channel:", error);
+        alert("Error deleting channel. Please try again.");
       }
-    });
+    }
+  });
 
-    backButton.addEventListener("click", async function () {
-      resetForm();
-      document.getElementById("channel-screen").classList.add("hidden");
-      chatScreen.style.display = "flex";
-    });
+  channelType.value = previousChannelType;
+  channelMembers.disabled = true;
+}
 
-    deleteButton.addEventListener("click", async function () {
-      const channelNameToDelete = channelName.value.trim();
+document
+  .getElementById("create-new-server")
+  .addEventListener("click", function() {
+    handleChannelForm(false);
+  });
 
-      if (!channelNameToDelete) {
-        alert("Channel name is missing");
-        return;
-      }
+async function updateModifyButtonVisibility() {
+  const modifyButton = document.getElementById("modify-channel");
 
-      if (
-        confirm(
-          `Are you sure you want to delete channel "${channelNameToDelete}"?`,
-        )
-      ) {
-        try {
-          const channelRef = ref(database, `Chat Info/${channelNameToDelete}`);
-          await remove(channelRef);
-
-          const messagesRef = ref(database, `Messages/${channelNameToDelete}`);
-          await remove(messagesRef);
-
-          document.getElementById("channel-screen").classList.add("hidden");
-          chatScreen.style.display = "flex";
-          resetForm();
-
-          alert(`Channel "${channelNameToDelete}" has been deleted.`);
-        } catch (error) {
-          console.error("Error deleting channel:", error);
-          alert("Error deleting channel. Please try again.");
-        }
-      }
-    });
-
-    channelType.value = previousChannelType;
-    channelMembers.disabled = true;
+  if (!currentChat) {
+    modifyButton.style.display = "none";
+    return;
   }
 
-  document
-    .getElementById("create-new-server")
-    .addEventListener("click", function () {
-      handleChannelForm(false);
-    });
+  try {
+    const chatInfoRef = ref(database, `Chat Info/${currentChat}`);
+    const snapshot = await get(chatInfoRef);
 
-  document
-    .getElementById("modify-channel")
-    .addEventListener("click", async function () {
-      const selectedChannel = document.querySelector(".channel.active");
-      if (!selectedChannel) {
-        alert("Please select a channel to modify");
-        return;
+    if (snapshot.exists()) {
+      const channelData = snapshot.val();
+      const currentUserEmail = email.replace(/\./g, "*");
+
+      if (channelData.Creator && channelData.Creator === currentUserEmail) {
+        modifyButton.style.display = "block";
+      } else {
+        modifyButton.style.display = "none";
       }
+    } else {
+      modifyButton.style.display = "none";
+    }
+  } catch (error) {
+    console.error("Error checking channel creator:", error);
+    modifyButton.style.display = "none";
+  }
+}
 
-      const channelName = selectedChannel.textContent.trim();
-      handleChannelForm(true, channelName);
-    });
+document
+  .getElementById("modify-channel")
+  .addEventListener("click", function() {
+    if (!currentChat) {
+      alert("Please select a channel to modify");
+      return;
+    }
+
+    handleChannelForm(true, currentChat);
+  });
+  
   function setupUnreadCountUpdates() {
     const chatsRef = ref(database, "Chats");
 
