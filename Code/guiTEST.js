@@ -618,7 +618,7 @@
     <button id="dark-mode" class="setting-button">${isDark ? "Light Mode" : "Dark Mode"}</button>
     <button id="read-all" class="setting-button">Read All</button>
     <button id="hide-left-sidebar" class="setting-button">Hide Left Sidebar</button>
-    <button id="modify-channel" class="setting-button">Modify Channel</button>
+    <button id="modify-channel" class="setting-button" style="display: none">Modify Channel</button>
   </div>
   <div id="lower-chat" class="chat">
     <div id="left-sidebar">
