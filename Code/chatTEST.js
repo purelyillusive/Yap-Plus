@@ -1982,6 +1982,7 @@ ${chatHistory}`;
           Description: description || "No description provided",
           Members: type === "Private" ? members.join(",") : "None",
           Type: type,
+          Creator: email,
         };
 
         try {
