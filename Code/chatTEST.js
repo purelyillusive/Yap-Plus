@@ -2026,25 +2026,25 @@ async function handleChannelForm(isModifying = false, existingChannelName = null
   }
 
   submitButton.addEventListener("click", async function () {
-    const name = channelName.value.trim();
-    const type = channelType.value;
-    const description = channelDescription.value.trim();
+  const name = channelName.value.trim();
+  const type = channelType.value;
+  const description = channelDescription.value.trim();
 
-    if (!name) {
-      alert("Please enter a channel name");
+  if (!name) {
+    alert("Please enter a channel name");
+    return;
+  }
+
+  if (!isModifying) {
+    const chatInfoRef = ref(database, `Chat Info/${name}`);
+    const snapshot = await get(chatInfoRef);
+    if (snapshot.exists()) {
+      alert(
+        "A channel with this name already exists. Please choose a different name.",
+      );
       return;
     }
-
-    if (!isModifying) {
-      const chatInfoRef = ref(database, `Chat Info/${name}`);
-      const snapshot = await get(chatInfoRef);
-      if (snapshot.exists()) {
-        alert(
-          "A channel with this name already exists. Please choose a different name.",
-        );
-        return;
-      }
-    }
+  }
 
     let members = [];
     members.push(email.replace(/\./g, "*"));
@@ -2103,6 +2103,7 @@ async function handleChannelForm(isModifying = false, existingChannelName = null
   });
 
   deleteButton.addEventListener("click", async function() {
+    if(isModifying){
     const channelNameToDelete = channelName.value.trim();
 
     if (!channelNameToDelete) {
@@ -2128,6 +2129,7 @@ async function handleChannelForm(isModifying = false, existingChannelName = null
         console.error("Error deleting channel:", error);
         alert("Error deleting channel. Please try again.");
       }
+    }
     }
   });
 
