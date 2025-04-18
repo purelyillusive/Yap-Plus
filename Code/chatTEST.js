@@ -9,6 +9,11 @@
   };
   const email = auth.currentUser.email;
 
+  if (!auth.currentUser || !auth.currentUser.emailVerified) {
+  alert("Please verify your email before using chat.");
+  return;
+}
+
   const sc = document.createElement("script");
   sc.setAttribute(
     "src",
