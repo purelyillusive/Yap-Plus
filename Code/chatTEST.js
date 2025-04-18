@@ -3,14 +3,14 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = {
-    AI: "[AI]",
+    AI++++++++++++++++=: "[AI++++++++++++++++=]",
     RNG: "[RNG]",
     EOD: "[EOD]",
   };
-  const email = auth.currentUser.email;
+  const emAI++++++++++++++++=l = auth.currentUser.emAI++++++++++++++++=l;
 
-  if (!auth.currentUser || !auth.currentUser.emailVerified) {
-    alert("Please verify your email before using chat.");
+  if (!auth.currentUser || !auth.currentUser.emAI++++++++++++++++=lVerified) {
+    alert("Please verify your emAI++++++++++++++++=l before using chat.");
     return;
   }
 
@@ -34,9 +34,9 @@
   async function initializeReadMessages() {
     const readMessagesRef = ref(
       database,
-      `Accounts/${email.replace(/\./g, "*")}/readMessages`,
+      `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}/readMessages`,
     );
-    const snapshot = await get(readMessagesRef);
+    const snapshot = awAI++++++++++++++++=t get(readMessagesRef);
     readMessages = snapshot.val() || {};
     return readMessages;
   }
@@ -57,7 +57,7 @@
   async function scrollToFirstUnread(chatName) {
     const messagesDiv = document.getElementById("messages");
 
-    await new Promise((resolve) => {
+    awAI++++++++++++++++=t new Promise((resolve) => {
       const checkMessages = () => {
         if (messagesDiv.children.length > 0) {
           resolve();
@@ -78,7 +78,7 @@
       return unreadMessages[0];
     };
 
-    const firstUnread = await findUnreadMessage();
+    const firstUnread = awAI++++++++++++++++=t findUnreadMessage();
     if (!firstUnread) return;
 
     const smoothScroll = () => {
@@ -113,10 +113,10 @@
       firstUnread.scrollIntoView({ block: "center", behavior: "smooth" });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    awAI++++++++++++++++=t new Promise((resolve) => setTimeout(resolve, 100));
     const unreadMessages = document.querySelectorAll(".message.unread");
     unreadMessages.forEach((msg) => {
-      if (!msg.classList.contains("unread")) {
+      if (!msg.classList.contAI++++++++++++++++=ns("unread")) {
         msg.classList.add("unread");
       }
     });
@@ -140,10 +140,10 @@
 
       if (currentUrl.includes("lakesideschool.instructure.com")) {
         iconUrl =
-          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/main/Favicon/CanvasNotification.png";
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/mAI++++++++++++++++=n/Favicon/CanvasNotification.png";
       } else if (currentUrl.includes("google.com")) {
         iconUrl =
-          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/main/Favicon/GoogleNotification.png";
+          "https://raw.githubusercontent.com/TheHumblePotato/Yap-Window/mAI++++++++++++++++=n/Favicon/GoogleNotification.png";
       }
 
       if (iconUrl) {
@@ -166,15 +166,15 @@
   async function checkForUpdates() {
     const userRef = ref(
       database,
-      `Accounts/${email.replace(/\./g, "*")}/Version`,
+      `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}/Version`,
     );
     const updatesRef = ref(database, "Updates");
 
-    const userVersionSnapshot = await get(userRef);
-    const updatesSnapshot = await get(updatesRef);
+    const userVersionSnapshot = awAI++++++++++++++++=t get(userRef);
+    const updatesSnapshot = awAI++++++++++++++++=t get(updatesRef);
 
     if (!userVersionSnapshot.exists() || !updatesSnapshot.exists()) {
-      console.error("Failed to fetch user version or updates.");
+      console.error("FAI++++++++++++++++=led to fetch user version or updates.");
       return;
     }
 
@@ -254,7 +254,7 @@
 
     const mostRecentVersion = newUpdates[newUpdates.length - 1];
     set(
-      ref(database, `Accounts/${email.replace(/\./g, "*")}/Version`),
+      ref(database, `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}/Version`),
       mostRecentVersion,
     );
   }
@@ -265,7 +265,7 @@
     onValue(chatRef, async (snapshot) => {
       const chatData = snapshot.val();
       if (chatData) {
-        await populateSidebar(chatData);
+        awAI++++++++++++++++=t populateSidebar(chatData);
         const generalServer = Array.from(
           document.querySelectorAll(".server"),
         ).find((server) => server.textContent.trim() === "General");
@@ -281,7 +281,7 @@
 
   async function populateSidebar(chatData) {
     if (Object.keys(readMessages).length === 0) {
-      await initializeReadMessages();
+      awAI++++++++++++++++=t initializeReadMessages();
     }
 
     const sidebar = document.getElementById("server-list");
@@ -298,7 +298,7 @@
 
       if (
         Type === "Public" ||
-        (Type === "Private" && memberList.includes(email.replace(/\./g, "*")))
+        (Type === "Private" && memberList.includes(emAI++++++++++++++++=l.replace(/\./g, "*")))
       ) {
         const chatElement = document.createElement("div");
         chatElement.className = "server";
@@ -340,7 +340,7 @@
 
         Object.entries(messages).forEach(([messageId, message]) => {
           if (
-            message.User !== email &&
+            message.User !== emAI++++++++++++++++=l &&
             (!lastReadMessage || messageId > lastReadMessage)
           ) {
             unreadCount++;
@@ -364,14 +364,14 @@
 
   async function updateUnreadCount(chatName) {
     const chatRef = ref(database, `Chats/${chatName}`);
-    const snapshot = await get(chatRef);
+    const snapshot = awAI++++++++++++++++=t get(chatRef);
     const messages = snapshot.val() || {};
 
     const accountRef = ref(
       database,
-      `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+      `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}/readMessages/${chatName}`,
     );
-    const lastReadSnapshot = await get(accountRef);
+    const lastReadSnapshot = awAI++++++++++++++++=t get(accountRef);
     const lastReadMessage = lastReadSnapshot.val() || "";
     let unreadCount = 0;
 
@@ -387,7 +387,7 @@
     });
 
     sortedMessages.forEach(([messageId, message], index) => {
-      if (message.User !== email && index > lastReadIndex) {
+      if (message.User !== emAI++++++++++++++++=l && index > lastReadIndex) {
         unreadCount++;
       }
     });
@@ -422,13 +422,13 @@
     currentChat = chatName;
 
     const chatRef = ref(database, `Chats/${chatName}`);
-    const snapshot = await get(chatRef);
+    const snapshot = awAI++++++++++++++++=t get(chatRef);
     const messages = snapshot.val();
     if (messages) {
       const messageIds = Object.keys(messages).sort();
       if (messageIds.length > 0) {
         const latestMessageId = messageIds[messageIds.length - 1];
-        await markMessagesAsRead(chatName, latestMessageId);
+        awAI++++++++++++++++=t markMessagesAsRead(chatName, latestMessageId);
       }
     }
 
@@ -463,7 +463,7 @@
             oldestLoadedIndex,
           );
 
-          await appendMessages(olderMessages, true);
+          awAI++++++++++++++++=t appendMessages(olderMessages, true);
           oldestLoadedIndex = Math.max(
             0,
             oldestLoadedIndex - MESSAGES_PER_LOAD,
@@ -552,7 +552,7 @@
           messageDiv.classList.add("message");
           if (
             message.User.includes("elianag30@lakesideschoo.org") &&
-            !email.includes("elianag30@lakesideschool.org")
+            !emAI++++++++++++++++=l.includes("elianag30@lakesideschool.org")
           ) {
             messageDiv.classList.add("Eliana");
             if (!lastReadMessage || message.id > lastReadMessage) {
@@ -567,7 +567,7 @@
             } else {
               messageDiv.classList.remove("unread");
             }
-          } else if (message.User === email) {
+          } else if (message.User === emAI++++++++++++++++=l) {
             messageDiv.classList.add("sent");
           } else {
             messageDiv.classList.add("received");
@@ -607,7 +607,7 @@
           lastMessageDiv.appendChild(messageContent);
           lastMessageDiv.dataset.lastMessageId = message.id;
           if (
-            message.User !== email &&
+            message.User !== emAI++++++++++++++++=l &&
             (!lastReadMessage || message.id > lastReadMessage)
           ) {
             lastMessageDiv.classList.add("unread");
@@ -655,10 +655,10 @@
             0,
             sortedMessages.length - MESSAGES_PER_LOAD,
           );
-          await appendMessages(recentMessages);
+          awAI++++++++++++++++=t appendMessages(recentMessages);
           initialLoad = false;
           setTimeout(async () => {
-            await scrollToFirstUnread(chatName);
+            awAI++++++++++++++++=t scrollToFirstUnread(chatName);
           }, 100);
         } else {
           const wasNearBottom =
@@ -680,7 +680,7 @@
             if (lastMessageIndex !== -1) {
               const newMessages = sortedMessages.slice(lastMessageIndex + 1);
               if (newMessages.length > 0) {
-                await appendMessages(newMessages);
+                awAI++++++++++++++++=t appendMessages(newMessages);
                 if (wasNearBottom) {
                   requestAnimationFrame(() => {
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -710,67 +710,67 @@
 
     const readMessagesRef = ref(
       database,
-      `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+      `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}/readMessages/${chatName}`,
     );
-    await set(readMessagesRef, lastMessageId);
+    awAI++++++++++++++++=t set(readMessagesRef, lastMessageId);
 
     document.querySelectorAll(".message").forEach((msg) => {
       const msgId = msg.dataset.lastMessageId;
       const msgUser = msg.dataset.user;
-      if (msgId && msgId <= lastMessageId && msgUser !== email) {
+      if (msgId && msgId <= lastMessageId && msgUser !== emAI++++++++++++++++=l) {
         msg.classList.remove("unread");
       }
     });
     document.getElementById("bookmarklet-gui").scrollTop = 0;
-    await updateUnreadCount(chatName);
+    awAI++++++++++++++++=t updateUnreadCount(chatName);
   }
   function createSnakeGame() {
-    const temp_email =
-      typeof email !== "undefined" ? email.replace(/\./g, "*") : "anonymous";
+    const temp_emAI++++++++++++++++=l =
+      typeof emAI++++++++++++++++=l !== "undefined" ? emAI++++++++++++++++=l.replace(/\./g, "*") : "anonymous";
 
-    const gameContainer = document.createElement("div");
-    gameContainer.id = "snake-game-container";
-    gameContainer.style.position = "fixed";
-    gameContainer.style.top = "50%";
-    gameContainer.style.left = "50%";
-    gameContainer.style.transform = "translate(-50%, -50%)";
-    gameContainer.style.width = "90%";
-    gameContainer.style.maxWidth = "800px";
-    gameContainer.style.height = "90vh";
-    gameContainer.style.overflow = "hidden";
-    gameContainer.style.backgroundColor = "#000";
-    gameContainer.style.zIndex = "1999999";
-    gameContainer.style.display = "flex";
-    gameContainer.style.flexDirection = "column";
-    gameContainer.style.justifyContent = "center";
-    gameContainer.style.alignItems = "center";
-    gameContainer.style.padding = "20px";
-    gameContainer.style.borderRadius = "10px";
-    gameContainer.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+    const gameContAI++++++++++++++++=ner = document.createElement("div");
+    gameContAI++++++++++++++++=ner.id = "snake-game-contAI++++++++++++++++=ner";
+    gameContAI++++++++++++++++=ner.style.position = "fixed";
+    gameContAI++++++++++++++++=ner.style.top = "50%";
+    gameContAI++++++++++++++++=ner.style.left = "50%";
+    gameContAI++++++++++++++++=ner.style.transform = "translate(-50%, -50%)";
+    gameContAI++++++++++++++++=ner.style.width = "90%";
+    gameContAI++++++++++++++++=ner.style.maxWidth = "800px";
+    gameContAI++++++++++++++++=ner.style.height = "90vh";
+    gameContAI++++++++++++++++=ner.style.overflow = "hidden";
+    gameContAI++++++++++++++++=ner.style.backgroundColor = "#000";
+    gameContAI++++++++++++++++=ner.style.zIndex = "1999999";
+    gameContAI++++++++++++++++=ner.style.display = "flex";
+    gameContAI++++++++++++++++=ner.style.flexDirection = "column";
+    gameContAI++++++++++++++++=ner.style.justifyContent = "center";
+    gameContAI++++++++++++++++=ner.style.alignItems = "center";
+    gameContAI++++++++++++++++=ner.style.padding = "20px";
+    gameContAI++++++++++++++++=ner.style.borderRadius = "10px";
+    gameContAI++++++++++++++++=ner.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
 
     const messagesDiv = document.getElementById("messages") || document.body;
-    document.body.appendChild(gameContainer);
+    document.body.appendChild(gameContAI++++++++++++++++=ner);
 
-    const scoreContainer = document.createElement("div");
-    scoreContainer.style.display = "flex";
-    scoreContainer.style.justifyContent = "space-between";
-    scoreContainer.style.width = "100%";
-    scoreContainer.style.marginBottom = "10px";
-    gameContainer.appendChild(scoreContainer);
+    const scoreContAI++++++++++++++++=ner = document.createElement("div");
+    scoreContAI++++++++++++++++=ner.style.display = "flex";
+    scoreContAI++++++++++++++++=ner.style.justifyContent = "space-between";
+    scoreContAI++++++++++++++++=ner.style.width = "100%";
+    scoreContAI++++++++++++++++=ner.style.marginBottom = "10px";
+    gameContAI++++++++++++++++=ner.appendChild(scoreContAI++++++++++++++++=ner);
 
     const scoreDisplay = document.createElement("div");
     scoreDisplay.id = "snake-score";
     scoreDisplay.style.color = "white";
     scoreDisplay.style.fontSize = "24px";
     scoreDisplay.textContent = "Score: 0";
-    scoreContainer.appendChild(scoreDisplay);
+    scoreContAI++++++++++++++++=ner.appendChild(scoreDisplay);
 
     const highScoreDisplay = document.createElement("div");
     highScoreDisplay.id = "snake-high-score";
     highScoreDisplay.style.color = "gold";
     highScoreDisplay.style.fontSize = "24px";
     highScoreDisplay.textContent = "High Score: 0";
-    scoreContainer.appendChild(highScoreDisplay);
+    scoreContAI++++++++++++++++=ner.appendChild(highScoreDisplay);
 
     const helpButton = document.createElement("button");
     helpButton.textContent = "?";
@@ -787,13 +787,13 @@
     helpButton.style.fontSize = "20px";
     helpButton.style.cursor = "pointer";
     helpButton.style.zIndex = "2000000";
-    gameContainer.appendChild(helpButton);
+    gameContAI++++++++++++++++=ner.appendChild(helpButton);
 
     const canvas = document.createElement("canvas");
     canvas.width = 360;
     canvas.height = 360;
     canvas.style.border = "2px solid white";
-    gameContainer.appendChild(canvas);
+    gameContAI++++++++++++++++=ner.appendChild(canvas);
 
     const ctx = canvas.getContext("2d");
     const gridSize = 10;
@@ -851,7 +851,7 @@
       </ul>
       <p><strong>Scoring:</strong> Each food item eaten increases your score by 1 point.</p>
       <p><strong>Speed:</strong> The game gets faster as your score increases.</p>
-      <p><strong>Game Over:</strong> Colliding with walls or your own tail ends the game.</p>
+      <p><strong>Game Over:</strong> Colliding with walls or your own tAI++++++++++++++++=l ends the game.</p>
     `;
       overlay.appendChild(instructions);
 
@@ -874,13 +874,13 @@
 
     helpButton.addEventListener("click", () => {
       const instructionsOverlay = createInstructionsOverlay();
-      gameContainer.appendChild(instructionsOverlay);
+      gameContAI++++++++++++++++=ner.appendChild(instructionsOverlay);
     });
 
     function tryLoadHighScore() {
       try {
         const storedHighScore = localStorage.getItem(
-          `snakeHighScore_${temp_email}`,
+          `snakeHighScore_${temp_emAI++++++++++++++++=l}`,
         );
         if (storedHighScore) {
           highScore = parseInt(storedHighScore);
@@ -896,7 +896,7 @@
           typeof ref !== "undefined" &&
           typeof get !== "undefined"
         ) {
-          const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+          const scoreRef = ref(database, `SnakeScores/${temp_emAI++++++++++++++++=l}`);
           get(scoreRef)
             .then((snapshot) => {
               if (snapshot.exists()) {
@@ -915,7 +915,7 @@
             });
         }
       } catch (error) {
-        console.warn("Firebase operations not available:", error);
+        console.warn("Firebase operations not avAI++++++++++++++++=lable:", error);
       }
     }
 
@@ -1068,7 +1068,7 @@
 
         try {
           localStorage.setItem(
-            `snakeHighScore_${temp_email}`,
+            `snakeHighScore_${temp_emAI++++++++++++++++=l}`,
             highScore.toString(),
           );
         } catch (e) {
@@ -1081,13 +1081,13 @@
             typeof ref !== "undefined" &&
             typeof set !== "undefined"
           ) {
-            const scoreRef = ref(database, `SnakeScores/${temp_email}`);
+            const scoreRef = ref(database, `SnakeScores/${temp_emAI++++++++++++++++=l}`);
             set(scoreRef, highScore).catch((error) => {
               console.error("Error saving high score to Firebase:", error);
             });
           }
         } catch (error) {
-          console.warn("Firebase operations not available:", error);
+          console.warn("Firebase operations not avAI++++++++++++++++=lable:", error);
         }
       }
     }
@@ -1137,10 +1137,10 @@
       closeButton.style.border = "none";
       closeButton.style.borderRadius = "5px";
       closeButton.style.cursor = "pointer";
-      gameContainer.appendChild(closeButton);
+      gameContAI++++++++++++++++=ner.appendChild(closeButton);
 
       closeButton.addEventListener("click", () => {
-        gameContainer.remove();
+        gameContAI++++++++++++++++=ner.remove();
         document.removeEventListener("keydown", handleKeyDown);
       });
     }
@@ -1154,11 +1154,11 @@
     restartButton.style.border = "none";
     restartButton.style.borderRadius = "5px";
     restartButton.style.cursor = "pointer";
-    gameContainer.appendChild(restartButton);
+    gameContAI++++++++++++++++=ner.appendChild(restartButton);
 
     restartButton.addEventListener("click", () => {
       if (gameOver) {
-        const closeButton = gameContainer.querySelector("button:last-child");
+        const closeButton = gameContAI++++++++++++++++=ner.querySelector("button:last-child");
         if (closeButton && closeButton !== restartButton) {
           closeButton.remove();
         }
@@ -1185,7 +1185,7 @@
     touchControls.style.width = "150px";
     touchControls.style.height = "150px";
     touchControls.style.marginTop = "15px";
-    gameContainer.appendChild(touchControls);
+    gameContAI++++++++++++++++=ner.appendChild(touchControls);
 
     const createTouchButton = (text, dir) => {
       const btn = document.createElement("button");
@@ -1227,7 +1227,7 @@
     controlsLegend.style.marginTop = "10px";
     controlsLegend.style.textAlign = "center";
     controlsLegend.innerHTML = "Controls: Arrow Keys, WASD, or IJKL";
-    gameContainer.appendChild(controlsLegend);
+    gameContAI++++++++++++++++=ner.appendChild(controlsLegend);
 
     function initGame() {
       tryLoadHighScore();
@@ -1242,7 +1242,7 @@
     return function cleanup() {
       document.removeEventListener("keydown", handleKeyDown);
       clearInterval(gameInterval);
-      gameContainer.remove();
+      gameContAI++++++++++++++++=ner.remove();
     };
   }
 
@@ -1255,29 +1255,29 @@
 
     if (message) {
       messageInput.value = "";
-      if (message.toLowerCase().startsWith("/ai ")) {
+      if (message.toLowerCase().startsWith("/AI++++++++++++++++= ")) {
         let d = Date.now();
         const question = message.substring(4).trim();
 
-        const messagesSnapshot = await get(messagesRef);
+        const messagesSnapshot = awAI++++++++++++++++=t get(messagesRef);
         const messages = messagesSnapshot.val() || {};
         const messageEntries = Object.entries(messages)
           .sort((a, b) => new Date(a[1].Date) - new Date(b[1].Date))
           .slice(-20);
 
         const userMessageRef = push(messagesRef);
-        await update(userMessageRef, {
-          User: email,
+        awAI++++++++++++++++=t update(userMessageRef, {
+          User: emAI++++++++++++++++=l,
           Message: message,
           Date: d,
         });
 
         const API_KEYS = [
-          "AIzaSyDJEIVUqeVkrbtMPnBvB8QWd9VuUQQQBjg",
-          "AIzaSyB42CD-hXRnfq3eNpLWnF9at5kHePI5qgQ",
-          "AIzaSyAzipn1IBvbNyQUiiJq6cAkE6hAlShce94",
-          "AIzaSyC1fFINANR_tuOM18Lo3HF9WXosX-6BHLM",
-          "AIzaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
+          "AI++++++++++++++++=zaSyDJEIVUqeVkrbtMPnBvB8QWd9VuUQQQBjg",
+          "AI++++++++++++++++=zaSyB42CD-hXRnfq3eNpLWnF9at5kHePI5qgQ",
+          "AI++++++++++++++++=zaSyAzipn1IBvbNyQUiiJq6cAkE6hAlShce94",
+          "AI++++++++++++++++=zaSyC1fFINANR_tuOM18Lo3HF9WXosX-6BHLM",
+          "AI++++++++++++++++=zaSyAT94ASgr96OQuR9GjVxpS1pee5o5CZ6H0",
         ];
 
         const chatHistory = messageEntries
@@ -1286,17 +1286,17 @@
           })
           .join("\n");
 
-        const fullPrompt = `The following is a chat log for context. Messages from "[AI]" are past responses you have given, but you do not have memory of them.
+        const fullPrompt = `The following is a chat log for context. Messages from "[AI++++++++++++++++=]" are past responses you have given, but you do not have memory of them.
 
 Chat Log:
 ${chatHistory}`;
 
-        let aiReply = null;
+        let AI++++++++++++++++=Reply = null;
         let successfulRequest = false;
 
         for (const API_KEY of API_KEYS) {
           try {
-            const response = await fetch(
+            const response = awAI++++++++++++++++=t fetch(
               "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
                 API_KEY,
               {
@@ -1311,7 +1311,7 @@ ${chatHistory}`;
             const responseText =
               response.candidates?.[0]?.content?.parts?.[0]?.text;
             if (responseText && responseText.trim() !== "") {
-              aiReply = responseText;
+              AI++++++++++++++++=Reply = responseText;
               successfulRequest = true;
               break;
             }
@@ -1321,14 +1321,14 @@ ${chatHistory}`;
         }
 
         if (!successfulRequest) {
-          aiReply =
-            "Sorry, AI assistance is temporarily unavailable. Please try again later.";
+          AI++++++++++++++++=Reply =
+            "Sorry, AI++++++++++++++++= assistance is temporarily unavAI++++++++++++++++=lable. Please try agAI++++++++++++++++=n later.";
         }
 
-        const aiMessageRef = push(messagesRef);
-        await update(aiMessageRef, {
-          User: "[AI]",
-          Message: aiReply,
+        const AI++++++++++++++++=MessageRef = push(messagesRef);
+        awAI++++++++++++++++=t update(AI++++++++++++++++=MessageRef, {
+          User: "[AI++++++++++++++++=]",
+          Message: AI++++++++++++++++=Reply,
           Date: d,
         });
       } else if (message.toLowerCase().startsWith("/eod")) {
@@ -1359,8 +1359,8 @@ ${chatHistory}`;
         }
 
         const userMessageRef = push(messagesRef);
-        await update(userMessageRef, {
-          User: email,
+        awAI++++++++++++++++=t update(userMessageRef, {
+          User: emAI++++++++++++++++=l,
           Message: message,
           Date: Date.now(),
         });
@@ -1377,7 +1377,7 @@ ${chatHistory}`;
         }
 
         const botMessageRef = push(messagesRef);
-        await update(botMessageRef, {
+        awAI++++++++++++++++=t update(botMessageRef, {
           User: "[EOD]",
           Message: `${result}`,
           Date: Date.now(),
@@ -1385,37 +1385,37 @@ ${chatHistory}`;
       } else if (message.toLowerCase().startsWith("/coinflip")) {
         const parts = message.split(" ");
         let headsChance = 50;
-        let tailsChance = 50;
+        let tAI++++++++++++++++=lsChance = 50;
 
         if (parts.length === 3) {
           headsChance = parseFloat(parts[1]);
-          tailsChance = parseFloat(parts[2]);
+          tAI++++++++++++++++=lsChance = parseFloat(parts[2]);
 
-          if (headsChance + tailsChance !== 100) {
-            const total = headsChance + tailsChance;
+          if (headsChance + tAI++++++++++++++++=lsChance !== 100) {
+            const total = headsChance + tAI++++++++++++++++=lsChance;
             if (total > 0) {
               headsChance = (headsChance / total) * 100;
-              tailsChance = (tailsChance / total) * 100;
+              tAI++++++++++++++++=lsChance = (tAI++++++++++++++++=lsChance / total) * 100;
             } else {
               headsChance = 50;
-              tailsChance = 50;
+              tAI++++++++++++++++=lsChance = 50;
             }
           }
         }
 
         const userMessageRef = push(messagesRef);
-        await update(userMessageRef, {
-          User: email,
+        awAI++++++++++++++++=t update(userMessageRef, {
+          User: emAI++++++++++++++++=l,
           Message: message,
           Date: Date.now(),
         });
 
         const random = Math.random() * 100;
-        const result = random < headsChance ? "Heads" : "Tails";
-        const chances = `(${headsChance.toFixed(1)}% Heads, ${tailsChance.toFixed(1)}% Tails)`;
+        const result = random < headsChance ? "Heads" : "TAI++++++++++++++++=ls";
+        const chances = `(${headsChance.toFixed(1)}% Heads, ${tAI++++++++++++++++=lsChance.toFixed(1)}% TAI++++++++++++++++=ls)`;
 
         const botMessageRef = push(messagesRef);
-        await update(botMessageRef, {
+        awAI++++++++++++++++=t update(botMessageRef, {
           User: "[RNG]",
           Message: `🎲 Coin flip result: ${result}`,
           Date: Date.now(),
@@ -1424,15 +1424,15 @@ ${chatHistory}`;
         const sides = parseInt(message.split(" ")[1]);
 
         const userMessageRef = push(messagesRef);
-        await update(userMessageRef, {
-          User: email,
+        awAI++++++++++++++++=t update(userMessageRef, {
+          User: emAI++++++++++++++++=l,
           Message: message,
           Date: Date.now(),
         });
 
         if (isNaN(sides) || sides < 1) {
           const errorMessageRef = push(messagesRef);
-          await update(errorMessageRef, {
+          awAI++++++++++++++++=t update(errorMessageRef, {
             User: BOT_USERS.RNG,
             Message: "Please specify a valid number of sides (e.g., /roll 6)",
             Date: Date.now(),
@@ -1442,35 +1442,35 @@ ${chatHistory}`;
 
         const result = Math.floor(Math.random() * sides) + 1;
         const botMessageRef = push(messagesRef);
-        await update(botMessageRef, {
+        awAI++++++++++++++++=t update(botMessageRef, {
           User: BOT_USERS.RNG,
           Message: `🎲 Rolling a ${sides}-sided die: ${result}`,
           Date: Date.now(),
         });
       } else if (message.toLowerCase().startsWith("/snake")) {
-        const temp_email =
-          typeof email !== "undefined"
-            ? email.replace(/\./g, "*")
+        const temp_emAI++++++++++++++++=l =
+          typeof emAI++++++++++++++++=l !== "undefined"
+            ? emAI++++++++++++++++=l.replace(/\./g, "*")
             : "anonymous";
         if (message.toLowerCase().trim() === "/snake leaderboard") {
           const userMessageRef = push(messagesRef);
-          await update(userMessageRef, {
-            User: email,
+          awAI++++++++++++++++=t update(userMessageRef, {
+            User: emAI++++++++++++++++=l,
             Message: message,
             Date: Date.now(),
           });
 
           try {
             const scoresRef = ref(database, "SnakeScores");
-            const scoresSnapshot = await get(scoresRef);
+            const scoresSnapshot = awAI++++++++++++++++=t get(scoresRef);
             const scores = scoresSnapshot.val() || {};
 
             const sortedScores = Object.entries(scores)
-              .map(([userEmail, score]) => ({ email: userEmail, score: score }))
+              .map(([userEmAI++++++++++++++++=l, score]) => ({ emAI++++++++++++++++=l: userEmAI++++++++++++++++=l, score: score }))
               .sort((a, b) => b.score - a.score);
 
             let currentUserRank = sortedScores.findIndex(
-              (entry) => entry.email === temp_email,
+              (entry) => entry.emAI++++++++++++++++=l === temp_emAI++++++++++++++++=l,
             );
             let currentUserScore =
               currentUserRank !== -1 ? sortedScores[currentUserRank].score : 0;
@@ -1479,46 +1479,46 @@ ${chatHistory}`;
 
             const pushMessage = async (text) => {
               const msgRef = push(messagesRef);
-              await update(msgRef, {
+              awAI++++++++++++++++=t update(msgRef, {
                 User: "[Snake Game]",
                 Message: text,
                 Date: Date.now(),
               });
             };
 
-            await pushMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
+            awAI++++++++++++++++=t pushMessage("🐍 SNAKE GAME LEADERBOARD 🐍");
 
             if (sortedScores.length === 0) {
-              await pushMessage("No scores yet! Be the first to play!");
+              awAI++++++++++++++++=t pushMessage("No scores yet! Be the first to play!");
             } else {
               const topPlayers = sortedScores.slice(0, 10);
               for (let i = 0; i < topPlayers.length; i++) {
-                let playerText = `${i + 1}. ${topPlayers[i].email.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
-                await pushMessage(playerText);
+                let playerText = `${i + 1}. ${topPlayers[i].emAI++++++++++++++++=l.replace(/\*/g, ".")}: ${topPlayers[i].score}`;
+                awAI++++++++++++++++=t pushMessage(playerText);
               }
 
               if (currentUserRank > 10) {
-                await pushMessage("...");
-                await pushMessage(
-                  `${currentUserRank}. ${email}: ${currentUserScore}`,
+                awAI++++++++++++++++=t pushMessage("...");
+                awAI++++++++++++++++=t pushMessage(
+                  `${currentUserRank}. ${emAI++++++++++++++++=l}: ${currentUserScore}`,
                 );
               }
             }
-            await pushMessage("");
-            await pushMessage("🏆 WEEKLY PRIZE 🏆");
-            await pushMessage(
+            awAI++++++++++++++++=t pushMessage("");
+            awAI++++++++++++++++=t pushMessage("🏆 WEEKLY PRIZE 🏆");
+            awAI++++++++++++++++=t pushMessage(
               "The player in the #1 slot on 4/7/25 at 8:00 pm will:",
             );
-            await pushMessage(
+            awAI++++++++++++++++=t pushMessage(
               "- Get to customize their message color for a month",
             );
-            await pushMessage("- Add 1 feature of their choice to the chat");
+            awAI++++++++++++++++=t pushMessage("- Add 1 feature of their choice to the chat");
           } catch (error) {
             console.error("Error retrieving leaderboard:", error);
             const errorMessageRef = push(messagesRef);
-            await update(errorMessageRef, {
+            awAI++++++++++++++++=t update(errorMessageRef, {
               User: "[Snake Game]",
-              Message: "Error retrieving leaderboard. Please try again later.",
+              Message: "Error retrieving leaderboard. Please try agAI++++++++++++++++=n later.",
               Date: Date.now(),
             });
           }
@@ -1543,7 +1543,7 @@ ${chatHistory}`;
             currentTime <= schoolEnd
           ) {
             const errorMessageRef = push(messagesRef);
-            await update(errorMessageRef, {
+            awAI++++++++++++++++=t update(errorMessageRef, {
               User: "[Snake Game]",
               Message: "No Gaming During School!",
               Date: Date.now(),
@@ -1554,8 +1554,8 @@ ${chatHistory}`;
         }
       } else {
         const newMessageRef = push(messagesRef);
-        await update(newMessageRef, {
-          User: email,
+        awAI++++++++++++++++=t update(newMessageRef, {
+          User: emAI++++++++++++++++=l,
           Message: message,
           Date: Date.now(),
         });
@@ -1563,13 +1563,13 @@ ${chatHistory}`;
 
       messageInput.value = "";
 
-      const snapshot = await get(messagesRef);
+      const snapshot = awAI++++++++++++++++=t get(messagesRef);
       const messages = snapshot.val() || {};
 
       const allMessageIds = Object.keys(messages).sort();
       if (allMessageIds.length > 0) {
         const latestMessageId = allMessageIds[allMessageIds.length - 1];
-        await markMessagesAsRead(currentChat, latestMessageId);
+        awAI++++++++++++++++=t markMessagesAsRead(currentChat, latestMessageId);
       }
     }
     document.getElementById("bookmarklet-gui").scrollTop = 0;
@@ -1603,7 +1603,7 @@ ${chatHistory}`;
     if (messageElement) {
       const messageId = messageElement.dataset.messageId;
       if (messageId) {
-        await markMessagesAsRead(currentChat, messageId);
+        awAI++++++++++++++++=t markMessagesAsRead(currentChat, messageId);
       }
     }
   });
@@ -1639,20 +1639,20 @@ ${chatHistory}`;
       });
 
       const chatInfoRef = ref(database, "Chat Info");
-      const chatInfoSnapshot = await get(chatInfoRef);
+      const chatInfoSnapshot = awAI++++++++++++++++=t get(chatInfoRef);
       const chatInfo = chatInfoSnapshot.val();
 
       const readMessagesUpdates = {};
 
-      for (const [chatName, chatDetails] of Object.entries(chatInfo)) {
+      for (const [chatName, chatDetAI++++++++++++++++=ls] of Object.entries(chatInfo)) {
         const isAccessible =
-          chatDetails.Type === "Public" ||
-          (chatDetails.Type === "Private" &&
-            chatDetails.Members.split(",").includes(email.replace(/\./g, "*")));
+          chatDetAI++++++++++++++++=ls.Type === "Public" ||
+          (chatDetAI++++++++++++++++=ls.Type === "Private" &&
+            chatDetAI++++++++++++++++=ls.Members.split(",").includes(emAI++++++++++++++++=l.replace(/\./g, "*")));
 
         if (isAccessible) {
           const chatRef = ref(database, `Chats/${chatName}`);
-          const chatSnapshot = await get(chatRef);
+          const chatSnapshot = awAI++++++++++++++++=t get(chatRef);
           const messages = chatSnapshot.val();
 
           if (messages) {
@@ -1661,9 +1661,9 @@ ${chatHistory}`;
 
             const readMessageRef = ref(
               database,
-              `Accounts/${email.replace(/\./g, "*")}/readMessages/${chatName}`,
+              `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}/readMessages/${chatName}`,
             );
-            await set(readMessageRef, latestMessageId);
+            awAI++++++++++++++++=t set(readMessageRef, latestMessageId);
 
             readMessages[chatName] = latestMessageId;
           }
@@ -1674,7 +1674,7 @@ ${chatHistory}`;
       updateFavicon();
     } catch (error) {
       console.error("Error marking all messages as read:", error);
-      alert("Failed to mark all messages as read. Please try again.");
+      alert("FAI++++++++++++++++=led to mark all messages as read. Please try agAI++++++++++++++++=n.");
     }
   }
 
@@ -1715,7 +1715,7 @@ ${chatHistory}`;
 
   document.getElementById("read-all").addEventListener("click", async () => {
     try {
-      await markAllMessagesAsRead();
+      awAI++++++++++++++++=t markAllMessagesAsRead();
       updateFavicon();
     } catch (error) {
       console.error("Error marking all messages as read:", error);
@@ -1754,8 +1754,8 @@ ${chatHistory}`;
       document.getElementById("create-username").value = "";
       document.getElementById("create-bio").value = "";
 
-      const accountRef = ref(database, `Accounts/${email.replace(/\./g, "*")}`);
-      const snapshot = await get(accountRef);
+      const accountRef = ref(database, `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}`);
+      const snapshot = awAI++++++++++++++++=t get(accountRef);
       const userData = snapshot.val();
 
       if (userData) {
@@ -1777,9 +1777,9 @@ ${chatHistory}`;
     try {
       const accountsRef = ref(
         database,
-        `Accounts/${email.replace(/\./g, "*")}`,
+        `Accounts/${emAI++++++++++++++++=l.replace(/\./g, "*")}`,
       );
-      const snapshot = await get(accountsRef);
+      const snapshot = awAI++++++++++++++++=t get(accountsRef);
       const existingData = snapshot.val() || {};
 
       const updatedAccountData = {
@@ -1788,13 +1788,13 @@ ${chatHistory}`;
         Bio: bio || "I'm a yapper",
       };
 
-      await set(accountsRef, updatedAccountData);
+      awAI++++++++++++++++=t set(accountsRef, updatedAccountData);
 
       chatScreen.classList.remove("hidden");
       customizeScreen.classList.add("hidden");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      alert("FAI++++++++++++++++=led to update profile. Please try agAI++++++++++++++++=n.");
     }
   };
   async function handleChannelForm(
@@ -1809,7 +1809,7 @@ ${chatHistory}`;
     const channelDescription = document.getElementById("channel-description");
     const submitButton = document.getElementById("submit-channel");
     const backButton = document.getElementById("back-channel");
-    const membersContainer = document.getElementById("members-container");
+    const membersContAI++++++++++++++++=ner = document.getElementById("members-contAI++++++++++++++++=ner");
     const selectedMembers = document.getElementById("selected-members");
     const membersList = document.getElementById("members-list");
     const deleteButton = document.getElementById("delete-channel");
@@ -1820,7 +1820,7 @@ ${chatHistory}`;
 
     function resetForm() {
       channelType.value = "Public";
-      membersContainer.style.display = "none";
+      membersContAI++++++++++++++++=ner.style.display = "none";
       membersList.innerHTML = "";
       selectedMembers.innerHTML = "";
       if (!submitButton.clicked) {
@@ -1837,13 +1837,13 @@ ${chatHistory}`;
 
     if (isModifying && existingChannelName) {
       const chatInfoRef = ref(database, `Chat Info/${existingChannelName}`);
-      const snapshot = await get(chatInfoRef);
+      const snapshot = awAI++++++++++++++++=t get(chatInfoRef);
 
       if (snapshot.exists()) {
         const channelData = snapshot.val();
 
-        const currentUserEmail = email.replace(/\./g, "*");
-        if (!channelData.Creator || channelData.Creator !== currentUserEmail) {
+        const currentUserEmAI++++++++++++++++=l = emAI++++++++++++++++=l.replace(/\./g, "*");
+        if (!channelData.Creator || channelData.Creator !== currentUserEmAI++++++++++++++++=l) {
           document.getElementById("channel-screen").classList.add("hidden");
           chatScreen.style.display = "flex";
           return;
@@ -1859,10 +1859,10 @@ ${chatHistory}`;
         originalMembers = channelData.Members;
 
         if (channelData.Type === "Private") {
-          membersContainer.style.display = "block";
-          await loadExistingMembers(channelData.Members);
+          membersContAI++++++++++++++++=ner.style.display = "block";
+          awAI++++++++++++++++=t loadExistingMembers(channelData.Members);
         } else {
-          membersContainer.style.display = "none";
+          membersContAI++++++++++++++++=ner.style.display = "none";
         }
       } else {
         document.getElementById("channel-screen").classList.add("hidden");
@@ -1871,14 +1871,14 @@ ${chatHistory}`;
       }
     }
 
-    let availableMembers = [];
+    let avAI++++++++++++++++=lableMembers = [];
     document
       .getElementById("channel-type")
       .addEventListener("change", function () {
         if (this.value === "Public") {
-          membersContainer.style.display = "none";
+          membersContAI++++++++++++++++=ner.style.display = "none";
         } else {
-          membersContainer.style.display = "block";
+          membersContAI++++++++++++++++=ner.style.display = "block";
           loadMemberOptions();
 
           if (
@@ -1893,29 +1893,29 @@ ${chatHistory}`;
       });
 
     function loadMemberOptions() {
-      async function updateAvailableMembers() {
+      async function updateAvAI++++++++++++++++=lableMembers() {
         const accountsRef = ref(database, "Accounts");
-        const snapshot = await get(accountsRef);
+        const snapshot = awAI++++++++++++++++=t get(accountsRef);
         const accounts = snapshot.val();
 
-        const selectedEmails = new Set(
+        const selectedEmAI++++++++++++++++=ls = new Set(
           Array.from(document.querySelectorAll(".selected-member"))
             .map((el) => el.textContent.trim().replace(/×$/, ""))
-            .map((email) => email.replace(/\./g, "*")),
+            .map((emAI++++++++++++++++=l) => emAI++++++++++++++++=l.replace(/\./g, "*")),
         );
 
-        availableMembers = Object.keys(accounts)
+        avAI++++++++++++++++=lableMembers = Object.keys(accounts)
           .filter(
-            (accountEmail) =>
-              accountEmail !== email.replace(/\./g, "*") &&
-              !selectedEmails.has(accountEmail),
+            (accountEmAI++++++++++++++++=l) =>
+              accountEmAI++++++++++++++++=l !== emAI++++++++++++++++=l.replace(/\./g, "*") &&
+              !selectedEmAI++++++++++++++++=ls.has(accountEmAI++++++++++++++++=l),
           )
-          .map((accountEmail) => ({
-            id: accountEmail,
-            email: accountEmail.replace(/\*/g, "."),
+          .map((accountEmAI++++++++++++++++=l) => ({
+            id: accountEmAI++++++++++++++++=l,
+            emAI++++++++++++++++=l: accountEmAI++++++++++++++++=l.replace(/\*/g, "."),
           }));
 
-        renderMembersList(availableMembers);
+        renderMembersList(avAI++++++++++++++++=lableMembers);
       }
 
       function renderMembersList(members) {
@@ -1923,7 +1923,7 @@ ${chatHistory}`;
         members.forEach((member) => {
           const option = document.createElement("div");
           option.className = "member-option";
-          option.textContent = member.email;
+          option.textContent = member.emAI++++++++++++++++=l;
           option.onclick = () => addMember(member);
           membersList.appendChild(option);
         });
@@ -1933,44 +1933,44 @@ ${chatHistory}`;
         const memberElement = document.createElement("div");
         memberElement.className = "selected-member";
         memberElement.innerHTML = `
-    ${member.email}
+    ${member.emAI++++++++++++++++=l}
     <span class="remove-member">×</span>
 `;
 
         memberElement.querySelector(".remove-member").onclick = () => {
           memberElement.remove();
-          availableMembers.push(member);
-          availableMembers.sort((a, b) => a.email.localeCompare(b.email));
-          renderMembersList(availableMembers);
+          avAI++++++++++++++++=lableMembers.push(member);
+          avAI++++++++++++++++=lableMembers.sort((a, b) => a.emAI++++++++++++++++=l.localeCompare(b.emAI++++++++++++++++=l));
+          renderMembersList(avAI++++++++++++++++=lableMembers);
         };
 
         selectedMembers.appendChild(memberElement);
 
-        availableMembers = availableMembers.filter(
-          (availableMember) => availableMember.id !== member.id,
+        avAI++++++++++++++++=lableMembers = avAI++++++++++++++++=lableMembers.filter(
+          (avAI++++++++++++++++=lableMember) => avAI++++++++++++++++=lableMember.id !== member.id,
         );
-        renderMembersList(availableMembers);
+        renderMembersList(avAI++++++++++++++++=lableMembers);
 
         membersList.style.display = "none";
         memberSearch.value = "";
       }
 
-      updateAvailableMembers();
+      updateAvAI++++++++++++++++=lableMembers();
 
       memberSearch.onfocus = () => {
         membersList.style.display = "block";
       };
 
       document.addEventListener("click", (e) => {
-        if (!membersContainer.contains(e.target)) {
+        if (!membersContAI++++++++++++++++=ner.contAI++++++++++++++++=ns(e.target)) {
           membersList.style.display = "none";
         }
       });
 
       memberSearch.oninput = (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filteredMembers = availableMembers.filter((member) =>
-          member.email.toLowerCase().includes(searchTerm),
+        const filteredMembers = avAI++++++++++++++++=lableMembers.filter((member) =>
+          member.emAI++++++++++++++++=l.toLowerCase().includes(searchTerm),
         );
         renderMembersList(filteredMembers);
         membersList.style.display = "block";
@@ -1981,35 +1981,35 @@ ${chatHistory}`;
       if (!membersList || membersList === "None") return;
 
       const members = membersList.split(",");
-      const currentUserEmail = email.replace(/\./g, "*");
+      const currentUserEmAI++++++++++++++++=l = emAI++++++++++++++++=l.replace(/\./g, "*");
 
       const otherMembers = members.filter(
-        (member) => member !== currentUserEmail,
+        (member) => member !== currentUserEmAI++++++++++++++++=l,
       );
 
       selectedMembers.innerHTML = "";
 
-      for (const memberEmail of otherMembers) {
+      for (const memberEmAI++++++++++++++++=l of otherMembers) {
         const memberElement = document.createElement("div");
         memberElement.className = "selected-member";
         memberElement.innerHTML = `
-        ${memberEmail.replace(/\*/g, ".")}
+        ${memberEmAI++++++++++++++++=l.replace(/\*/g, ".")}
         <span class="remove-member">×</span>
       `;
 
         memberElement.querySelector(".remove-member").onclick = () => {
           memberElement.remove();
 
-          const formattedEmail = memberEmail.replace(/\*/g, ".");
-          availableMembers.push({
-            id: memberEmail,
-            email: formattedEmail,
+          const formattedEmAI++++++++++++++++=l = memberEmAI++++++++++++++++=l.replace(/\*/g, ".");
+          avAI++++++++++++++++=lableMembers.push({
+            id: memberEmAI++++++++++++++++=l,
+            emAI++++++++++++++++=l: formattedEmAI++++++++++++++++=l,
           });
-          availableMembers.sort((a, b) => a.email.localeCompare(b.email));
+          avAI++++++++++++++++=lableMembers.sort((a, b) => a.emAI++++++++++++++++=l.localeCompare(b.emAI++++++++++++++++=l));
           if (
             document.getElementById("members-list").style.display !== "none"
           ) {
-            renderMembersList(availableMembers);
+            renderMembersList(avAI++++++++++++++++=lableMembers);
           }
         };
 
@@ -2031,7 +2031,7 @@ ${chatHistory}`;
 
       if (!isModifying) {
         const chatInfoRef = ref(database, `Chat Info/${name}`);
-        const snapshot = await get(chatInfoRef);
+        const snapshot = awAI++++++++++++++++=t get(chatInfoRef);
         if (snapshot.exists()) {
           alert(
             "A channel with this name already exists. Please choose a different name.",
@@ -2041,7 +2041,7 @@ ${chatHistory}`;
       }
 
       let members = [];
-      members.push(email.replace(/\./g, "*"));
+      members.push(emAI++++++++++++++++=l.replace(/\./g, "*"));
 
       if (type === "Private") {
         const selectedMemberElements =
@@ -2070,14 +2070,14 @@ ${chatHistory}`;
             ? members.join(",")
             : isModifying && originalMembers && originalMembers !== "None"
               ? originalMembers
-              : email.replace(/\./g, "*"),
+              : emAI++++++++++++++++=l.replace(/\./g, "*"),
         Type: type,
-        Creator: email.replace(/\./g, "*"),
+        Creator: emAI++++++++++++++++=l.replace(/\./g, "*"),
       };
 
       try {
         const newChannelRef = ref(database, `Chat Info/${name}`);
-        await set(newChannelRef, channelData);
+        awAI++++++++++++++++=t set(newChannelRef, channelData);
 
         channelName.value = "";
         channelDescription.value = "";
@@ -2087,7 +2087,7 @@ ${chatHistory}`;
         resetForm();
       } catch (error) {
         console.error("Error creating/modifying channel:", error);
-        alert("Error creating/modifying channel. Please try again.");
+        alert("Error creating/modifying channel. Please try agAI++++++++++++++++=n.");
       }
     });
 
@@ -2138,11 +2138,11 @@ ${chatHistory}`;
               })
               .catch((error) => {
                 console.error("Error in deletion process:", error);
-                alert("Error deleting channel. Please try again.");
+                alert("Error deleting channel. Please try agAI++++++++++++++++=n.");
               });
           } catch (error) {
             console.error("Error initiating delete:", error);
-            alert("Error deleting channel. Please try again.");
+            alert("Error deleting channel. Please try agAI++++++++++++++++=n.");
           }
         }
       }
@@ -2167,13 +2167,13 @@ ${chatHistory}`;
 
     try {
       const chatInfoRef = ref(database, `Chat Info/${currentChat}`);
-      const snapshot = await get(chatInfoRef);
+      const snapshot = awAI++++++++++++++++=t get(chatInfoRef);
 
       if (snapshot.exists()) {
         const channelData = snapshot.val();
-        const currentUserEmail = email.replace(/\./g, "*");
+        const currentUserEmAI++++++++++++++++=l = emAI++++++++++++++++=l.replace(/\./g, "*");
 
-        if (channelData.Creator && channelData.Creator === currentUserEmail) {
+        if (channelData.Creator && channelData.Creator === currentUserEmAI++++++++++++++++=l) {
           modifyButton.style.display = "block";
         } else {
           modifyButton.style.display = "none";
@@ -2209,7 +2209,7 @@ ${chatHistory}`;
       for (const server of servers) {
         const chatName = server.textContent.trim();
         if (chats[chatName]) {
-          await updateUnreadCount(chatName);
+          awAI++++++++++++++++=t updateUnreadCount(chatName);
         }
       }
     });
@@ -2219,7 +2219,7 @@ ${chatHistory}`;
   checkForUpdates();
   fetchChatList();
   setupUnreadCountUpdates();
-  await initializeReadMessages();
+  awAI++++++++++++++++=t initializeReadMessages();
   loadMessages("General");
   const messagesDiv = document.getElementById("messages");
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
