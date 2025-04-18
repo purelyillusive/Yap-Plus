@@ -3,7 +3,7 @@
   var readAll = true;
   var isDark = false;
   const BOT_USERS = {
-    AI: "[AI]",
+    AI: "[AI+]",
     RNG: "[RNG]",
     EOD: "[EOD]",
   };
